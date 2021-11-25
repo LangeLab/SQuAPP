@@ -1,0 +1,12 @@
+fluidPage(
+  fluidRow(
+    column(
+      width=3,
+      box()
+    ),
+    column(
+      width=9,
+      box()
+    )
+  )
+)

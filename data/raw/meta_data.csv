@@ -1,0 +1,73 @@
+ID,SampleType,Disease,Stage,Replica,SampleName
+NP01_1,Patient,B-ALL,Diagnosis,1,NP01
+NP01_2,Patient,B-ALL,Diagnosis,2,NP01
+NP02_1,Cell Line,B-ALL,Diagnosis,1,NP02
+NP02_2,Cell Line,B-ALL,Diagnosis,2,NP02
+NP04_1,PDX,T-ALL,Relapse,1,NP04
+NP04_2,PDX,T-ALL,Relapse,2,NP04
+NP05_1,Patient,T-ALL,Relapse,1,NP05
+NP05_2,Patient,T-ALL,Relapse,2,NP05
+NP06_1,Cell Line,B-ALL,Diagnosis,1,NP06
+NP06_2,Cell Line,B-ALL,Diagnosis,2,NP06
+NP07_1,PDX,B-ALL,Relapse,1,NP07
+NP07_2,PDX,B-ALL,Relapse,2,NP07
+NP08_1,Patient,B-ALL,Relapse,1,NP08
+NP08_2,Patient,B-ALL,Relapse,2,NP08
+NP10_1,PDX,B-ALL,Diagnosis,1,NP10
+NP10_2,PDX,B-ALL,Diagnosis,2,NP10
+NP11_1,PDX,B-ALL,Diagnosis,1,NP11
+NP11_2,PDX,B-ALL,Diagnosis,2,NP11
+NP18_1,Patient,B-ALL,Diagnosis,1,NP18
+NP18_2,Patient,B-ALL,Diagnosis,2,NP18
+NP19_1,PDX,B-ALL,Diagnosis,1,NP19
+NP19_2,PDX,B-ALL,Diagnosis,2,NP19
+NP20_1,Patient,Normal,Normal,1,NP20
+NP20_2,Patient,Normal,Normal,2,NP20
+NP21_1,Patient,Normal,Normal,1,NP21
+NP22_1,Patient,B-ALL,Diagnosis,1,NP22
+NP22_2,Patient,B-ALL,Diagnosis,2,NP22
+NP23_1,PDX,B-ALL,Relapse,1,NP23
+NP23_2,PDX,B-ALL,Relapse,2,NP23
+NP25_1,Cell Line,B-ALL,Diagnosis,1,NP25
+NP25_2,Cell Line,B-ALL,Diagnosis,2,NP25
+NP26_1,Patient,B-ALL,Diagnosis,1,NP26
+NP26_2,Patient,B-ALL,Diagnosis,2,NP26
+NP27_1,PDX,B-ALL,Relapse,1,NP27
+NP27_2,PDX,B-ALL,Relapse,2,NP27
+NP28_1,Patient,B-ALL,Relapse,1,NP28
+NP29_1,Cell Line,T-ALL,Diagnosis,1,NP29
+NP30_1,Patient,B-ALL,Relapse,1,NP30
+NP30_2,Patient,B-ALL,Relapse,2,NP30
+NP31_1,PDX,B-ALL,Diagnosis,1,NP31
+NP31_2,PDX,B-ALL,Diagnosis,2,NP31
+NP32_1,PDX,B-ALL,Diagnosis,1,NP32
+NP32_2,PDX,B-ALL,Diagnosis,2,NP32
+NP33_1,Cell Line,T-ALL,Diagnosis,1,NP33
+NP33_2,Cell Line,T-ALL,Diagnosis,2,NP33
+NP34_1,PDX,T-ALL,Relapse,1,NP34
+NP34_2,PDX,T-ALL,Relapse,2,NP34
+NP35_1,Patient,T-ALL,Diagnosis,1,NP35
+NP35_2,Patient,T-ALL,Diagnosis,2,NP35
+NP36_1,PDX,B-ALL,Relapse,1,NP36
+NP36_2,PDX,B-ALL,Relapse,2,NP36
+NP37_1,Patient,T-ALL,Diagnosis,1,NP37
+NP37_2,Patient,T-ALL,Diagnosis,2,NP37
+NP38_1,Cell Line,T-ALL,Diagnosis,1,NP38
+NP38_2,Cell Line,T-ALL,Diagnosis,2,NP38
+NP39_1,PDX,B-ALL,Relapse,1,NP39
+NP40_1,Cell Line,T-ALL,Diagnosis,1,NP40
+NP40_2,Cell Line,T-ALL,Diagnosis,2,NP40
+NP41_1,Patient,B-ALL,Relapse,1,NP41
+NP41_2,Patient,B-ALL,Relapse,2,NP41
+NP42_1,PDX,B-ALL,Relapse,1,NP42
+NP42_2,PDX,B-ALL,Relapse,2,NP42
+NP44_1,PDX,B-ALL,Relapse,1,NP44
+NP44_2,PDX,B-ALL,Relapse,2,NP44
+NP45_1,PDX,T-ALL,Diagnosis,1,NP45
+NP45_2,PDX,T-ALL,Diagnosis,2,NP45
+NP47_1,Patient,T-ALL,Diagnosis,1,NP47
+NP47_2,Patient,T-ALL,Diagnosis,2,NP47
+NP48_1,Cell Line,B-ALL,Diagnosis,1,NP48
+NP48_2,Cell Line,B-ALL,Diagnosis,2,NP48
+NP49_1,Patient,B-ALL,Relapse,1,NP49
+NP49_2,Patient,B-ALL,Relapse,2,NP49
