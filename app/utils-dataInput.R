@@ -51,26 +51,26 @@ getPeptidePosition <- function(data) {
     #  Column names needs to be updated here if they changed in UniprotDB file.
     # Finds peptide start and end position as well as returning to important AA
     data <- data %>%
-        dplyr::mutate(PEP.AA.length = stringr::str_length(Peptide.sequence)) %>%
-        dplyr::mutate(PEP.Pos.start = stringr::str_locate(Fasta.sequence,
+        dplyr::mutate(PEP.AA.length = str_length(Peptide.sequence)) %>%
+        dplyr::mutate(PEP.Pos.start = str_locate(Fasta.sequence,
                                                           Peptide.sequence)[, 1]) %>%
-        dplyr::mutate(PEP.AA.start = stringr::str_sub(Fasta.sequence,
+        dplyr::mutate(PEP.AA.start = str_sub(Fasta.sequence,
                                                       start = .data$PEP.Pos.start,
                                                       end   = .data$PEP.Pos.start)) %>%
 
-        dplyr::mutate(PEP.Pos.end   = stringr::str_locate(Fasta.sequence,
+        dplyr::mutate(PEP.Pos.end   = str_locate(Fasta.sequence,
                                                           Peptide.sequence)[, 2]) %>%
-        dplyr::mutate(PEP.AA.end = stringr::str_sub(Fasta.sequence,
+        dplyr::mutate(PEP.AA.end = str_sub(Fasta.sequence,
                                                     start = .data$PEP.Pos.end,
                                                     end   = .data$PEP.Pos.end)) %>%
 
-        dplyr::mutate(PEP.AA.before = stringr::str_sub(Fasta.sequence,
+        dplyr::mutate(PEP.AA.before = str_sub(Fasta.sequence,
                                                        start = .data$PEP.Pos.start - 1,
                                                        end   = .data$PEP.Pos.start - 1)) %>%
-        dplyr::mutate(PEP.AA.last   = stringr::str_sub(Fasta.sequence,
+        dplyr::mutate(PEP.AA.last   = str_sub(Fasta.sequence,
                                                        start = .data$PEP.Pos.end,
                                                        end   = .data$PEP.Pos.end)) %>%
-        dplyr::mutate(PEP.AA.after  = stringr::str_sub(Fasta.sequence,
+        dplyr::mutate(PEP.AA.after  = str_sub(Fasta.sequence,
                                                        start = .data$PEP.Pos.end + 1,
                                                        end   = .data$PEP.Pos.end + 1))
     # Return the data
@@ -102,7 +102,7 @@ expandAnnotation <- function(proteinIdentifier,
     # Add uniprot data to the new dataframe for annotation
     df <- cbind(df, res)
     # Create protein length variable
-    df$Protein.length <- stringr::str_length(df$Fasta.sequence)
+    df$Protein.length <- str_length(df$Fasta.sequence)
     # If protein data is passed
     if(data_type=="protein"){
         # Skip other steps since no peptide data will be there

@@ -3,12 +3,12 @@ getSequenceWindow <- function(df, numExtend, modificationType){
     df["Window.size"] <- ((numExtend)*2) + 1
     # Create peptide end and start windows
     df <- df %>%
-        dplyr::mutate(PEP.End.window = stringr::str_sub(Fasta.sequence,
-                                                        start = .data$PEP.Pos.end - numExtend,
-                                                        end   = .data$PEP.Pos.end + numExtend)) %>%
-        dplyr::mutate(PEP.Start.window = stringr::str_sub(Fasta.sequence,
-                                                          start = .data$PEP.Pos.start - numExtend,
-                                                          end   = .data$PEP.Pos.start + numExtend))
+        dplyr::mutate(PEP.End.window = str_sub(Fasta.sequence,
+                                              start = .data$PEP.Pos.end - numExtend,
+                                              end   = .data$PEP.Pos.end + numExtend)) %>%
+        dplyr::mutate(PEP.Start.window = str_sub(Fasta.sequence,
+                                                start = .data$PEP.Pos.start - numExtend,
+                                                end   = .data$PEP.Pos.start + numExtend))
 
     # Modification Specific Columns
     if(modificationType == "Nterm"){

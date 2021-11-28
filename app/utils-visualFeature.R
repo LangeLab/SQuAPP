@@ -1,3 +1,8 @@
+# require -> tibble
+# require -> corrplot
+# require -> ggstatsplot
+# require -> ggcorrplot
+
 prepare_subset_preview_data <- function(dataList, feature_selection="all"){
   # Get quantitative data
   quant_data <- dataList$quant
@@ -112,8 +117,7 @@ plot_correlogram_fast <- function(dataList,
   return(p)
 }
 
-# require -> ggstatsplot
-# require -> ggcorrplot
+
 plot_correlogram_detailed <- function(dataList,
                                       feature_subset,
                                       padjust="none",

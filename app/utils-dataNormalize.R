@@ -1,3 +1,6 @@
+# require -> MsCoreUtils
+# require -> psych
+
 normalize_with_MsCore <- function(data, normalize.method="div.median"){
   # Get the data as matrix
   data_matrix <- as.matrix(data)

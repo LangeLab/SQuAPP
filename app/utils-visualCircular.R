@@ -1,3 +1,5 @@
+# require -> ComplexHeatmap
+
 # Utility function that subsets based on data level
 subset_data_for_circular <- function(data, d_type="protein"){
   # Subsets the data based on data type

@@ -1,4 +1,5 @@
-# require <- limma
+# require -> limma
+
 # Function to Add different methods for testing
 testingDEmethods <- function(data,
                              methodin,

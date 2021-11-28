@@ -1,3 +1,6 @@
+# require -> umap
+# require -> Rtsne
+
 reduce_dimensions <- function(dataList,
                               feature_selection,
                               method,

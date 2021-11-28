@@ -38,7 +38,7 @@ install_bioconductor <- installer(biocLite, ask=FALSE, INSTALL_opts=install_opts
 
 ## Bioconductor Packages
 # Read the file to get the list of bioconductor packages
-bioconductor_ <- paste(readLines('bioconductor_packages.txt'), sep = "\n")
+bioconductor_ <- paste(readLines('./dep/bioconductor_packages.txt'), sep = "\n")
 # Check if the file has packages
 if(length(bioconductor_)){
   print("Calling for the bioconductor source!")
@@ -54,7 +54,7 @@ if(length(bioconductor_)){
 
 ## CRAN Packages
 # Read the files to get the list of cran packages
-cran_ <- paste(readLines('cran_packages.txt'), sep = "\n")
+cran_ <- paste(readLines('./dep/cran_packages.txt'), sep = "\n")
 # Check if the file has packages
 if(length(cran_)){
   print("Installing Packages from Cran")
@@ -68,7 +68,7 @@ if(length(cran_)){
 
 ## GitHub Package
 # Read the files to get the list of GitHub packages
-github_ <- paste(readLines('github_packages.txt'), sep="\n")
+github_ <- paste(readLines('./dep/github_packages.txt'), sep="\n")
 # Check if the file has packages
 if(length(github_)){
   print("Installing Packages from GitHub")

@@ -1,3 +1,5 @@
+# require -> gprofiler2
+
 run_gprofiler <- function(dataList,
                           organism,
                           run_multiple=FALSE,

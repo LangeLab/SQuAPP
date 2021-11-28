@@ -1,3 +1,6 @@
+# requires -> drawProteins
+# requires -> cowplot
+
 prepare_subset_preview_data <- function(dataList, feature_selection="all"){
   # Get quantitative data
   quant_data <- dataList$quant
@@ -177,8 +180,6 @@ custom_protein_domain_intensities <- function(df,
   return(df)
 }
 
-# requires -> drawProteins
-# requires -> cowplot
 plot_protein_domain <- function(current_data,
                                 uniprot_data,
                                 intensity_method="Ratio"){

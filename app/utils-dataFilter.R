@@ -17,7 +17,6 @@ filter_features <- function(dataList, filterLevel, group_factor=NULL){
   # get the quantitative data
   quant_data <- dataList$quant
 
-
   # If filtering is done on global - consider all samples in one group
   if(is.null(group_factor)){
     # Applying the filtering by passed filtered level

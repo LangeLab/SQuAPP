@@ -1,3 +1,5 @@
+# require -> factoextra
+
 prepare_clustering_data <- function(dataList, feature_selection="all"){
   # Get quantitative data
   quant_data <- dataList$quant
