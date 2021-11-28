@@ -1,10 +1,10 @@
 packages <- c("shiny",
-              "bs4Dash",
               "DT",
               "tippy",
+              "fresh",
+              "bs4Dash",
               "shinyWidgets",
               "shinycssloaders",
-              "fresh",
               "dplyr",
               "tidyr",
               "stringr",
@@ -17,16 +17,7 @@ packages <- c("shiny",
               "ggpubr",
               "patchwork",
               "circlize"
-              # "cluster",
-              # "corrplot",
-              # "cowplot",
-              # "UpSetR",
-              # "umap",
-              # "Rtsne",
-              # "pheatmap",
-              # "drawProteins",
-              # "factoextra"
-)
+            )
 suppressPackageStartupMessages(lapply(packages, library, character.only = TRUE))
 
 source('utils-ui.R')

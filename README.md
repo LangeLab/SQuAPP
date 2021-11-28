@@ -2,13 +2,11 @@
 SQuAPP is a workflow-based web application built on R-Shiny to enable a rapid high-level analysis of quantitative proteomics data. SQuAPP provides simple and streamlined access to many aspects of typical downstream analysis done with quantitative proteomics data. SQuAPP can bring multiple levels of proteomics data to process and visually compare them for further visualizations.
 
 - [List of Features](#list-of-features)
+- [Tutorial](#tutorial)
 - [Usage](#usage)
   - [Online Version](#online-version)
-  - [Local Version](#local-version)
-    - [Clone the Repository](#clone-the-repository)
-    - [Install Dependencies](#install-dependencies)
-    - [Run the App](#run-the-app)
-  - [Docker Version](#docker-version)
+  - [Local Installation](#local-installation)
+  - [Docker Installation](#docker-installation)
 - [References](#references)
 - [Code of Conduct](#code-of-conduct)
 - [Session Info](#session-info)
@@ -50,20 +48,25 @@ SQuAPP provides features for most commonly used downstream data analysis approac
 
 ## Tutorial
 
-
-
 ## Usage
 SQuAPP can be used by different methods: online, local installation, and docker installation.
 
 ### Online Version
 SQuAPP can be access through hosting shiny-server in our own servers using this [squapp.langelab.org](http://squapp.langelab.org/) Online version is to provide a quick access to the features without installing or configuring for the local version. Due to limitations of the server you might have access issues if the server is overloaded.
 
-### Local Version
+### Local Use
 If you would like to use SQuAPP on your own computer to avoid server limitations you can follow these step to install it on your local computer.
-> This part is still work in progress!
 
+#### Step 1 - Get the Source Code
+You can click on the "Code", which will give you an option to either `Clone or Download ZIP`. You can clone the repository locally by using the link `git clone https://github.com/LangeLab/SQuAPP.git` or you can download as ZIP then unzip to get it ready for using.
 
-### Docker Version
+#### Step 2 - Installing Dependencies
+In the Rstudio run the script `install_dependencies.R` which will install packages if packages are not installed.
+
+#### Step 3 - Running the App Locally
+In the Rstudio you can run the shiny app by "Run App" option.
+
+### Docker Installation
 > This part is still work in progress!
 
 
