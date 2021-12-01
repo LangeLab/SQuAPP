@@ -1,8 +1,7 @@
 # Simple Quantitative Analysis of Proteins and PTMs (SQuAPP)
-SQuAPP is a workflow-based web application built on R-Shiny to enable a rapid high-level analysis of quantitative proteomics data. SQuAPP provides simple and streamlined access to many aspects of typical downstream analysis done with quantitative proteomics data. SQuAPP can bring multiple levels of proteomics data to process and visually compare them for further visualizations.
+SQuAPP is a workflow-based web application built on R-Shiny to enable a rapid high-level analysis of quantitative proteomics data. SQuAPP provides streamlined and straightforward access to many aspects of typical downstream analysis done with quantitative proteomics data. SQuAPP can bring multiple levels of proteomics data to process and visually compare them for further visualizations.
 
-- [List of Features](#list-of-features)
-- [Tutorial](#tutorial)
+- [SQuAPP Features](#squapp-features)
 - [Usage](#usage)
   - [Online Version](#online-version)
   - [Local Installation](#local-installation)
@@ -13,8 +12,8 @@ SQuAPP is a workflow-based web application built on R-Shiny to enable a rapid hi
 
 ---
 
-## List of Features
-SQuAPP provides features for most commonly used downstream data analysis approaches as well as some new functionality to allow combining multiple data levels such as protein-peptide-ptms. Here is the full list of functionality that can be used within SQuAPP.
+# SQuAPP Features
+SQuAPP provides features for most commonly used downstream data analysis approaches as well as some new functionality to allow combining multiple data levels such as protein-peptide-ptms. Here is the full list of functionality that can be used within SQuAPP. You can access the more detailed functionality descriptions and step-by-step tutorial in the [SQuAPP's](http://squapp.langelab.org/) home page.
 
 - **Data Setup**
   - Multiple level tabular data input from any tool
@@ -45,44 +44,41 @@ SQuAPP provides features for most commonly used downstream data analysis approac
   - Circular network summary
 - **Report Generation** *`(WIP)`*
 
-
-## Tutorial
-
-## Usage
+# Usage
 SQuAPP can be used by different methods: online, local installation, and docker installation.
 
-### Online Version
+## Online Version
 SQuAPP can be access through hosting shiny-server in our own servers using this [squapp.langelab.org](http://squapp.langelab.org/) Online version is to provide a quick access to the features without installing or configuring for the local version. Due to limitations of the server you might have access issues if the server is overloaded.
 
-### Local Use
+## Local Use
 If you would like to use SQuAPP on your own computer to avoid server limitations you can follow these step to install it on your local computer.
 
-#### Step 1 - Get the Source Code
+### Step 1 - Get the Source Code
 You can click on the "Code", which will give you an option to either `Clone or Download ZIP`. You can clone the repository locally by using the link `git clone https://github.com/LangeLab/SQuAPP.git` or you can download as ZIP then unzip to get it ready for using.
 
-#### Step 2 - Installing Dependencies
+### Step 2 - Installing Dependencies
 In the Rstudio run the script `install_dependencies.R` which will install packages if packages are not installed.
 
-#### Step 3 - Running the App Locally
+### Step 3 - Running the App Locally
 In the Rstudio you can run the shiny app by "Run App" option.
 
-### Docker Installation
+## Docker Installation
 > This part is still work in progress!
 
 
-## Publication
+# Publication
 > This part is still work in progress!
 
 
-## References
+# References
 > This part is still work in progress!
 
 
-## Code of Conduct
+# Code of Conduct
 Please note that SQuAPP is released with a [Contributor Code of Conduct](./CODE_OF_CONDUCT.md). By contributing to this project, you agree to abide by its terms.
 
 
-## Session Info
+# Session Info
 ```R
 > sessionInfo()
 R version 4.1.0 (2021-05-18)
