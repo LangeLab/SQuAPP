@@ -308,7 +308,7 @@ fluidPage(
                 status="primary",
               ),
               conditionalPanel(
-                condition="input.isExist_termini",
+                condition="input.isExist_ptm",
                 fileInput(
                   "uploadPTMData",
                   "Upload PTM Level Data",
