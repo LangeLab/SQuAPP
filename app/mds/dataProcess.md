@@ -48,9 +48,81 @@ After you have decided to go with the filtered state you can click on the “Rec
 ---
 
 ### 3. Data Imputation
+Missing values are a common issue in proteomics data. Combined with filtering data imputation can allow some features to be included in the data without the need to exclude large portions of the features removed from the data.
 
+SQuAPP can apply common data imputation methods in a global or group-wise fashion. As of version 0.25 SQuAPP offers 5 imputation methods four of which utilized `impute_matrix()` function from `MsCoreUtils` package.
 
+- `min`: Applies minimum value in the data (or grouped subset) to all missing values
+- `knn`: Calculates the nearest neighbour averaging to replace the missing value as implemented in the `impute::impute.knn` function.
+- `with`: Applies user-selected value with to all missing values
+- `MinProb`: Randomly draws values from Gaussian distribution centred to a minimum value in the data. Implements the `imputeLCMD::impute.MinProb` function.
+- `Down-shifted Normal`: Custom function imputes missing values with a random value selected from a narrower normal distribution with a smaller mean shifted by a user-selected magnitude.
+
+<p align="center">
+  <img src="../../png/023_DataImputationInitial.png" width="80%">
+</p>
+
+After selecting a data level, the imputation method, and group factor (if you switch on the “impute by group” option), you can click on “Preview Imputation Distribution” to access preview visualizations and data tables provided by SQuAPP:
+
+- `Missing values in Data`: Stacked bar plot to visualize the data missingness by sample (taken from quality check section)
+- `Imputation Distribution`: Combined density and count distributions of complete and imputed values to visualize
+- `Data Table`: Selected data level’s original state as a data table
+- `Summary Statistics`: Selected data level’s summary statistics
+
+Previewing the data with your configuration allows you to see how planned imputation affects the data. You can update the parameters and click the preview button again to update the previews to see more versions of how your data would change with a given imputation setup.
+
+<p align="center">
+  <img src="../../png/024_DataImputationPreview.png" width="80%">
+</p>
+
+When you decided on an imputation configuration you can click on the “Submit for Imputation”, which will enable the “Imputed State of Data” box allowing the direct comparison between original and imputed states:
+
+- `Split Violin`: Split violin to visualize the comparison of original vs imputed distribution of each sample.
+- `Data Table`: Imputed state as a data table
+- `Summary Statistics`: Imputed state’s summary statistics
+
+To save the imputed state as the original data you need to click the “Record as Original” to prompt SQuAPP to save the imputed state as the original data.
+
+<p align="center">
+  <img src="../../png/025_DataImputationDone.png" width="80%">
+</p>
 
 ---
 
 ### 4. Data Normalization
+Data normalization is a crucial step to include in a data analysis workflow to control and reduce the variability in mass spectrometry data.
+
+SQuAPP can apply commonly used data normalization methods in a global or group-wise fashion. As of version 0.25, SQuAPP offers 5 normalization methods customized from the `normalize_matrix()` function from `MsCoreUtils` package.
+
+- `Divided by Max`: *Dividing each feature by the maximum value of the feature*
+- `Divided by Sum`: *Dividing each feature by the sum of the feature*
+- `Divided by Mean`: *Divides values by column means*
+- `Divided by Median`: *Divides values by column median*
+- `Variance Stabilization`: *Implements variance stabilization method from `vsn::vsn2()`*
+
+<p align="center">
+  <img src="../../png/026_DataNormalizationInitial.png" width="80%">
+</p>
+
+After selecting a data level, the normalization method, and group factor (if you switch on the “normalize by group” option), you can click on “Preview Normalization Distribution” to access preview visualizations and data tables provided by SQuAPP:
+
+- `Violin - Distribution of Data`: Violin plot to visualize sample distributions (taken from quality check section)
+- `Density - Distribution of Data`: Density plot to visualize global and sample-wise densities.
+- `Paired Plots`: Paired plot to visualize sample pairs with matrix layout. (**Since pair plot works best 2 to 10 samples, plot defaults to first four samples. This plot can be updated with the setting tab located in the upper left corner of the plot.  **)
+  - **Lower triangle:** scatter plot with the linear fit
+  - **Upper triangle:** correlation value with significance indicator
+  - **Diagonal:** histogram
+- `Data Table`: Selected data level as a data table
+- `Summary Statistics`: Selected data level’s summary statistics
+
+<p align="center">
+  <img src="../../png/027_DataNormalizationPrepared.png" width="80%">
+</p>
+
+When you check the preview of the original state of the data and decide on the normalization configuration, you can click on the “Submit for Normalization,” which will enable the “Normalized State of Data” to compare the original vs normalized states directly.
+
+To save the normalized state as the original data, you must click the “Record as Original” to prompt SQuAPP to save the normalized state as the original data.
+
+<p align="center">
+  <img src="../../png/028_DataNormalizationDone.png" width="80%">
+</p>

@@ -14,7 +14,7 @@ fluidPage(
           inputId="select_normalization_method",
           label="Normalization methods",
           choices=c(
-            "min-max"="max",
+            "Divided by Max"="max",
             "Divided by Sum"="sum",
             "Divided by Mean"="div.mean",
             "Divided by Median"="div.median",

@@ -219,21 +219,33 @@
     footer = dashboardFooter(
       fluidRow(
         column(
-            width = 12,
+          width=3, 
+          align="center", 
+          "Placeholder for BCCHR LOGO"
+        ),
+        column(
+            width = 6,
             align = "center",
-            "Lange Lab @",
-            "BC Children's Hospital", "&",
-            "University of British Columbia",
+            "Developed by", 
+            a(href="https://langelab.med.ubc.ca/", "Lange Lab"),
+            "@",
+            a(href="https://www.bcchr.ca/", "BC Children's Hospital"), 
+            "&",
+            a(href="https://www.ubc.ca/", "University of British Columbia"),
             br(),
-            "Code available on Github:", a(href = "https://github.com/LangeLab/DataAnalysisPipeline", "LangeLab/DataAnalysisPipeline"),
+            "Code available on Github:", a(href = "https://github.com/LangeLab/SQuAPP", "LangeLab/SQuAPP"),
             br(),
             "For citing the app:",
             br(),
-            "Copyright (C) 2021, code licensed under GPL-3.0"
+            "Copyright (C) 2021, code licensed under MIT "
             # TODO:
-            #   1 - Add Small logos of the main founding partnerts
-            #   2 - Complete the footer with more information
-            #   3 - Create a markdown version of it for cleaner and easier modification
+            #   1 - Complete the footer with more information
+            #   2 - Create a markdown version of it for cleaner and easier modification
+        ), 
+        column(
+          width=3, 
+          align="center", 
+          "Placeholder for UBC LOGO"
         )
       )
     )
