@@ -23,7 +23,7 @@ output$select_cirNet_cond_pval_protein <- renderUI({
       dataList <- variables$datasets[["protein"]]
       if(isTruthy(dataList$stats)){
         s_l <- levels(dataList$stats$significance)
-        cc <- c("All significant"="all", s_l[s_l!="no significance"])
+        cc <- c("All significant"="all", s_l)
         selectInput("select_cirNet_cond_pval_protein",
                      label="Select filteration criteria",
                      choices=cc,
@@ -41,7 +41,7 @@ output$select_cirNet_cond_pval_peptide <- renderUI({
       dataList <- variables$datasets[["peptide"]]
       if(isTruthy(dataList$stats)){
         s_l <- levels(dataList$stats$significance)
-        cc <- c("All significant"="all", s_l[s_l!="no significance"])
+        cc <- c("All significant"="all", s_l)
         selectInput("select_cirNet_cond_pval_peptide",
                      label="Select filteration criteria",
                      choices=cc,
@@ -59,7 +59,7 @@ output$select_cirNet_cond_pval_termini <- renderUI({
       dataList <- variables$datasets[["termini"]]
       if(isTruthy(dataList$stats)){
         s_l <- levels(dataList$stats$significance)
-        cc <- c("All significant"="all", s_l[s_l!="no significance"])
+        cc <- c("All significant"="all", s_l)
         selectInput("select_cirNet_cond_pval_termini",
                      label="Select filteration criteria",
                      choices=cc,
@@ -77,7 +77,7 @@ output$select_cirNet_cond_pval_ptm <- renderUI({
       dataList <- variables$datasets[["ptm"]]
       if(isTruthy(dataList$stats)){
         s_l <- levels(dataList$stats$significance)
-        cc <- c("All significant"="all", s_l[s_l!="no significance"])
+        cc <- c("All significant"="all", s_l)
         selectInput("select_cirNet_cond_pval_ptm",
                      label="Select filteration criteria",
                      choices=cc,

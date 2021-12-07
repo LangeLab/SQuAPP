@@ -25,6 +25,8 @@ filter_data_based_user_selection <- function(df,
       filtered_data <- df %>% filter(change!="no change")
     }else if(filter_condition == "none"){
       filtered_data <- df
+    }else if(filter_condition == "no regulate"){
+      filtered_data <- df %>% filter(change=="no change")
     }else{
       filtered_data <- df %>% filter(change==filter_condition)
     }
@@ -34,7 +36,7 @@ filter_data_based_user_selection <- function(df,
     }else if(filter_condition == "none"){
       filtered_data <- df
     }else{
-      filtered_data <- df %>% filter(change==filter_condition)
+      filtered_data <- df %>% filter(significance==filter_condition)
     }
   }
   return(as.data.frame(filtered_data))
@@ -178,10 +180,10 @@ create_connections_data <- function(df,
     connection_df <- rbind(connection_df, sub_data)
   }
 
-  connection_df <- connection_df %>%
-    # Remove entities with non-significant in both ends of the connection to boost performance in plotting
-    filter((change.x != "no change") | (change.y != "no change")) %>%
-    data.frame()
+  # connection_df <- connection_df %>%
+  #   # Remove entities with non-significant in both ends of the connection to boost performance in plotting
+  #   filter((change.x != "no change") & (change.y != "no change")) %>%
+  #   data.frame()
 
   # Return the prepare connection dataframe
   return(connection_df)

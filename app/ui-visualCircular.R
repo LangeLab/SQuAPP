@@ -49,7 +49,8 @@ fluidPage(
                            label="Select filteration criteria",
                            choices=c("Both regulated"="all",
                                      "Up regulated"="up",
-                                     "Down regulated"="down"),
+                                     "Down regulated"="down",
+                                     "None regulated"="no regulate"),
                            selected=NULL)
             ),
             conditionalPanel(
@@ -79,7 +80,8 @@ fluidPage(
                            label="Select filteration criteria",
                            choices=c("Both regulated"="all",
                                      "Up regulated"="up",
-                                     "Down regulated"="down"),
+                                     "Down regulated"="down",
+                                     "None regulated"="no regulate"),
                            selected=NULL)
             ),
             conditionalPanel(
@@ -109,7 +111,8 @@ fluidPage(
                            label="Select filteration criteria",
                            choices=c("Both regulated"="all",
                                      "Up regulated"="up",
-                                     "Down regulated"="down"),
+                                     "Down regulated"="down",
+                                     "None regulated"="no regulate"),
                            selected=NULL)
             ),
             conditionalPanel(
@@ -139,7 +142,8 @@ fluidPage(
                            label="Select filteration criteria",
                            choices=c("Both regulated"="all",
                                      "Up regulated"="up",
-                                     "Down regulated"="down"),
+                                     "Down regulated"="down",
+                                     "None regulated"="no regulate"),
                            selected=NULL)
             ),
             conditionalPanel(

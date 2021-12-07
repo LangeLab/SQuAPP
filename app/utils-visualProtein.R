@@ -193,47 +193,46 @@ plot_protein_domain <- function(current_data,
   uniProt_plot <- drawProteins::draw_phospho(uniProt_plot, uniprot_data,
                                              size = 5, fill = "#ee9b00")
   # Stylize the plot a bit for cowplot
-  uniProt_plot <- uniProt_plot + theme_pubclean() +
+  uniProt_plot <- uniProt_plot + theme_pubr() +
     theme(axis.line.y=element_blank(), axis.ticks.y=element_blank(),
           axis.text.y=element_blank(), legend.position='bottom',
-          legend.key.size=unit(15, "pt")) +  ggtitle("Uniprot Reference")
+          legend.key.size=unit(15, "pt"))
 
   if(intensity_method=="Ratio"){
     # Create a current data based lolipop data establishing the intensity
     current_plot <- ggplot(current_data, aes(x=PTM.Pos, y=Calc.Intensity)) +
+        geom_hline(yintercept=0, color="gray") +
         geom_point(aes(fill=Modification.type), colour="black", pch=21, size=5)+
         geom_segment(alpha=0.5, aes(x=PTM.Pos, xend=PTM.Pos, y=0, yend=Calc.Intensity)) +
-        # ylim(0,max((current_data$Calc.Intensity))+.25) +
+
         xlim(-max(uniprot_data$end, na.rm=TRUE)*0.2,
               max(uniprot_data$end, na.rm=TRUE) +
               max(uniprot_data$end, na.rm=TRUE)*0.1) +
-        facet_wrap(~Modification.type, strip.position="left", ncol=1)+
         scale_fill_manual(values=c("peptide"="#005f73",
                                    "Phospho"="#ee9b00",
                                    "Nterm"="#ae2012")) +
-        theme_pubclean() + labs(title="Current Data", fill="Data Level") +
+        theme_pubclean() + labs(fill="Data Level") +
         xlab("") + ylab("log2FC")
 
   }else{
     # Create a current data based lolipop data establishing the intensity
     current_plot <- ggplot(current_data, aes(x=PTM.Pos, y=log2(Calc.Intensity))) +
+        geom_hline(yintercept=0, color="gray") +
         geom_point(aes(fill=Modification.type), colour="black", pch=21, size=5)+
         geom_segment(alpha=0.5, aes(x=PTM.Pos, xend=PTM.Pos, y=0, yend=log2(Calc.Intensity))) +
-        # ylim(0,max(log2(current_data$Calc.Intensity))+1) +
         xlim(-max(uniprot_data$end, na.rm=TRUE)*0.2,
               max(uniprot_data$end, na.rm=TRUE) +
               max(uniprot_data$end, na.rm=TRUE)*0.1) +
-        facet_wrap(~Modification.type, strip.position="left", ncol=1)+
         scale_fill_manual(values=c("peptide"="#005f73",
                                    "Phospho"="#ee9b00",
                                    "Nterm"="#ae2012")) +
-        theme_pubclean() + labs(title="Current Data", fill="Data Level") +
+        theme_pubclean() + labs(fill="Data Level") +
         xlab("") + ylab(paste0("log2(",intensity_method,")"))
 
   }
 
   # Put the plot together and align them
-  res <- cowplot::plot_grid(current_plot, uniProt_plot, ncol=1, align='v', axis='lr')
+  res <- cowplot::plot_grid(current_plot, uniProt_plot, ncol=1, align='v', axis='lr', labels=c("Current Data", "Uniprot Reference"))
   # Return the plot
   return(res)
 }

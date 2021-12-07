@@ -1,4 +1,4 @@
-## `SQuAPP` *Version 0.25*
+## `SQuAPP` *Version 0.26*
 **S**imple **Qu**antitative **A**nalysis of **P**eptides and **P**roteins (`SQuAPP`) is a workflow-based web application built on R-Shiny to enable a rapid high-level analysis of quantitative proteomics data. `SQuAPP` provides streamlined and straightforward access to many aspects of typical downstream analysis done with quantitative proteomics data. `SQuAPP` facilitates combined statistical analysis of multiple levels of proteomics data, including peptide, protein, post-translational modifications and termini modification, and allows for visual comparisons using a variety of plots and table formats.
 
 Mandatory quality control and conscious pre-processing early in the workflow ensure that only robust data are quantitatively evaluated and visualized. The processed datasets can be downloaded for further custom analysis, and the comprehensive report supports record keeping and allows for easy sharing with colleagues and collaborators.

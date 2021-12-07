@@ -36,7 +36,7 @@ shiny.download.plot <- function(fname, plot, multi=F,
     filename = function() {fname},
     content = function(file){
       pdf(file,
-          paper="default",
+          paper="special",
           width=fig.width,
           height=fig.height)
       if(multi){

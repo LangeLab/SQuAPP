@@ -210,8 +210,8 @@ observeEvent(input$plot_proteinDomain, {
     # Download handler for the plot created
     output$download_proteinDomain_plot <- shiny.download.plot(pname, res,
                                                               multi=F,
-                                                              fig.width=8,
-                                                              fig.height=12)
+                                                              fig.width=14,
+                                                              fig.height=8)
 
     # Return the plot result
     return(res)
