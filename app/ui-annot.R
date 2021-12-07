@@ -24,7 +24,7 @@ fluidPage(
     column(
       width=9,
       box(
-        title="Expanded Annotation",
+        title=textOutput('annot_box_title'),
         solidHeader=TRUE,
         collapsed = FALSE,
         status="primary",

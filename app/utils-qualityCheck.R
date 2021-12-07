@@ -126,7 +126,7 @@ bar_plot_identified_features <- function(dataList, group_factor=NULL){
                    sort.by.groups = TRUE,
                    x.text.angle = 90,
                    ggtheme = theme_pubclean()) +
-        labs(y="# of feature") +
+        labs(y="# of feature", x="Samples") +
         font("x.text", size = 8, vjust = 0.5) +
         ggtitle("Number of identified features per sample")
 
@@ -159,7 +159,7 @@ bar_plot_identified_features <- function(dataList, group_factor=NULL){
                    sort.by.groups = TRUE,
                    x.text.angle = 90,
                    ggtheme = theme_pubclean()) +
-        labs(y="# of features") +
+        labs(y="# of features", x="Samples") +
         font("x.text", size = 8, vjust = 0.5) +
         ggtitle(paste("Number of identified features per sample, grouped by", paste0('"', group_factor, '"')))
   }
@@ -314,8 +314,6 @@ plot_missing_values <- function(dataList, group_factor=NULL){
                  colour = "#e63946",
                  linetype='dotted',
                  show.legend = NA)
-    # Return the plot
-    return(p)
 
   # If grouping factor is not passed plot the whole data without facet
   }else{
@@ -328,6 +326,7 @@ plot_missing_values <- function(dataList, group_factor=NULL){
       theme_pubclean() +
       scale_fill_manual(values=c("complete"="#00AFBB", "missing"="#E7B800")) +
       theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 7.5))
-    return(p)
   }
+  # Return the plot
+  return(p+labs(x="Samples"))
 }

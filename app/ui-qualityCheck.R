@@ -30,7 +30,7 @@ fluidPage(
     column(
       width=9,
       box(
-        title="Distribution of All Samples",
+        title=textOutput('qc_box_title'),
         status="primary",
         width=NULL,
         inputId="",
@@ -88,10 +88,7 @@ fluidPage(
                            style="minimal",
                            color="warning")
             )
-            # tabPanel(
-            #   title="Sample Correlation Plot",
-            #   plotOutput("show_sample_correlation") %>% withSpinner()
-            # )
+            # TODO: There could be more quality check visualizations
           )
         )
       )

@@ -69,6 +69,10 @@ observeEvent(input$load_reference, {
     }else{
       dfs <- feather::read_feather(references_vector[refs])
     }
+    if(isTruthy(dfs) && nrow(dfs) > 0){
+      # TODO: Replace this with better button like sytle for the message
+      output$reference_loaded <- renderText({"Reference Uploaded!"})
+    }
     # Save the uniprot reference data
     variables$reference <- dfs
   }

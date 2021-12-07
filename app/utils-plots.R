@@ -39,7 +39,7 @@ plotviolin <- function(dataList, group_factor=NULL, custom_title=""){
             theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 7.5))
     p <- set_palette(p, "jco")
   }
-  return(p)
+  return(p+labs(x="Samples"))
 }
 
 geom_flat_violin <- function(mapping = NULL, data = NULL, stat = "ydensity",

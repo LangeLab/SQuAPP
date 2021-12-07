@@ -219,17 +219,17 @@
     footer = dashboardFooter(
       fluidRow(
         column(
-          width=3, 
-          align="center", 
+          width=3,
+          align="center",
           "Placeholder for BCCHR LOGO"
         ),
         column(
             width = 6,
             align = "center",
-            "Developed by", 
+            "Developed by",
             a(href="https://langelab.med.ubc.ca/", "Lange Lab"),
             "@",
-            a(href="https://www.bcchr.ca/", "BC Children's Hospital"), 
+            a(href="https://www.bcchr.ca/", "BC Children's Hospital"),
             "&",
             a(href="https://www.ubc.ca/", "University of British Columbia"),
             br(),
@@ -241,10 +241,10 @@
             # TODO:
             #   1 - Complete the footer with more information
             #   2 - Create a markdown version of it for cleaner and easier modification
-        ), 
+        ),
         column(
-          width=3, 
-          align="center", 
+          width=3,
+          align="center",
           "Placeholder for UBC LOGO"
         )
       )

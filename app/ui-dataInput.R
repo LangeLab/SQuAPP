@@ -51,12 +51,22 @@ fluidPage(
                         "Select uniprot reference proteome(s)",
                         choices=reference_organisms,
                         selected=NULL, multiple=TRUE),
-            actionButton(
-              inputId="load_reference",
-              label="Load reference(s)",
-              icon=icon("caret-right"),
-              status="primary",
-              size="xs"
+            fluidRow(
+              column(
+                width=6,
+                actionButton(
+                  inputId="load_reference",
+                  label="Load reference(s)",
+                  icon=icon("caret-right"),
+                  status="primary",
+                  size="xs"
+                )
+              ),
+              column(
+                width=6,
+                align='right',
+                span(textOutput("reference_loaded"), style="color:red")
+              )
             )
           ),
           hr(),
@@ -105,6 +115,7 @@ fluidPage(
                   status="primary",
                   size="sm"
                 ),
+                hr(),
                 conditionalPanel(
                   condition="input.show_metadata_preview!=0",
                   uiOutput("metadata_sampleName_col"),
@@ -163,6 +174,7 @@ fluidPage(
                   status="primary",
                   size="sm"
                 ),
+                hr(),
                 conditionalPanel(
                   condition="input.show_protein_preview!=0",
                   uiOutput("protein_identifier_col"),
@@ -216,6 +228,7 @@ fluidPage(
                   status="primary",
                   size="sm"
                 ),
+                hr(),
                 conditionalPanel(
                   condition="input.show_peptide_preview!=0",
                   uiOutput("peptide_identifier_col"),
@@ -271,6 +284,7 @@ fluidPage(
                   status="primary",
                   size="sm"
                 ),
+                hr(),
                 conditionalPanel(
                   condition="input.show_termini_preview!=0",
                   selectInput(
@@ -332,6 +346,7 @@ fluidPage(
                   status="primary",
                   size="sm"
                 ),
+                hr(),
                 conditionalPanel(
                   condition=("input.show_ptm_preview!=0"),
                   selectInput(

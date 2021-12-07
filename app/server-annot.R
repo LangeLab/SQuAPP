@@ -15,9 +15,15 @@ output$select_annot_data <- renderUI({
 # If annotation processing is started through button
 observeEvent(input$process_annot, {
   #TODO: Add req or validate statements (or sendSweetAlert)
+
   # Select the annotation part of the given annotation data
   annotData <- variables$datasets[[input$select_annot_data]]$annot
   modType <- variables$datasets[[input$select_annot_data]]$name
+
+  # Dynamically changed box title for better representation
+  output$annot_box_title <- renderText({paste("Expanded Annotation -",
+                                              str_to_title(input$select_annot_data))})
+
   # Expand the annotation
   df <- getSequenceWindow(annotData, input$expand_size, modType)
 

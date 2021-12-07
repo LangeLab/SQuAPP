@@ -3,7 +3,7 @@ shinyServer(function(input, output, session){
   # Initialize reacrive variables to use throughout the app
   variables <- reactiveValues(
     reference=NULL,
-    uploads=list( "metadata"=NULL,
+    uploads= list("metadata"=NULL,
                   "protein"=NULL,
                   "peptide"=NULL,
                   "termini"=NULL,
