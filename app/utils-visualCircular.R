@@ -42,6 +42,28 @@ filter_data_based_user_selection <- function(df,
   return(as.data.frame(filtered_data))
 }
 
+# Function to applys filtering to connections data based on pre-defined scenarious
+filter_with_predefined_scenario <- function(df, pre_def_filter, name_vector){
+  # Filteration scenario where proteins are unchanged and
+  #  termini and ptm are reverse regulated to each other.
+  #  NOTE: This removes peptides from the selection
+  if(pre_def_filter=="reverse_mods"){
+    df <- df %>%
+      filter((type.x %in% c(name_vector["protein"], name_vector["termini"]) &
+              type.y %in% c(name_vector["termini"], name_vector["ptm"]))) %>%
+      filter((type.x == name_vector["protein"] &
+              change.x=="no change" &
+              change.y!="no change") |
+             (type.x == name_vector["termini"] &
+              change.x != "no change" &
+              change.y != "no change" &
+              change.x != change.y))
+  }
+
+  return(as.data.frame(df))
+
+}
+
 # Creates a quantitative based data from all available data levels
 create_circular_quant_data <- function(dataset_lists,
                                        include_levels=c("protein",
@@ -102,42 +124,87 @@ create_circular_quant_data <- function(dataset_lists,
   }
 }
 
+## Maps colors to the connections dataframe based on what users selects
+create_connection_color_map <- function(df, name_vector, color_vector){
+
+  df <- df %>%
+    mutate(color = case_when(
+      (type.x == name_vector["protein"] &
+       type.y == name_vector["peptide"]) ~ color_vector["Protein-Peptide"],
+
+      (type.x == name_vector["protein"] &
+       type.y == name_vector["termini"]) ~ color_vector["Protein-Termini"],
+
+      (type.x == name_vector["protein"] &
+       type.y == name_vector["ptm"]) ~ color_vector["Protein-PTM"],
+
+      (type.x == name_vector["peptide"] &
+       type.y == name_vector["termini"]) ~ color_vector["Peptide-Termini"],
+
+      (type.x == name_vector["peptide"] &
+       type.y == name_vector["ptm"]) ~ color_vector["Peptide-PTM"],
+
+      (type.x == name_vector["termini"] &
+       type.y == name_vector["ptm"]) ~ color_vector["Termini-PTM"],
+    ))
+
+}
+
 # Creates a Start to End connections dataframe for plotting
 create_connections_data <- function(df,
                                     dataset_lists,
                                     include_levels,
                                     filter_on_vector,
                                     filter_condition_vector,
-                                    windowSize=10
+                                    custom_filter=TRUE,
+                                    pre_def_filter="none",
+                                    windowSize=10,
+                                    custom_color=FALSE,
+                                    color_vector=NULL
                                     ){
+
+  # Create accurate name vector
+  name_vector <- c()
   # Get subset from circular quant_data and apply filtering parameters
   if("protein" %in% include_levels){
     pro_sub <- subset_data_for_circular(df, dataset_lists$protein$name)
-    pro_sub <- filter_data_based_user_selection(pro_sub,
-                                                filter_on_vector["protein"],
-                                                filter_condition_vector["protein"]
-                                                )
+    name_vector <- c(name_vector, "protein"=dataset_lists$protein$name)
+    if(custom_filter){
+      pro_sub <- filter_data_based_user_selection(pro_sub,
+                                                  filter_on_vector["protein"],
+                                                  filter_condition_vector["protein"]
+                                                  )
+    }
   }
   if("peptide" %in% include_levels){
     pep_sub <- subset_data_for_circular(df, dataset_lists$peptide$name)
-    pep_sub <- filter_data_based_user_selection(pep_sub,
-                                                filter_on_vector["peptide"],
-                                                filter_condition_vector["peptide"]
-                                                )
+    name_vector <- c(name_vector, "peptide"=dataset_lists$peptide$name)
+    if(custom_filter){
+      pep_sub <- filter_data_based_user_selection(pep_sub,
+                                                  filter_on_vector["peptide"],
+                                                  filter_condition_vector["peptide"]
+                                                  )
+    }
   }
   if("termini" %in% include_levels){
     ter_sub <- subset_data_for_circular(df, dataset_lists$termini$name)
-    ter_sub <- filter_data_based_user_selection(ter_sub,
-                                                filter_on_vector["termini"],
-                                                filter_condition_vector["termini"]
-                                                )
+    name_vector <- c(name_vector, "termini"=dataset_lists$termini$name)
+    if(custom_filter){
+      ter_sub <- filter_data_based_user_selection(ter_sub,
+                                                  filter_on_vector["termini"],
+                                                  filter_condition_vector["termini"]
+                                                  )
+    }
   }
   if("ptm" %in% include_levels){
     ptm_sub <- subset_data_for_circular(df, dataset_lists$ptm$name)
-    ptm_sub <- filter_data_based_user_selection(ptm_sub,
-                                                filter_on_vector["ptm"],
-                                                filter_condition_vector["ptm"]
-                                                )
+    name_vector <- c(name_vector, "ptm"=dataset_lists$ptm$name)
+    if(custom_filter){
+      ptm_sub <- filter_data_based_user_selection(ptm_sub,
+                                                  filter_on_vector["ptm"],
+                                                  filter_condition_vector["ptm"]
+                                                  )
+    }
   }
   # Initialize a connections data to populate
   connection_df <- data.frame()
@@ -180,10 +247,22 @@ create_connections_data <- function(df,
     connection_df <- rbind(connection_df, sub_data)
   }
 
-  # connection_df <- connection_df %>%
-  #   # Remove entities with non-significant in both ends of the connection to boost performance in plotting
-  #   filter((change.x != "no change") & (change.y != "no change")) %>%
-  #   data.frame()
+  # If user elected to use pre-define filtering scenarios
+  if(custom_filter==FALSE){
+    connection_df <- filter_with_predefined_scenario(connection_df,
+                                                     pre_def_filter,
+                                                     name_vector)
+  }
+  # If user elected to use custom coloring for the connections
+  if(custom_color){
+    connection_df <- create_connection_color_map(connection_df,
+                                                 name_vector,
+                                                 color_vector)
+    connection_df$width <- 0.75
+  }else{
+    connection_df$color <- "#a8dadc50"
+    connection_df$width <- 0.75
+  }
 
   # Return the prepare connection dataframe
   return(connection_df)

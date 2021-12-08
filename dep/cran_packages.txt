@@ -5,6 +5,7 @@ tippy
 shinyWidgets
 shinycssloaders
 fresh
+colourpicker
 tidyverse
 openxlsx
 feather

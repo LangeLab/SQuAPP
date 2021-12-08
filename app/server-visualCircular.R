@@ -27,7 +27,7 @@ output$select_cirNet_cond_pval_protein <- renderUI({
         selectInput("select_cirNet_cond_pval_protein",
                      label="Select filteration criteria",
                      choices=cc,
-                     selected=NULL)
+                     selected="all")
       } else{ return() }
     } else{ return() }
   } else{ return() }
@@ -45,7 +45,7 @@ output$select_cirNet_cond_pval_peptide <- renderUI({
         selectInput("select_cirNet_cond_pval_peptide",
                      label="Select filteration criteria",
                      choices=cc,
-                     selected=NULL)
+                     selected="all")
       } else{ return() }
     } else{ return() }
   } else{ return() }
@@ -63,7 +63,7 @@ output$select_cirNet_cond_pval_termini <- renderUI({
         selectInput("select_cirNet_cond_pval_termini",
                      label="Select filteration criteria",
                      choices=cc,
-                     selected=NULL)
+                     selected="all")
       } else{ return() }
     } else{ return() }
   } else{ return() }
@@ -81,7 +81,7 @@ output$select_cirNet_cond_pval_ptm <- renderUI({
         selectInput("select_cirNet_cond_pval_ptm",
                      label="Select filteration criteria",
                      choices=cc,
-                     selected=NULL)
+                     selected="all")
       } else{ return() }
     } else{ return() }
   } else{ return() }
@@ -144,12 +144,15 @@ observeEvent(input$combine_dataLevels, {
 })
 
 # Main bulk script for plotting the circular network plot
-observeEvent(input$plot_circularNetwork, {
+observeEvent(input$plot_circularNetwork |
+             input$plot_circularNetwork_with_color, {
   # TODO: add checks and validations
   if(isTruthy(variables$temp_data)){
     df <- variables$temp_data
     if(isTruthy(input$select_cirNet_dataLevels)){
       include_levels <- input$select_cirNet_dataLevels
+      custom_filter <- input$if_customFiltering
+      custom_color <- input$if_cirNet_provideColor
       # Get the list object for datasets
       dataset_lists <- variables$datasets
       # Initialize vectors to be used in the filter vectors
@@ -161,82 +164,102 @@ observeEvent(input$plot_circularNetwork, {
                       "peptide"="none",
                       "termini"="none",
                       "ptm"="none")
-      # Based on the data levels assign filter conditions
-      # Assign filter conditions for protein level
-      if("protein" %in% include_levels){
-        if(input$if_cirNet_filterProtein){
-          pro_filterOn <- input$select_cirNet_filterOn_protein
-          # If Select filtering output
-          if(pro_filterOn=="log2fc"){
-            if(isTruthy(input$select_cirNet_cond_logfc_protein)){
-              pro_filterCond <- input$select_cirNet_cond_logfc_protein
+      # If the custom filtering is switched on
+      if(custom_filter){
+        pre_def_filter <- "none"
+        # Based on the data levels assign filter conditions
+        # Assign filter conditions for protein level
+        if("protein" %in% include_levels){
+          if(input$if_cirNet_filterProtein){
+            pro_filterOn <- input$select_cirNet_filterOn_protein
+            # If Select filtering output
+            if(pro_filterOn=="log2fc"){
+              if(isTruthy(input$select_cirNet_cond_logfc_protein)){
+                pro_filterCond <- input$select_cirNet_cond_logfc_protein
+              } else{ return() }
+            }else if(pro_filterOn=="pvalue"){
+              if(isTruthy(input$select_cirNet_cond_pval_protein)){
+                pro_filterCond <- input$select_cirNet_cond_pval_protein
+              } else{ return() }
             } else{ return() }
-          }else if(pro_filterOn=="pvalue"){
-            if(isTruthy(input$select_cirNet_cond_pval_protein)){
-              pro_filterCond <- input$select_cirNet_cond_pval_protein
-            } else{ return() }
-          } else{ return() }
-          # Save the filterOn and filterCond into protein values in the shared vectors
-          filterOn["protein"] <- pro_filterOn
-          filterCond["protein"] <- pro_filterCond
+            # Save the filterOn and filterCond into protein values in the shared vectors
+            filterOn["protein"] <- pro_filterOn
+            filterCond["protein"] <- pro_filterCond
+          }
         }
+        # Assign filter conditions for peptide level
+        if("peptide" %in% include_levels){
+          if(input$if_cirNet_filterPeptide){
+            pep_filterOn <- input$select_cirNet_filterOn_peptide
+            # If Select filtering output
+            if(pep_filterOn=="log2fc"){
+              if(isTruthy(input$select_cirNet_cond_logfc_peptide)){
+                pep_filterCond <- input$select_cirNet_cond_logfc_peptide
+              } else{ return() }
+            }else if(pep_filterOn=="pvalue"){
+              if(isTruthy(input$select_cirNet_cond_pval_peptide)){
+                pep_filterCond <- input$select_cirNet_cond_pval_peptide
+              } else{ return() }
+            } else{ return() }
+            # Save the filterOn and filterCond into peptide values in the shared vectors
+            filterOn["peptide"] <- pep_filterOn
+            filterCond["peptide"] <- pep_filterCond
+          }
+        }
+        # Assign filter conditions for termini level
+        if("termini" %in% include_levels){
+          if(input$if_cirNet_filterTermini){
+            ter_filterOn <- input$select_cirNet_filterOn_termini
+            # If Select filtering output
+            if(ter_filterOn=="log2fc"){
+              if(isTruthy(input$select_cirNet_cond_logfc_termini)){
+                ter_filterCond <- input$select_cirNet_cond_logfc_termini
+              } else{ return() }
+            }else if(ter_filterOn=="pvalue"){
+              if(isTruthy(input$select_cirNet_cond_pval_termini)){
+                ter_filterCond <- input$select_cirNet_cond_pval_termini
+              } else{ return() }
+            } else{ return() }
+            # Save the filterOn and filterCond into termini values in the shared vectors
+            filterOn["termini"] <- ter_filterOn
+            filterCond["termini"] <- ter_filterCond
+          }
+        }
+        # Assign filter conditions for ptm level
+        if("ptm" %in% include_levels){
+          if(input$if_cirNet_filterPTM){
+            ptm_filterOn <- input$select_cirNet_filterOn_ptm
+            # If Select filtering output
+            if(ptm_filterOn=="log2fc"){
+              if(isTruthy(input$select_cirNet_cond_logfc_ptm)){
+                ptm_filterCond <- input$select_cirNet_cond_logfc_ptm
+              } else{ return() }
+            }else if(ptm_filterOn=="pvalue"){
+              if(isTruthy(input$select_cirNet_cond_pval_ptm)){
+                ptm_filterCond <- input$select_cirNet_cond_pval_ptm
+              } else{ return() }
+            } else{ return() }
+            # Save the filterOn and filterCond into ptm values in the shared vectors
+            filterOn["ptm"] <- ptm_filterOn
+            filterCond["ptm"] <- ptm_filterCond
+          }
+        }
+      }else{
+        pre_def_filter <- input$select_cirNet_preDef_filtering
       }
-      # Assign filter conditions for peptide level
-      if("peptide" %in% include_levels){
-        if(input$if_cirNet_filterPeptide){
-          pep_filterOn <- input$select_cirNet_filterOn_peptide
-          # If Select filtering output
-          if(pep_filterOn=="log2fc"){
-            if(isTruthy(input$select_cirNet_cond_logfc_peptide)){
-              pep_filterCond <- input$select_cirNet_cond_logfc_peptide
-            } else{ return() }
-          }else if(pep_filterOn=="pvalue"){
-            if(isTruthy(input$select_cirNet_cond_pval_peptide)){
-              pep_filterCond <- input$select_cirNet_cond_pval_peptide
-            } else{ return() }
-          } else{ return() }
-          # Save the filterOn and filterCond into peptide values in the shared vectors
-          filterOn["peptide"] <- pep_filterOn
-          filterCond["peptide"] <- pep_filterCond
-        }
-      }
-      # Assign filter conditions for termini level
-      if("termini" %in% include_levels){
-        if(input$if_cirNet_filterTermini){
-          ter_filterOn <- input$select_cirNet_filterOn_termini
-          # If Select filtering output
-          if(ter_filterOn=="log2fc"){
-            if(isTruthy(input$select_cirNet_cond_logfc_termini)){
-              ter_filterCond <- input$select_cirNet_cond_logfc_termini
-            } else{ return() }
-          }else if(ter_filterOn=="pvalue"){
-            if(isTruthy(input$select_cirNet_cond_pval_termini)){
-              ter_filterCond <- input$select_cirNet_cond_pval_termini
-            } else{ return() }
-          } else{ return() }
-          # Save the filterOn and filterCond into termini values in the shared vectors
-          filterOn["termini"] <- ter_filterOn
-          filterCond["termini"] <- ter_filterCond
-        }
-      }
-      # Assign filter conditions for ptm level
-      if("ptm" %in% include_levels){
-        if(input$if_cirNet_filterPTM){
-          ptm_filterOn <- input$select_cirNet_filterOn_ptm
-          # If Select filtering output
-          if(ptm_filterOn=="log2fc"){
-            if(isTruthy(input$select_cirNet_cond_logfc_ptm)){
-              ptm_filterCond <- input$select_cirNet_cond_logfc_ptm
-            } else{ return() }
-          }else if(ptm_filterOn=="pvalue"){
-            if(isTruthy(input$select_cirNet_cond_pval_ptm)){
-              ptm_filterCond <- input$select_cirNet_cond_pval_ptm
-            } else{ return() }
-          } else{ return() }
-          # Save the filterOn and filterCond into ptm values in the shared vectors
-          filterOn["ptm"] <- ptm_filterOn
-          filterCond["ptm"] <- ptm_filterCond
-        }
+
+      # Create a custom color_vector if it is available leave null if not
+      if(custom_color){
+        # Create a named vector from colorpicker data:
+        color_vector <- c("Protein-Peptide"=input$col_cirNet_propep,
+                          "Protein-Termini"=input$col_cirNet_proter,
+                          "Protein-PTM"=input$col_cirNet_proptm,
+                          "Peptide-Termini"=input$col_cirNet_pepter,
+                          "Peptide-PTM"=input$col_cirNet_pepptm,
+                          "Termini-PTM"=input$col_cirNet_terptm
+                          )
+      }else{
+        color_vector <- NULL
       }
 
       # Create connections data by applying the filterations
@@ -245,7 +268,12 @@ observeEvent(input$plot_circularNetwork, {
                                                include_levels,
                                                filterOn,
                                                filterCond,
-                                               windowSize=10)
+                                               custom_filter=custom_filter,
+                                               pre_def_filter=pre_def_filter,
+                                               windowSize=10,
+                                               custom_color=custom_color,
+                                               color_vector=color_vector
+                                              )
 
       # Create custom color map with selection
       color_map <- create_data_level_color_map(dataset_lists, include_levels)
@@ -267,14 +295,11 @@ observeEvent(input$plot_circularNetwork, {
         fname_data <- paste0("CircularNetwork_connections_data_", Sys.Date(), ".csv")
         output$download_cirNet_combConnect <- shiny.download.data(fname_data, connection_df)
 
-        # Create columns for customizing the connection links to plot
-        connection_df$color <- "#a8dadc50"
-        connection_df$width <- 0.75
         # If user selected
         if(isTruthy(input$show_cirNet_combConnect_rows_selected)){
           color_rows <- input$show_cirNet_combConnect_rows_selected
           connection_df[color_rows, "color"] <- "#14213d"
-          connection_df[color_rows, "width"] <- 1.25
+          connection_df[color_rows, "width"] <- 1.50
         }
 
         output$show_circNet_plot <- renderPlot({
