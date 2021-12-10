@@ -55,7 +55,8 @@ Or you can directly submit an issue on the [GitHub page](https://github.com/Lang
 	- Various bug fixes
 	- Various UI updates
 	- More compact protein domain
-	- More filteration options for circular network summary plot
-	- Additional combinations to select in circular network summary plot
+	- More filteration options for circular network plot
+	- Additional combinations to select in circular network plot
+	- Customizable coloring for circular network plot
 - **Version 0.25 - December 1st 2021**:
 	- Working version made public
