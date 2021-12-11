@@ -7,6 +7,7 @@ testingDEmethods <- function(data,
                              metadata,
                              meta_id_col,
                              weight.m,
+                             adj.method,
                              pval.thr=0.05,
                              log2FC.thr=1){
   # Make sure the data columns are present in the metadata
@@ -26,7 +27,7 @@ testingDEmethods <- function(data,
     # Get pvalues for the model
     pvalues <- fit.eb$p.value[, 2]
     # Adjust the p-values with FDR
-    adj.pvalues <- p.adjust(pvalues, method="fdr")
+    adj.pvalues <- p.adjust(pvalues, method=adj.method)
   }
   # OPINION: I believe limma is flexible and robust enough that
   #  we can include that only and not include t-test
@@ -57,6 +58,7 @@ testBlockGroup <- function(data,
                            blockfactor,
                            blockgroup,
                            weight.m,
+                           adj.method,
                            pval.thr,
                            log2FC.thr){
   # Select samples
@@ -68,6 +70,7 @@ testBlockGroup <- function(data,
                          metadata,
                          meta_id_col,
                          weight.m[,samples_grp],
+                         adj.method,
                          pval.thr,
                          log2FC.thr)
   # Return the result
@@ -110,6 +113,7 @@ run_testing <- function(dataList,
                         flag.weight,
                         NAweight,
                         NAind,
+                        adj.method,
                         pval.thr=0.05,
                         log2FC.thr=1) {
 
@@ -153,6 +157,7 @@ run_testing <- function(dataList,
                            metadata,
                            meta_id_col,
                            weight.m,
+                           adj.method,
                            pval.thr,
                            log2FC.thr)
     # If blocking is selected in the app
@@ -168,6 +173,7 @@ run_testing <- function(dataList,
                           blockfactor,
                           blockLevels[1],
                           weight.m,
+                          adj.method,
                           pval.thr,
                           log2FC.thr)
 
@@ -180,6 +186,7 @@ run_testing <- function(dataList,
                           blockfactor,
                           blockLevels[2],
                           weight.m,
+                          adj.method,
                           pval.thr,
                           log2FC.thr)
 

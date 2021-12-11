@@ -51,9 +51,13 @@ Or you can directly submit an issue on the [GitHub page](https://github.com/Lang
 ---
 
 #### Change Log
+- **Version 0.27 - December 13th 2021**:
+	- Various bug fixes and ui updates
+	- Blocking is disabled for now
+	- Generate a report section is initialized
 - **Version 0.26 - December 8th 2021**:
 	- Various bug fixes
-	- Various UI updates
+	- Various ui updates
 	- More compact protein domain
 	- More filteration options for circular network plot
 	- Additional combinations to select in circular network plot

@@ -26,35 +26,37 @@ output$select_testing_variable <- renderUI({
 output$select_testing_groups <- renderUI({
   if(isTruthy(input$select_testing_data)){
     metadata <- variables$datasets[[input$select_testing_data]]$meta
+    test_var <- input$select_testing_variable
+    cc <- unique(metadata[, test_var])
     selectInput("select_testing_groups",
                 label="Select groups for testing",
-                choices=unique(metadata[, input$select_testing_variable]),
+                choices=cc,
                 multiple=TRUE)
   }else{return()}
 })
 
-output$select_blocking_variable <- renderUI({
-  metadata <- variables$datasets[[input$select_testing_data]]$meta
-  id_col <- variables$datasets[[input$select_testing_data]]$meta_id
-  testing_var <- input$select_testing_variable
-  cc <- colnames(metadata)[!(colnames(metadata) %in% c("Replica",
-                                                       id_col,
-                                                       testing_var))]
-  selectInput("select_blocking_variable",
-                 label="Select metadata column for blocking groups",
-                 choices=cc,
-                 multiple=FALSE)
-})
-
-output$select_blocking_groups <- renderUI({
-  if(isTruthy(input$select_blocking_variable)){
-    metadata <- variables$datasets[[input$select_testing_data]]$meta
-    selectInput("select_blocking_groups",
-                label="Select groups for blocking (Only 2 unique group allowed!)",
-                choices=unique(metadata[, input$select_blocking_variable]),
-                multiple=TRUE)
-  }else{return()}
-})
+# output$select_blocking_variable <- renderUI({
+#   metadata <- variables$datasets[[input$select_testing_data]]$meta
+#   id_col <- variables$datasets[[input$select_testing_data]]$meta_id
+#   testing_var <- input$select_testing_variable
+#   cc <- colnames(metadata)[!(colnames(metadata) %in% c("Replica",
+#                                                        id_col,
+#                                                        testing_var))]
+#   selectInput("select_blocking_variable",
+#                  label="Select metadata column for blocking groups",
+#                  choices=cc,
+#                  multiple=FALSE)
+# })
+#
+# output$select_blocking_groups <- renderUI({
+#   if(isTruthy(input$select_blocking_variable)){
+#     metadata <- variables$datasets[[input$select_testing_data]]$meta
+#     selectInput("select_blocking_groups",
+#                 label="Select groups for blocking (Only 2 unique group allowed!)",
+#                 choices=unique(metadata[, input$select_blocking_variable]),
+#                 multiple=TRUE)
+#   }else{return()}
+# })
 
 observeEvent(input$run_statistical_analysis, {
   # TODO: Add validation and checks here
@@ -77,20 +79,28 @@ observeEvent(input$run_statistical_analysis, {
     )
     return()
   }
+
+  # Get adjusted p-value method
+  adj.method <- input$select_adjust_method
   # Get p-value threshold
   pval.thr <- input$set_pval.thr
   # Get log2fc threshold
   log2FC.thr <- input$set_logfc.thr
-  # Get if blocking is allowed
-  flag.block <- input$testBlocksSwitch
-  # Get block factors
-  if(flag.block){blockfactor <- input$select_blocking_variable}else{blockfactor <- NULL}
-  # Get block levels
-  if(flag.block){blockLevels <- input$select_blocking_groups}else{blockLevels <- NULL}
-  # TODO: Add warning or error message if user puts 1 or 2 values
+
+  # Blocking feature is disabled
+  # # Get if blocking is allowed
+  # flag.block <- input$testBlocksSwitch
+  # # Get block factors
+  # if(flag.block){blockfactor <- input$select_blocking_variable}else{blockfactor <- NULL}
+  # # Get block levels
+  # if(flag.block){blockLevels <- input$select_blocking_groups}else{blockLevels <- NULL}
+  # # TODO: Add warning or error message if user puts 1 or 2 values
+  flag.block <- FALSE
+  blockfactor <- NULL
+  blockLevels <- NULL
+
   # Get if weighting is allowed
   flag.weight <- input$testWeightingSwitch
-  # TODO: Check if flag.weight is passed but data is not imputed throw an error or warning
   if((flag.weight)){
     NAweight <- input$selected_weigth
     if(!dataList$impt){
@@ -110,7 +120,7 @@ observeEvent(input$run_statistical_analysis, {
   # Run the statistical testing
   dataList <- run_testing(dataList, methodin, group_factor, test_variables,
                           flag.block, blockfactor, blockLevels,
-                          flag.weight, NAweight, NAind,
+                          flag.weight, NAweight, NAind, adj.method,
                           pval.thr, log2FC.thr)
 
   # Output the Volcano plot to visualize the results

@@ -20,6 +20,18 @@ fluidPage(
         uiOutput("select_testing_variable"),
         uiOutput("select_testing_groups"),
         hr(),
+        selectInput(
+          inputId="select_adjust_method",
+          label="Select Multiple Testing Correction Method",
+          choices=c(
+            "Bonferroni Correction"="bonferroni",
+            "Holm Correction"="holm",
+            "Hochberg Correction"="hochberg",
+            "Hommel Correction"="hommel",
+            "Benjamini & Hochberg Correction (FDR)"="BH",
+            "Benjamini & Yekutieli Correction"="BY"),
+          multiple=FALSE, selected="BH"
+        ),
         sliderInput(
             inputId = "set_pval.thr",
             label = "Adjusted P-value Threshold",
@@ -44,17 +56,17 @@ fluidPage(
             width=NULL, min=0.00001, max=1, value=0.001)
         ),
         hr(),
-        materialSwitch(
-          inputId="testBlocksSwitch",
-          label="Do you want to test with 2 blocks?",
-          value=FALSE, status="primary"
-        ),
-        conditionalPanel(
-          condition="input.testBlocksSwitch",
-          uiOutput("select_blocking_variable"),
-          uiOutput("select_blocking_groups")
-        ),
-        hr(),
+        # materialSwitch(
+        #   inputId="testBlocksSwitch",
+        #   label="Do you want to test with 2 blocks?",
+        #   value=FALSE, status="primary"
+        # ),
+        # conditionalPanel(
+        #   condition="input.testBlocksSwitch",
+        #   uiOutput("select_blocking_variable"),
+        #   uiOutput("select_blocking_groups")
+        # ),
+        # hr(),
         actionButton(
           inputId="run_statistical_analysis",
           label="Run Statistical Analysis",
