@@ -1,93 +1,140 @@
 # require -> UpSetR
 
-plot_cv <- function(dataList, group_factor=NULL){
-
-  # Get quantitative data
-  quant_data <- dataList$quant
-
-  if(is.null(group_factor)){
-    # Calculate row-wise CV
-    # WARNING: Omits any NAs which removes large portion of the data
-    cvs <- apply(na.omit(quant_data), 1,
-                 function(x) (sd(x, na.rm = TRUE) / mean(x, na.rm = TRUE)) * 100)
-    stacked_bar_data <- data.frame(protein="Groups", CV = cvs, number = 1)
-    # Create CV Groupings
-    stacked_bar_data <- stacked_bar_data %>%
-      mutate(range = case_when((CV < 10) ~ "<10%",
-                               (CV > 10) & (CV < 20) ~ "10%~20%",
-                               (CV > 20) & (CV < 50) ~ "20%~50%",
-                               (CV > 50) & (CV < 100 ) ~ "50%~100%",
-                               (CV > 100) ~ ">100%"))
-    # Create the column for the CV groupings created
-    stacked_bar_data$range <- ordered(stacked_bar_data$range,
-                                      levels = c(">100%",
-                                                 "50%~100%",
-                                                 "20%~50%",
-                                                 "10%~20%",
-                                                 "<10%"))
-
-
-    # Create a stacked bar chart with CV groupings
-    g1<-ggplot(stacked_bar_data, aes(y = protein, x = number, fill = range)) +
-        geom_bar(position = "stack", stat = "identity", width = 0.5) +
-        scale_fill_manual(values = c("<10%"="#011627",
-                                     "10%~20%"="#023047",
-                                     "20%~50%"="#126782",
-                                     "50%~100%"="#219ebc",
-                                     ">100%"="#8ecae6")) +
-        labs(x = "# of features",y = "", fill = "%CV") + theme_pubclean()
-
-    g2<-ggplot(data.frame(name = "CV", CV = cvs), aes(y = CV, x = name)) +
-        geom_violin() +
-        geom_hline(yintercept = median(cvs,na.rm=TRUE),
-                   color = "red",
-                   linetype = "dashed") +
-        geom_text(data = data.frame(y = median(cvs),x = 0), aes(x, y),
-                  label = round(median(cvs), digits = 1),
-                  vjust = -0.8, hjust = -0.2, color = "red", size = 3.5) +
-        labs(x = "", y = "%CV") + coord_flip() + theme_pubclean()
-
-    return(g1/g2)
-  }else{
-    # Get the metadata
-    metadata <- dataList$meta
-    meta_id_col <- dataList$meta_id
-    # Check if the group factor is within the metadata
-    if(!group_factor %in% colnames(metadata)){return()}
-    # Initialize cv list and columnname vector variables
-    cv_list <- list()
-    colname_kept <- c()
-    # Loop through each group in group_factor
-    for(i in unique(metadata[, group_factor])){
-      # Find the elements matching the current group in the metadata
-      match_locs <- which(metadata[, group_factor]==i)
-      # If only one element has been matched - skip it
-      if (length(match_locs) == 1){
-          next
+# Custom cv calculation function
+calculate_cvs <- function(quant_data, metadata,
+                          group_factor, id_column){
+  # Initialize cv list and columnname vector variables
+  cv_list <- list()
+  colname_kept <- c()
+  # Loop through the unique samples to collect CV of replicas for each samples
+  for(i in unique(metadata[, group_factor])){
+    # Find the elements matching the current group in the metadata
+    match_locs <- which(metadata[, group_factor]==i)
+    # If only one element has been matched - skip it
+    if (length(match_locs) == 1){
+        next
+    }
+    # Get sample ids from metadata matched to the group_factor
+    match_samples <- metadata[match_locs, id_column]
+    # Selecting columns that are consistent with quant data and metadata
+    match_samples <- match_samples[match_samples %in% colnames(quant_data)]
+    # Checks and error messages if there are issues with sample name consistency
+    if(length(match_samples) < 1){
+      stop("No samples are returned!\n
+            Make sure the sample names are consistent
+            between metadata id and quantitative data's column names!")
+    }else if(length(match_samples) == 1){
+      stop("Only single sample has returned!\n
+            Make sure the sample names are consistent between metadata id
+            and quantitative data's column names!")
+    }else{
+      # Calculate feature-wise cvs for the selected elements from the quantitative data
+      cur_cv <- na.omit(apply(quant_data[, match_samples], 1,
+                    function(x) (sd(x, na.rm=TRUE) / mean(x, na.rm=TRUE))* 100))
+      if(length(cur_cv) < 1){
+        next
       }
-      # Calculate protein-wise cvs for the selected elements from the quantitative data
-      cv_list[[i]] <- apply(na.omit(quant_data[, metadata[match_locs, meta_id_col]]),
-                            1,
-                            function(x) (sd(x, na.rm=TRUE) / mean(x, na.rm=TRUE))* 100)
+      cv_list[[i]] <- cur_cv
       # Get the column names that are used to have consistencies
       colname_kept <- c(colname_kept, i)
     }
-    # Create CV data from the list
-    cv_data <- data.frame(t(bind_rows(cv_list)))
-    # Pass the column names saved
-    colnames(cv_data) <- colname_kept
+  }
+  # Create CV data from the list
+  cv_data <- data.frame(t(bind_rows(cv_list)))
+  # Pass the column names saved
+  colnames(cv_data) <- colname_kept
+
+  return(cv_data)
+}
+
+# plot_cv function for the version 0.27
+plot_cv <- function(dataList, group_factor=NULL){
+  ## Gather variables from the dataList
+  # Get replica info
+  if_repl <- dataList$repl
+  # Get quantitative data
+  quant_data <- dataList$quant
+  # Get the metadata
+  metadata <- dataList$meta
+  meta_id_col <- dataList$meta_id
+
+  # If user selected global quality check.
+  if(is.null(group_factor)){
+    # If the data has replica
+    if(if_repl){
+      # Get the unique sample name column from the list
+      meta_uniq_col <- dataList$meta_uniq
+      # Calculates the cvs using custom function
+      cv_data <- calculate_cvs(quant_data, metadata,
+                               group_factor=meta_uniq_col,
+                               id_column=meta_id_col)
+      # Calculate row averages for CV calculate for each unique sample
+      cvs <- (rowMeans(cv_data, na.rm=TRUE))
+
+      # Create stacked bar data
+      stacked_bar_data <- data.frame(feature="Global", CV=cvs, number=1) %>%
+          mutate(range=case_when((CV < 10) ~ "<10%",
+                                 (CV > 10) & (CV < 20) ~ "10%~20%",
+                                 (CV > 20) & (CV < 50) ~ "20%~50%",
+                                 (CV > 50) & (CV < 100 ) ~ "50%~100%",
+                                 (CV > 100) ~ ">100%"))
+      # Create the column for the CV groups created
+      stacked_bar_data$range <- ordered(stacked_bar_data$range,
+                                        levels = c(">100%",
+                                                   "50%~100%",
+                                                   "20%~50%",
+                                                   "10%~20%",
+                                                   "<10%"))
+
+      # Create a stacked bar chart with CV groups
+      g1 <- ggplot(stacked_bar_data, aes(y=feature, x=number, fill=range)) +
+            geom_bar(position = "stack", stat = "identity", width = 0.5) +
+            scale_fill_manual(values = c("<10%"="#011627",
+                                         "10%~20%"="#023047",
+                                         "20%~50%"="#126782",
+                                         "50%~100%"="#219ebc",
+                                         ">100%"="#8ecae6")) +
+            labs(x = "# of features",y = "", fill = "%CV") + theme_pubclean()
+      # Create a violin plot with CVs
+      g2 <- ggplot(data.frame(name = "CV", CV = cvs), aes(y = CV, x = name)) +
+            geom_violin() +
+            geom_hline(yintercept = median(cvs,na.rm=TRUE),
+                       color = "red",
+                       linetype = "dashed") +
+            geom_text(data = data.frame(y = median(cvs),x = 0), aes(x, y),
+                      label = round(median(cvs), digits = 1),
+                      vjust = -0.8, hjust = -0.2, color = "red", size = 3.5) +
+            labs(x = "", y = "%CV") + coord_flip() + theme_pubclean()
+
+      return(g1/g2)
+    }else{
+      stop("Data needs to have replicas to create CV plot!")
+    }
+  }else{
+    # Check if the group factor is within the metadata
+    if(!group_factor %in% colnames(metadata)){return()}
+    # Calculates the cvs using custom function
+    cv_data <- calculate_cvs(quant_data, metadata,
+                             group_factor=group_factor,
+                             id_column=meta_id_col)
     # Create long version of the data for ease of plotting
     cv_data.long <- melt(data = cv_data, variable.name = "Group", value.name = "CV", id.vars = NULL)
     # Create CV counts based on percentages
     cv_data.long <- cv_data.long %>%
-                            mutate(range = case_when((is.na(CV)) ~ "Missing",
-                                                     (CV < 10) ~ "<10%",
-                                                     (CV > 10) & (CV < 20) ~ "10%~20%",
-                                                     (CV > 20) & (CV < 50) ~ "20%~50%",
-                                                     (CV > 50) & (CV < 100 ) ~ "50%~100%",
-                                                     (CV > 100) ~ ">100%"))
+        mutate(range = case_when((is.na(CV)) ~ "Missing",
+                                 (CV < 10) ~ "<10%",
+                                 (CV > 10) & (CV < 20) ~ "10%~20%",
+                                 (CV > 20) & (CV < 50) ~ "20%~50%",
+                                 (CV > 50) & (CV < 100 ) ~ "50%~100%",
+                                 (CV > 100) ~ ">100%"))
     # Have fixed order for CV counts
-    cv_data.long$range <- ordered(cv_data.long$range, levels = c("Missing", ">100%", "50%~100%", "20%~50%", "10%~20%", "<10%"))
+    cv_data.long$range <- ordered(cv_data.long$range,
+                                  levels = c("Missing",
+                                             ">100%",
+                                             "50%~100%",
+                                             "20%~50%",
+                                             "10%~20%",
+                                             "<10%"))
     # Plot the Stacked Bar Chart
     g1 <- ggplot(data=cv_data.long, aes(y=Group, fill=range,)) +
             geom_bar(color = "grey") +
@@ -99,11 +146,13 @@ plot_cv <- function(dataList, group_factor=NULL){
                                          "Missing"="#540b0e")) +
             labs(x="# of Features", y="", fill="%CV") + theme_pubclean()
     # Plot the violin chart
-    g2 <- ggplot(data=cv_data.long, aes(y = CV, x = Group)) +
-            geom_violin(draw_quantiles = c(0.25, 0.75), linetype = "dashed") +
-            geom_violin(fill="transparent",draw_quantiles = 0.5) +
-            stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red") +
-            labs(x = "", y = "%CV") + coord_flip() + theme_pubclean() +
+    g2 <- ggplot(data=na.omit(cv_data.long), aes(x=Group, y=CV)) +
+          geom_violin(draw_quantiles = c(0.25, 0.75), linetype = "dashed", adjust=1.5) +
+          geom_violin(fill="transparent", draw_quantiles = 0.5, adjust=1.5) +
+          stat_summary(fun=mean,na.rm=TRUE,
+                       geom="point", shape=20, size=5,
+                       color="red", fill="red") +
+          labs(x = "", y = "%CV") + coord_flip() + theme_pubclean() +
           rremove("y.ticks") + rremove("y.text")
     return(g1+g2)
   }

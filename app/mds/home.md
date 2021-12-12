@@ -54,6 +54,7 @@ Or you can directly submit an issue on the [GitHub page](https://github.com/Lang
 - **Version 0.27 - December 13th 2021**:
 	- Various bug fixes and ui updates
 	- Blocking is disabled for now
+	- Update Global coefficient of variation based QC plot
 	- Generate a report section is initialized
 - **Version 0.26 - December 8th 2021**:
 	- Various bug fixes

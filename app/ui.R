@@ -2,21 +2,21 @@
   dashboardPage(
     dark=NULL, # Removes the skin change toggle
     # Title of the dashboard
-    title = "SQuAPP V0.25",
+    title = "SQuAPP V0.26",
     # Create Header
     header = dashboardHeader(
       skin = "light",
       status = "primary",
       border = TRUE,
       fixed = TRUE,
-      title = "SQuAPP V0.25"
+      title = "SQuAPP V0.26"
       # sidebarIcon = icon("chevron-left")
     ),
     # Create the Collapsable Sidebar
     sidebar = dashboardSidebar(
       skin = "light",
       status = "primary",
-      title = HTML("SQuAPP V0.25"),
+      title = HTML("SQuAPP V0.26"),
       elevation = 3,
       opacity = 0.8,
       # Define individual menu items
