@@ -16,9 +16,20 @@ output$select_averaging_data <- renderUI({
 
 # Average the replicas of average_replicas
 observeEvent(input$average_replicas, {
-  # TODO: Create checks
+  # Get the data level name from user selection
+  data_name <- input$select_averaging_data
   # Get current data list
-  dataList <- variables$datasets[[input$select_averaging_data]]
+  dataList <- variables$datasets[[data_name]]
+
+  # Dynamically changed box title for better representation
+  output$avg_org_box_title <- renderText({
+    paste("Original State of", str_to_title(data_name), "Data")
+  })
+  output$avg_chng_box_title <- renderText({
+    paste("Averaged State of", str_to_title(data_name), "Data")
+  })
+
+  # Adding additional checks
   if(dataList$avrg){
     sendSweetAlert(
       session=session,
@@ -31,38 +42,47 @@ observeEvent(input$average_replicas, {
     if(dataList$repl){
       # Run the averaging function
       dataList_new <- average_data(dataList)
-      # Create violin plot for the original distribution
+
+      # Create Violin Plot for Original Distribution
+      res_original <- plotviolin(dataList, group_factor=NULL, custom_title="")
+      # Save the original distribution plot to the data averaging report section
+      variables$reportVars[[data_name]]$dataAverage$plot$original <- res_original
+      # Render plot to the user
       output$show_original_dist_averaging <- renderPlot({
-        res <- plotviolin(dataList, group_factor=NULL, custom_title="")
-        return(res)
+        req(res_original)
+        return(res_original)
       })
       # Create violin plot for the averaged version
+      res_averaged <- plotviolin(dataList_new, group_factor=NULL, custom_title="")
+      # Save the averaged distribution plot to the data averaging report section
+      variables$reportVars[[data_name]]$dataAverage$plot$averaged <- res_averaged
+      # Create a download link to the averaged
       output$show_averaged_dist_in_averaging <- renderPlot({
-        res <- plotviolin(dataList_new, group_factor=NULL, custom_title="")
-        return(res)
+        req(res_averaged)
+        return(res_averaged)
       })
 
       # Create a preview for original data
-      output$original_data_preview_averaging <- shiny.preview.data(cbind(dataList$annot,
-                                                                         dataList$quant),
-                                                                   colIgnore='Fasta.sequence')
+      output$original_data_preview_averaging <- shiny.preview.data(
+        cbind(dataList$annot, dataList$quant), colIgnore='Fasta.sequence'
+      )
       # Create a preview for the averaged data
-      output$averaged_data_preview_averaging <- shiny.preview.data(cbind(dataList_new$annot,
-                                                                         dataList_new$quant),
-                                                                   colIgnore='Fasta.sequence')
+      output$averaged_data_preview_averaging <- shiny.preview.data(
+        cbind(dataList_new$annot, dataList_new$quant), colIgnore='Fasta.sequence'
+      )
       # Create a file name for download
-      fname <- paste0("replicaAveraged_",
-                      dataList$name,
-                      "level_data_",
-                      Sys.Date(),
-                      ".csv")
+      fname <- paste0(
+        "replicaAveraged_", dataList$name, "level_data_", Sys.Date(), ".csv"
+      )
       # Pass to the download button
-      output$downloadAveraged <- shiny.download.data(fname,
-                                                     cbind(dataList_new$annot,
-                                                           dataList_new$quant),
-                                                     colIgnore="Fasta.sequence")
+      output$downloadAveraged <- shiny.download.data(
+        fname,
+        cbind(dataList_new$annot, dataList_new$quant),
+        colIgnore="Fasta.sequence"
+      )
       # Save the data into reactive value
-      variables$temp_data <- dataList_new
+      variables$reportVars[[data_name]]$dataAverage$data$original <- dataList
+      variables$reportVars[[data_name]]$dataAverage$data$averaged <- dataList_new
     }else{
       sendSweetAlert(
         session=session,
@@ -86,12 +106,13 @@ observeEvent(input$record_processed_averaged, {
 })
 
 observeEvent(input$confirm_record_averaged,{
+  data_name <- input$select_averaging_data
   if(isTruthy(input$confirm_record_averaged)){
     # If temp_data is populated replace the variables in the reactive list
-    if(!is.null(variables$temp_data)){
+    if(isTruthy(variables$reportVars[[data_name]]$dataAverage$data$averaged)){
+      data_list <- variables$reportVars[[data_name]]$dataAverage$data$averaged
       # Save the modified data list into its reactive list values
-      variables$datasets[[input$select_averaging_data]] <- variables$temp_data
-    }
-    variables$temp_data <- NULL
+      variables$datasets[[data_name]] <- data_list
+    }else{return()}
   }else{return()}
 })

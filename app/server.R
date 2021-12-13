@@ -20,8 +20,6 @@ shinyServer(function(input, output, session){
     # Simple boolean holder list for quick checks being used in many places
     reportVars=list(
       "protein"=list(
-        "dataAnnot"=NULL,
-        "proteinCalc"=NULL,
         "qualityCheck"=NULL,
         "dataAverage"=NULL,
         "dataFilter"=NULL,
@@ -35,7 +33,6 @@ shinyServer(function(input, output, session){
         "featureCompare"=NULL
       ),
       "peptide"=list(
-        "dataAnnot"=NULL,
         "proteinCalc"=NULL,
         "qualityCheck"=NULL,
         "dataAverage"=NULL,
@@ -51,7 +48,6 @@ shinyServer(function(input, output, session){
       ),
       "termini"=list(
         "dataAnnot"=NULL,
-        "proteinCalc"=NULL,
         "qualityCheck"=NULL,
         "dataAverage"=NULL,
         "dataFilter"=NULL,
@@ -66,7 +62,6 @@ shinyServer(function(input, output, session){
       ),
       "ptm"=list(
         "dataAnnot"=NULL,
-        "proteinCalc"=NULL,
         "qualityCheck"=NULL,
         "dataAverage"=NULL,
         "dataFilter"=NULL,

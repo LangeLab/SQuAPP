@@ -93,7 +93,7 @@ fluidPage(
     column(
       width=9,
       box(
-        title="Original State of Data",
+        title=textOutput('impt_org_box_title'),
         status="primary",
         width=NULL,
         inputId="",
@@ -111,7 +111,11 @@ fluidPage(
             ),
             tabPanel(
               title="Imputation Distribution",
-              plotOutput("show_imputation_distribution_comparison") %>% withSpinner()
+              plotOutput("show_imputation_distribution_comparison") %>% withSpinner(),
+              downloadBttn("download_dataImpute_preview_comparison",
+                           label="Download Plot",
+                           style="minimal",
+                           color="warning")
             ),
             tabPanel(
               title="Data Table",
@@ -125,7 +129,7 @@ fluidPage(
         )
       ),
       box(
-        title="Imputed State of Data",
+        title=textOutput('impt_chng_box_title'),
         status="warning",
         width=NULL,
         inputId="",
@@ -139,7 +143,11 @@ fluidPage(
             collapsible=FALSE,
             tabPanel(
               title="Split Violin",
-              plotOutput("show_imputation_comparison_splitViolin") %>% withSpinner()
+              plotOutput("show_imputation_comparison_splitViolin") %>% withSpinner(),
+              downloadBttn("download_dataImpute_splitViolin",
+                           label="Download Plot",
+                           style="minimal",
+                           color="warning")
             ),
             tabPanel(
               title="Data Table",

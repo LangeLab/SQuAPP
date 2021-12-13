@@ -99,7 +99,7 @@ fluidPage(
     column(
       width=9,
       box(
-        title="Original State of Data",
+        title=textOutput('filt_org_box_title'),
         status="primary",
         width=NULL,
         inputId="",
@@ -139,7 +139,7 @@ fluidPage(
         )
       ),
       box(
-        title="Filtered State of Data",
+        title=textOutput('filt_chng_box_title'),
         status="warning",
         width=NULL,
         inputId="",

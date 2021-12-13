@@ -42,7 +42,7 @@ fluidPage(
     column(
       width=9,
       box(
-        title="Original State of Data",
+        title=textOutput('avg_org_box_title'),
         status="primary",
         width=NULL,
         inputId="",
@@ -66,7 +66,7 @@ fluidPage(
         )
       ),
       box(
-        title="Averaged State of Data",
+        title=textOutput('avg_chng_box_title'),
         status="warning",
         width=NULL,
         inputId="",

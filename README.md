@@ -15,6 +15,8 @@ SQuAPP is a workflow-based web application built on R-Shiny to enable a rapid hi
 # SQuAPP Features
 SQuAPP provides features for most commonly used downstream data analysis approaches as well as some new functionality to allow combining multiple data levels such as protein-peptide-ptms. Here is the full list of functionality that can be used within SQuAPP. You can access the more detailed functionality descriptions and step-by-step tutorial in the [SQuAPP's](http://squapp.langelab.org/) home page.
 
+![Main Workflow Figure](./png/github/MainWorkflow-Boxes-V1.png)
+
 - **Data Setup**
   - Multiple level tabular data input from any tool
   - Data annotation for peptide and ptm data levels for expanded information that can be used for external tools such as ROLIM
