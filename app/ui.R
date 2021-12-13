@@ -41,10 +41,6 @@
                      input.isExist_peptide ||
                      input.isExist_termini ||
                      input.isExist_ptm",
-          # menuItem("Data Inspection", tabName="dataInspectTab", icon=icon("search"),
-          #   # menuSubItem("Batch Effects", tabName="batchEffect"),
-          #   menuSubItem("Quality Check", tabName="qualityCheck")
-          # )
           menuItem("Data Inspection", tabName="qualityCheckTab", icon=icon("search"))
         ),
         conditionalPanel(

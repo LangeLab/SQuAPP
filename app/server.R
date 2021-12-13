@@ -2,18 +2,88 @@
 shinyServer(function(input, output, session){
   # Initialize reacrive variables to use throughout the app
   variables <- reactiveValues(
+    # variable holding the refence proteome pre-loaded or uploaded
     reference=NULL,
-    uploads= list("metadata"=NULL,
-                  "protein"=NULL,
-                  "peptide"=NULL,
-                  "termini"=NULL,
-                  "ptm"=NULL),
+    # Temporary list for data input script
+    uploads=list("metadata"=NULL,
+                 "protein"=NULL,
+                 "peptide"=NULL,
+                 "termini"=NULL,
+                 "ptm"=NULL),
+    # Main list to hold different data levels uploaded in the app
     datasets=list("protein"=NULL,
                   "peptide"=NULL,
                   "termini"=NULL,
                   "ptm"=NULL),
     temp_data=NULL,
     temp_plot=NULL,
+    # Simple boolean holder list for quick checks being used in many places
+    reportVars=list(
+      "protein"=list(
+        "dataAnnot"=NULL,
+        "proteinCalc"=NULL,
+        "qualityCheck"=NULL,
+        "dataAverage"=NULL,
+        "dataFilter"=NULL,
+        "dataImpute"=NULL,
+        "dataNormalize"=NULL,
+        "statTest"=NULL,
+        "enrichAnalysis"=NULL,
+        "goVis"=NULL,
+        "dimenReduc"=NULL,
+        "clustering"=NULL,
+        "featureCompare"=NULL
+      ),
+      "peptide"=list(
+        "dataAnnot"=NULL,
+        "proteinCalc"=NULL,
+        "qualityCheck"=NULL,
+        "dataAverage"=NULL,
+        "dataFilter"=NULL,
+        "dataImpute"=NULL,
+        "dataNormalize"=NULL,
+        "statTest"=NULL,
+        "enrichAnalysis"=NULL,
+        "goVis"=NULL,
+        "dimenReduc"=NULL,
+        "clustering"=NULL,
+        "featureCompare"=NULL
+      ),
+      "termini"=list(
+        "dataAnnot"=NULL,
+        "proteinCalc"=NULL,
+        "qualityCheck"=NULL,
+        "dataAverage"=NULL,
+        "dataFilter"=NULL,
+        "dataImpute"=NULL,
+        "dataNormalize"=NULL,
+        "statTest"=NULL,
+        "enrichAnalysis"=NULL,
+        "goVis"=NULL,
+        "dimenReduc"=NULL,
+        "clustering"=NULL,
+        "featureCompare"=NULL
+      ),
+      "ptm"=list(
+        "dataAnnot"=NULL,
+        "proteinCalc"=NULL,
+        "qualityCheck"=NULL,
+        "dataAverage"=NULL,
+        "dataFilter"=NULL,
+        "dataImpute"=NULL,
+        "dataNormalize"=NULL,
+        "statTest"=NULL,
+        "enrichAnalysis"=NULL,
+        "goVis"=NULL,
+        "dimenReduc"=NULL,
+        "clustering"=NULL,
+        "featureCompare"=NULL
+      ),
+      "shared"=list(
+        "proteinDomain"=NULL,
+        "circularNetwork"=NULL
+      )
+    ),
     reportFile=NULL
   )
 
@@ -47,6 +117,7 @@ shinyServer(function(input, output, session){
   source(file="server-visualProtein.R", local=TRUE, encoding="UTF-8")
   # Circular plot visualizations server script
   source(file="server-visualCircular.R", local=TRUE, encoding="UTF-8")
-
+  # Report generation server script
+  source(file="server-genReport.R", local=TRUE, encoding="UTF-8")
 
 })

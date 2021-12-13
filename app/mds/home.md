@@ -46,14 +46,14 @@ For any feedback, comments, and questions please contact:
 	- [Twitter](https://twitter.com/Lange_Lab)
 	- [GitHub](https://github.com/phegnal)
 
-Or you can directly submit an issue on the [GitHub page](https://github.com/LangeLab/SQuAPP/issues/new).
+Or you can directly submit an issue on `SQuAPP`'s [GitHub page](https://github.com/LangeLab/SQuAPP/issues/new).
 
 ---
 
 #### Change Log
 - **Version 0.27 - December 13th 2021**:
 	- Various bug fixes and ui updates
-	- Blocking is disabled for now
+	- Blocking option in statistical testing is disabled
 	- Update Global coefficient of variation based QC plot
 	- Generate a report section is initialized
 - **Version 0.26 - December 8th 2021**:

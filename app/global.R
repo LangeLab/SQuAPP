@@ -37,6 +37,7 @@ source('utils-visualCluster.R')
 source('utils-visualFeature.R')
 source('utils-visualProtein.R')
 source('utils-visualCircular.R')
+source('utils-genReport.R')
 
 options(dplyr.summarise.inform = FALSE)
 options(shiny.maxRequestSize=100*1024^2)
