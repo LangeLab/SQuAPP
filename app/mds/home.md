@@ -7,16 +7,11 @@ Mandatory quality control and conscious pre-processing early in the workflow ens
 
 #### Functionality
 
-`SQuAPP` is a flexible application, and its functions can be applied in a non-sequential order as long as the requirements for a specific function are met. `SQuAPP` also can be used to follow a sequential workflow-driven approach with the following steps:
+`SQuAPP` is a flexible application, and its functions can be applied in a non-sequential order as long as the requirements for a specific function are met. `SQuAPP` also can be used to follow a sequential workflow-driven approach.
 
-1. **Data Setup**
-2. **Data Inspection**
-3. **Data Pre-processing**
-4. **Statistical inference**
-5. **Summary Visualization**
-6. **Report generation**
-
-[Add the main workflow figure here!]
+<p align="center">
+  <img src="../../png/github/MainWorkflow-Simple-V1.png" width="80%">
+</p>
 
 ---
 
@@ -40,11 +35,9 @@ For any feedback, comments, and questions please contact:
 - Enes Kemal Ergin
 	- [Email](mailto:eneskemalergin@gmail.com)
 	- [Twitter](https://twitter.com/eneskemalergin)
-	- [GitHub](https://github.com/eneskemalergin)
 - Philipp Lange
 	- [Email](mailto:philipp.lange@ubc.ca)
 	- [Twitter](https://twitter.com/Lange_Lab)
-	- [GitHub](https://github.com/phegnal)
 
 Or you can directly submit an issue on `SQuAPP`'s [GitHub page](https://github.com/LangeLab/SQuAPP/issues/new).
 
