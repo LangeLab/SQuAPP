@@ -22,7 +22,8 @@ plotviolin <- function(dataList, group_factor=NULL, custom_title=""){
     if(!group_factor %in% colnames(metadata)){return()}
     # If there are more than 5 unique values for the group_factor
     if(length(unique(metadata[, group_factor])) > 5){
-      stop("More than 5 unique values in group_factor won't be plotted!")
+      # stop("More than 5 unique values in group_factor won't be plotted!")
+      return(1)
     }
     # Merge the grouping factor to the plot data
     data.long <- merge(data.long,

@@ -56,38 +56,66 @@ observeEvent(input$produce_plots, {
   ### Violin Plot ###
   # Create violin plot showing distribution of the samples
   res_violin <- plotviolin(dataList, group_factor=group_factor, custom_title="")
-  # Create a download link to the violin plot
-  pname_violin <- paste0(
-    "QCPlots_ViolinDist_", data_name,"_", group_factor, "_", Sys.Date(), ".pdf"
-  )
-  output$download_qc_distributions <- shiny.download.plot(
-    pname_violin, res_violin, multi=F, fig.width=12, fig.height=6
-  )
-  # Save the violin plot for the quality check report section
-  variables$reportVars[[data_name]]$qualityCheck$plot$Distribution <- res_violin
+
   # Render plot to the user
   output$show_data_distributions <- renderPlot({
     req(res_violin)
-    return(res_violin)
+    if(is.numeric(res_violin)){
+      if(res_violin == 1){
+        stop("More than 5 unique values in group_factor won't be plotted!")
+      }
+    }else{
+      return(res_violin)
+    }
   })
+
+  if(is.numeric(res_violin)){
+    # Create a download link to the violin plot
+    pname_violin <- paste0(
+      "QCPlots_ViolinDist_", data_name,"_", group_factor, "_", Sys.Date(), ".pdf"
+    )
+    output$download_qc_distributions <- shiny.download.plot(
+      pname_violin, res_violin, multi=F, fig.width=12, fig.height=6
+    )
+    # Save the violin plot for the quality check report section
+    variables$reportVars[[data_name]]$qualityCheck$plot$Distribution <- res_violin
+  }
 
   ### CV Plot ###
   # Create a CV plot showing the coefficient of variation
   res_cv <- plot_cv(dataList, group_factor=group_factor)
-  # Create a download link to the CV plot
-  pname_cv <- paste0(
-    "QCPlots_CV_", data_name, group_name, "_", Sys.Date(), ".pdf"
-  )
-  output$download_qc_cv <- shiny.download.plot(
-    pname_cv, res_cv, multi=F, fig.width=12, fig.height=6
-  )
-  # Save the cv plot for the quality check report section
-  variables$reportVars[[data_name]]$qualityCheck$plot$CV <- res_cv
   # Render plot to the user
   output$show_cv_plots <- renderPlot({
     req(res_cv)
-    return(res_cv)
+    # Dumb but effective specific error displaying system
+    if(is.numeric(res_cv)){
+      if(res_cv == 1){
+        stop("No samples are returned!\n
+              Make sure the sample names are consistent
+              between metadata id and quantitative data's column names!")
+      }else if(res_cv == 2){
+        stop("Only single sample has returned!\n
+              Make sure the sample names are consistent between metadata id
+              and quantitative data's column names!")
+      }else if(res_cv == 3){
+        stop("Data needs to have replicas to create CV plot!")
+      }
+    }else{
+      return(res_cv)
+    }
   })
+  # If the plot var is not numeric continue with the download button
+  if(!is.numeric(res_cv)){
+    # Create a download link to the CV plot
+    pname_cv <- paste0(
+      "QCPlots_CV_", data_name, group_name, "_", Sys.Date(), ".pdf"
+    )
+    output$download_qc_cv <- shiny.download.plot(
+      pname_cv, res_cv, multi=F, fig.width=12, fig.height=6
+    )
+    # Save the cv plot for the quality check report section
+    variables$reportVars[[data_name]]$qualityCheck$plot$CV <- res_cv
+  }
 
   ### Identified Feature Numbers Plot ###
   # Create a bar plot showing identified features per sample
@@ -146,19 +174,30 @@ observeEvent(input$produce_plots, {
   ### Data Missingness Plot ###
   # Create the stacked bar plot showing missingness of each sample
   res_miss <- plot_missing_values(dataList, group_factor=group_factor)
-  # Create download plot button
-  pname_miss <- paste0(
-    "QCPlots_MissingValues_", data_name, group_name, "_", Sys.Date(), ".pdf"
-  )
-  output$download_qc_missingvalues <- shiny.download.plot(
-    pname_miss, res_miss, multi=F, fig.width=12, fig.height=6
-  )
-  # Save the data missingness plot for quality check report section
-  variables$reportVars[[data_name]]$qualityCheck$plot$Missingness <- res_miss
   # Render plot to the user
   output$show_missing_values <- renderPlot({
     req(res_miss)
-    return(res_miss)
+    # Dumb but effective specific error displaying system
+    if(is.numeric(res_miss)){
+      if(res_miss == 1){
+        stop("More than 5 unique values in group_factor won't be plotted!")
+      }
+    }else{
+      return(res_miss)
+    }
   })
+  # If the plot var is not numeric continue with the download button
+  if(!is.numeric(res_miss)){
+    # Create download plot button
+    pname_miss <- paste0(
+      "QCPlots_MissingValues_", data_name, group_name, "_", Sys.Date(), ".pdf"
+    )
+    output$download_qc_missingvalues <- shiny.download.plot(
+      pname_miss, res_miss, multi=F, fig.width=12, fig.height=6
+    )
+    # Save the data missingness plot for quality check report section
+    variables$reportVars[[data_name]]$qualityCheck$plot$Missingness <- res_miss
+  }
+
 
 })

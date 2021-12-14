@@ -20,13 +20,15 @@ calculate_cvs <- function(quant_data, metadata,
     match_samples <- match_samples[match_samples %in% colnames(quant_data)]
     # Checks and error messages if there are issues with sample name consistency
     if(length(match_samples) < 1){
-      stop("No samples are returned!\n
-            Make sure the sample names are consistent
-            between metadata id and quantitative data's column names!")
+      return(1)
+      # return("No samples are returned!\n
+      #       Make sure the sample names are consistent
+      #       between metadata id and quantitative data's column names!")
     }else if(length(match_samples) == 1){
-      stop("Only single sample has returned!\n
-            Make sure the sample names are consistent between metadata id
-            and quantitative data's column names!")
+      return(2)
+      # return("Only single sample has returned!\n
+      #       Make sure the sample names are consistent between metadata id
+      #       and quantitative data's column names!")
     }else{
       # Calculate feature-wise cvs for the selected elements from the quantitative data
       cur_cv <- na.omit(apply(quant_data[, match_samples], 1,
@@ -68,6 +70,9 @@ plot_cv <- function(dataList, group_factor=NULL){
       cv_data <- calculate_cvs(quant_data, metadata,
                                group_factor=meta_uniq_col,
                                id_column=meta_id_col)
+      if(!is.data.frame(cv_data)){
+        return(cv_data)
+      }
       # Calculate row averages for CV calculate for each unique sample
       cvs <- (rowMeans(cv_data, na.rm=TRUE))
 
@@ -108,7 +113,8 @@ plot_cv <- function(dataList, group_factor=NULL){
 
       return(g1/g2)
     }else{
-      stop("Data needs to have replicas to create CV plot!")
+      # stop("Data needs to have replicas to create CV plot!")
+      return(3)
     }
   }else{
     # Check if the group factor is within the metadata
@@ -117,6 +123,9 @@ plot_cv <- function(dataList, group_factor=NULL){
     cv_data <- calculate_cvs(quant_data, metadata,
                              group_factor=group_factor,
                              id_column=meta_id_col)
+    if(!is.data.frame(cv_data)){
+      return(cv_data)
+    }
     # Create long version of the data for ease of plotting
     cv_data.long <- melt(data = cv_data, variable.name = "Group", value.name = "CV", id.vars = NULL)
     # Create CV counts based on percentages
@@ -334,7 +343,8 @@ plot_missing_values <- function(dataList, group_factor=NULL){
     if(!group_factor %in% colnames(metadata)){return()}
     # If there are more than 5 unique values for the group_factor
     if(length(unique(metadata[, group_factor])) > 5){
-      stop("More than 5 unique values in group_factor won't be plotted!")
+      # stop("More than 5 unique values in group_factor won't be plotted!")
+      return(1)
     }
     # Add group factor to the count data
     count_data <- cbind(count_data,
