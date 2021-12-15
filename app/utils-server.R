@@ -30,22 +30,13 @@ shiny.download.data <- function(fname,
     content = function(file) {write.csv(data, file, row.names=row.names)})
 }
 
-shiny.download.plot <- function(fname, plot, multi=F,
+shiny.download.plot <- function(f, p, multi=F,
                                 fig.width=5, fig.height=3){
   downloadHandler(
-    filename = function() {fname},
+    filename = function() {f},
     content = function(file){
-      pdf(file,
-          paper="special",
-          width=fig.width,
-          height=fig.height)
-      if(multi){
-        for(i in plot){
-          print(i)
-        }
-      }else{
-        print(plot)
-      }
+      pdf( file, paper="special", width=fig.width, height=fig.height )
+      if(multi){ for(i in p){ print(i) } } else { print(p) }
       dev.off()
     }
   )

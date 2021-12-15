@@ -12,7 +12,7 @@ plotviolin <- function(dataList, group_factor=NULL, custom_title=""){
     # Plot the Violin Plots of the data to show intensities
     p <- ggplot(data.long, aes(x = Sample, y = log2(Intensity))) +
             geom_violin(draw_quantiles=(.5)) + # Drawing median for each violin
-            theme_pubclean() + ggtitle(custom_title) +
+            theme_pubclean() + ggtitle(custom_title) + labs(x="Samples") +
             theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 7.5))
   }else{
     # Get the metadata
@@ -36,11 +36,11 @@ plotviolin <- function(dataList, group_factor=NULL, custom_title=""){
     p <- ggplot(data.long, aes(x = Sample, y = log2(Intensity), fill=group)) +
             geom_violin(draw_quantiles=(.5)) + # Drawing median for each violin
             facet_grid(. ~group, scales = "free_x", space='free') +
-            theme_pubclean() + ggtitle(custom_title) +
+            theme_pubclean() + ggtitle(custom_title) + labs(x="Samples") +
             theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 7.5))
     p <- set_palette(p, "jco")
   }
-  return(p+labs(x="Samples"))
+  return(p)
 }
 
 geom_flat_violin <- function(mapping = NULL, data = NULL, stat = "ydensity",

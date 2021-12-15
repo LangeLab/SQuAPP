@@ -42,6 +42,8 @@ source('utils-genReport.R')
 options(dplyr.summarise.inform = FALSE)
 options(shiny.maxRequestSize=100*1024^2)
 
+shinyOptions(cache = cachem::cache_disk("./app_cache/cache/"))
+
 
 # Establishes a default theme for the app using "fresh" package with "bs4Dash"
 # Reference: https://dreamrs.github.io/fresh/articles/vars-bs4dash.html

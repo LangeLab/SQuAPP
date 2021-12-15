@@ -364,7 +364,7 @@ plot_missing_values <- function(dataList, group_factor=NULL){
     p <- ggplot(count_data, aes(fill=state, y=count, x=samples)) +
       geom_bar(position="stack", stat="identity", width=1) +
       facet_grid(. ~group, scales = "free_x", space='free') +
-      theme_pubclean() +
+      theme_pubclean() + labs(x="Samples") +
       scale_fill_manual(values=c("complete"="#00AFBB", "missing"="#E7B800")) +
       theme(panel.spacing = unit(.5, "lines"),
             axis.text.x = element_text(angle = 90, hjust = 1, size = 7.5)) +
@@ -382,10 +382,10 @@ plot_missing_values <- function(dataList, group_factor=NULL){
     # Create the plot
     p <- ggplot(count_data, aes(fill=state, y=count, x=samples)) +
       geom_bar(position="stack", stat="identity", width=1) +
-      theme_pubclean() +
+      theme_pubclean() + labs(x="Samples") +
       scale_fill_manual(values=c("complete"="#00AFBB", "missing"="#E7B800")) +
       theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 7.5))
   }
   # Return the plot
-  return(p+labs(x="Samples"))
+  return(p)
 }

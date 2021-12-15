@@ -36,8 +36,8 @@ observeEvent(input$process_proCalc, {
   variables$reportVars$peptide$proteinCalc$plot <- res
   # Render static split violin plot
   output$show_reCalcProtein_splitViolin <- renderPlot({
-    req(variables$reportVars$peptide$proteinCalc$plot)
-    return(variables$reportVars$peptide$proteinCalc$plot)
+    req(res)
+    return(res)
   })
 
   # # Render plotly plot

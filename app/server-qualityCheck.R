@@ -65,18 +65,18 @@ observeEvent(input$produce_plots, {
         stop("More than 5 unique values in group_factor won't be plotted!")
       }
     }else{
+      # Create a download link to the violin plot
+      pname_violin <- paste0(
+        "QCPlots_ViolinDist_", data_name,"_", group_factor, "_", Sys.Date(), ".pdf"
+      )
+      output$download_qc_distributions <- shiny.download.plot(
+        pname_violin, res_violin, multi=F, fig.width=12, fig.height=6
+      )
       return(res_violin)
     }
   })
 
-  if(is.numeric(res_violin)){
-    # Create a download link to the violin plot
-    pname_violin <- paste0(
-      "QCPlots_ViolinDist_", data_name,"_", group_factor, "_", Sys.Date(), ".pdf"
-    )
-    output$download_qc_distributions <- shiny.download.plot(
-      pname_violin, res_violin, multi=F, fig.width=12, fig.height=6
-    )
+  if(!is.numeric(res_violin)){
     # Save the violin plot for the quality check report section
     variables$reportVars[[data_name]]$qualityCheck$plot$Distribution <- res_violin
   }
@@ -101,18 +101,18 @@ observeEvent(input$produce_plots, {
         stop("Data needs to have replicas to create CV plot!")
       }
     }else{
+      # Create a download link to the CV plot
+      pname_cv <- paste0(
+        "QCPlots_CV_", data_name, group_name, "_", Sys.Date(), ".pdf"
+      )
+      output$download_qc_cv <- shiny.download.plot(
+        pname_cv, res_cv, multi=F, fig.width=12, fig.height=6
+      )
       return(res_cv)
     }
   })
-  # If the plot var is not numeric continue with the download button
+  # If the plot var is not numeric continue with saving to the variable
   if(!is.numeric(res_cv)){
-    # Create a download link to the CV plot
-    pname_cv <- paste0(
-      "QCPlots_CV_", data_name, group_name, "_", Sys.Date(), ".pdf"
-    )
-    output$download_qc_cv <- shiny.download.plot(
-      pname_cv, res_cv, multi=F, fig.width=12, fig.height=6
-    )
     # Save the cv plot for the quality check report section
     variables$reportVars[[data_name]]$qualityCheck$plot$CV <- res_cv
   }
@@ -120,56 +120,83 @@ observeEvent(input$produce_plots, {
   ### Identified Feature Numbers Plot ###
   # Create a bar plot showing identified features per sample
   res_bar_id <- bar_plot_identified_features(dataList, group_factor=group_factor)
-  # Create download link to the Identified features plot
-  pname_bar_id <- paste0(
-    "QCPlots_IdentFeatures_", data_name, group_name, "_", Sys.Date(), ".pdf"
-  )
-  output$download_qc_identifiedFeatures <- shiny.download.plot(
-    pname_bar_id, res_bar_id, multi=F, fig.width=12, fig.height=6
-  )
-  # Save the identified features number plot to the quality check report section
-  variables$reportVars[[data_name]]$qualityCheck$plot$IdentFeature <- res_bar_id
   # Render plot to the user
   output$show_identified_features <- renderPlot({
     req(res_bar_id)
-    return(res_bar_id)
+    if(is.numeric(res_bar_id)){
+      if(res_bar_id == 1){
+        stop("An error happened when creating this plot!")
+      }
+    }else{
+      # Create download link to the Identified features plot
+      pname_bar_id <- paste0(
+        "QCPlots_IdentFeatures_", data_name, group_name, "_", Sys.Date(), ".pdf"
+      )
+      output$download_qc_identifiedFeatures <- shiny.download.plot(
+        pname_bar_id, res_bar_id, multi=F, fig.width=12, fig.height=6
+      )
+      return(res_bar_id)
+    }
   })
+  # If the plot var is not numeric continue with report var save
+  if(!is.numeric(res_bar_id)){
+    # Save the upset plot showing shared features for quality check report section
+    variables$reportVars[[data_name]]$qualityCheck$plot$SharedFeature <- res_bar_id
+  }
 
   ### Shared Features Upset Plot ###
   # Create an upset plot with shared feature set
   res_upset <- upsetplot(dataList, group_factor=group_factor)
-  # Create download link to the Upset plot
-  pname_upset <- paste0(
-    "QCPlots_SharedFeatures_", data_name, group_name, "_", Sys.Date(), ".pdf"
-  )
-  output$download_qc_sharedFeatures <- shiny.download.plot(
-    pname_upset, res_upset, multi=F, fig.width=12, fig.height=6
-  )
-  # Save the upset plot showing shared features for quality check report section
-  variables$reportVars[[data_name]]$qualityCheck$plot$SharedFeature <- res_upset
   # Render plot to the user
   output$show_shared_features <- renderPlot({
     req(res_upset)
-    return(res_upset)
+    if(is.numeric(res_upset)){
+      if(res_bar_id == 1){
+        stop("An error happened when creating this plot!")
+      }
+    }else{
+      # Create download link to the Upset plot
+      pname_upset <- paste0(
+        "QCPlots_SharedFeatures_", data_name, group_name, "_", Sys.Date(), ".pdf"
+      )
+      output$download_qc_sharedFeatures <- shiny.download.plot(
+        pname_upset, res_upset, multi=F, fig.width=12, fig.height=6
+      )
+      return(res_upset)
+    }
   })
+  # If the plot var is not numeric continue with report var save
+  if(!is.numeric(res_upset)){
+    # Save the upset plot showing shared features for quality check report section
+    variables$reportVars[[data_name]]$qualityCheck$plot$SharedFeature <- res_upset
+  }
 
   ### Data Completeness Plot ###
   # Create the point plot showing completeness of the data
   res_compl <- datacompleteness(dataList)
-  # Create download plot button
-  pname_compl <- paste0(
-    "QCPlots_DataCompleteness_", data_name, group_name, "_", Sys.Date(), ".pdf"
-  )
-  output$download_qc_completeness <- shiny.download.plot(
-    pname_compl, res_compl, multi=F, fig.width=12, fig.height=6
-  )
-  # Save the data completeness plot for quality check report section
-  variables$reportVars[[data_name]]$qualityCheck$plot$Completeness <- res_compl
   # Render plot to the user
   output$show_data_completeness <- renderPlot({
     req(res_compl)
-    return(res_compl)
+    if(is.numeric(res_compl)){
+      if(res_compl == 1){
+        stop("An error happened when creating this plot!")
+      }
+    }else{
+      # Create download plot button
+      pname_compl <- paste0(
+        "QCPlots_DataCompleteness_", data_name, group_name, "_", Sys.Date(), ".pdf"
+      )
+      output$download_qc_completeness <- shiny.download.plot(
+        pname_compl, res_compl, multi=F, fig.width=12, fig.height=6
+      )
+      return(res_compl)
+    }
   })
+  # If the plot var is not numeric continue with report var save
+  if(!is.numeric(res_compl)){
+    # Save the data completeness plot for quality check report section
+    variables$reportVars[[data_name]]$qualityCheck$plot$Completeness <- res_compl
+  }
 
   ### Data Missingness Plot ###
   # Create the stacked bar plot showing missingness of each sample
@@ -183,18 +210,18 @@ observeEvent(input$produce_plots, {
         stop("More than 5 unique values in group_factor won't be plotted!")
       }
     }else{
+      # Create download plot button
+      pname_miss <- paste0(
+        "QCPlots_MissingValues_", data_name, group_name, "_", Sys.Date(), ".pdf"
+      )
+      output$download_qc_missingvalues <- shiny.download.plot(
+        pname_miss, res_miss, multi=F, fig.width=12, fig.height=6
+      )
       return(res_miss)
     }
   })
-  # If the plot var is not numeric continue with the download button
+  # If the plot var is not numeric continue with report var save
   if(!is.numeric(res_miss)){
-    # Create download plot button
-    pname_miss <- paste0(
-      "QCPlots_MissingValues_", data_name, group_name, "_", Sys.Date(), ".pdf"
-    )
-    output$download_qc_missingvalues <- shiny.download.plot(
-      pname_miss, res_miss, multi=F, fig.width=12, fig.height=6
-    )
     # Save the data missingness plot for quality check report section
     variables$reportVars[[data_name]]$qualityCheck$plot$Missingness <- res_miss
   }
