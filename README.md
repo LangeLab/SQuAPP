@@ -1,5 +1,5 @@
 # Simple Quantitative Analysis of Proteins and PTMs (SQuAPP)
-SQuAPP is a workflow-based web application built on R-Shiny to enable a rapid high-level analysis of quantitative proteomics data. SQuAPP provides streamlined and straightforward access to many aspects of typical downstream analysis done with quantitative proteomics data. SQuAPP can bring multiple levels of proteomics data to process and visually compare them for further visualizations.
+SQuAPP is a workflow-based web application built on R-Shiny to enable rapid high-level analysis of quantitative proteomics data. SQuAPP provides streamlined and straightforward access to many aspects of typical downstream analysis done with quantitative proteomics data. SQuAPP can bring multiple levels of proteomics data to process and visually compare them for further visualizations.
 
 - [SQuAPP Features](#squapp-features)
 - [Usage](#usage)
@@ -10,28 +10,33 @@ SQuAPP is a workflow-based web application built on R-Shiny to enable a rapid hi
 - [Code of Conduct](#code-of-conduct)
 - [Session Info](#session-info)
 
+> This document introduces the tool and how to access it. To get further information about the functionality and step-by-step tutorial, visit the [ wiki page ](https://github.com/LangeLab/SQuAPP/wiki) of the repository or follow through in [SQuAPP's](http://squapp.langelab.org/) home page.
+
+
 ---
 
 # SQuAPP Features
-SQuAPP provides features for most commonly used downstream data analysis approaches as well as some new functionality to allow combining multiple data levels such as protein-peptide-ptms. Here is the full list of functionality that can be used within SQuAPP. You can access the more detailed functionality descriptions and step-by-step tutorial in the [SQuAPP's](http://squapp.langelab.org/) home page.
+SQuAPP provides features for the most commonly used downstream data analysis approaches and some new functionality to combine multiple data levels, e.g. protein-peptide-ptms. Here is a quick look at the functionality offered within SQuAPP.
 
-![Main Workflow Figure](./png/github/MainWorkflow-Boxes-V1.png)
+<p align="center">
+  <img src="./png/github/MainWorkflow-Boxes-V1.png" />
+</p>
 
 - **Data Setup**
-  - Multiple level tabular data input from any tool
-  - Data annotation for peptide and ptm data levels for expanded information that can be used for external tools such as ROLIM
+  - Multiple-level tabular data input from any tool
+  - Data annotation for peptide and ptm data levels for expanded information for external tools such as ROLIM
   - Protein re-calculation from peptide level data
 - **Data Inspection**
   - Global and Grouped quality check
     - Distribution of Samples: Violin
     - Coefficient of variation (CV)
     - Identified features
-    - Data completeness
+    - Data Completeness
     - Missing values
 - **Data Processing**
   - Collapsing replica with averaging
   - Sub-par sample filtering
-  - Data completeness based filtering
+  - Data completeness-based filtering
   - Data imputation
   - Data normalization
 - **Statistical Inference**
@@ -46,35 +51,65 @@ SQuAPP provides features for most commonly used downstream data analysis approac
   - Circular network summary
 - **Report Generation** *`(WIP)`*
 
+
 # Usage
-SQuAPP can be used by different methods: online, local installation, and docker installation.
+SQuAPP can be accessed by different means: online, local installation, and docker installation.
 
 ## Online Version
-SQuAPP can be access through hosting shiny-server in our own servers using this [squapp.langelab.org](http://squapp.langelab.org/) Online version is to provide a quick access to the features without installing or configuring for the local version. Due to limitations of the server you might have access issues if the server is overloaded.
+We have a ready-to-be-accessed version of SQuAPP [squapp.langelab.org](http://squapp.langelab.org/). The online version is to provide quick access to the features without installing or configuring the local version.
+> While using the server is desirable, you might experience access issues due to server limitations when the server is overloaded.
 
 ## Local Use
-If you would like to use SQuAPP on your own computer to avoid server limitations you can follow these step to install it on your local computer.
+If you want to use SQuAPP on your local computer to avoid server limitations, you can follow the outlined steps to install it on your local computer.
+
+> We provide a script that checks if all necessary packages are installed and installs them if they are not. The automated dependency installation is tested only in a Linux system. If there are any issues during or after installation, please open an issue in [this repository.](https://github.com/LangeLab/SQuAPP/issues/new)
+
+### **Step 0** - R and Rstudio Installation
+> **This step is for users who don't have R and Rstudio in their system. You can ignore this step if you already have them on your local machine and don't wish to do a clean install.**
+
+#### Windows
+- Download R for windows from the [official cran website.](https://cran.rstudio.com/bin/windows/base/)
+- Install R by opening the *.exe file and following instructions.
+- Download Rstudio installer (RStudio-*.exe) file from the [official website.](https://www.rstudio.com/products/rstudio/download/#download)
+- Install RStudio by opening *.exe file and following the instructions.
+
+#### macOS
+- Download R for macOS from the [official CRAN website.](https://cran.rstudio.com/bin/macosx/).
+  - *Important:* Careful when selecting the appropriate silicon version (Apple's M-series or Intel chips.)
+- Install R by opening *.pkg file and following the instructions.
+- Download Rstudio installer (RStudio-*.dmg) file from the [official website.](https://www.rstudio.com/products/rstudio/download/#download)
+- Install RStudio by opening *.dmg file and following the instructions
+
+#### Linux
+> For this installation section for Linux, we picked Ubuntu as the example distro. If your local machine has another Linux distro, you can find instructions specific to it on the [official cran website.](https://cran.rstudio.com/bin/linux/)
+
+- Install R by following the instructions
+  - ```sudo apt update -qq```
+  - ```sudo apt install --no-install-recommends software-properties-common dirmngr```
+  - ```wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | sudo tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc```
+  - ```sudo add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"```
+    - *These instructions put the R 4.0+ release repository to ubuntu, making the update and keep-up easier.*
+  - ```sudo apt install --no-install-recommends r-base```
+- Download the Rstudio installer appropriate for your Linux distro and version from [official website](https://www.rstudio.com/products/rstudio/download/#download)
+- Use your installer of choice to install the downloaded *.deb file.
+  - *We prefer using gdebi command line tool to install since it automatically downloads and installs required dependencies.*
 
 ### Step 1 - Get the Source Code
-You can click on the "Code", which will give you an option to either `Clone or Download ZIP`. You can clone the repository locally by using the link `git clone https://github.com/LangeLab/SQuAPP.git` or you can download as ZIP then unzip to get it ready for using.
+You can click on the "Code," which will give you an option to either `Clone or Download ZIP`. You can clone the repository locally by using the link `git clone https://github.com/LangeLab/SQuAPP.git,` or you can download it as ZIP and then unzip it to get it ready for use.
 
 ### Step 2 - Installing Dependencies
-In the Rstudio run the script `install_dependencies.R` which will install packages if packages are not installed.
+In the Rstudio, run the script `install_dependencies.R`, which will check if the required packages are installed and install the ones that are not already installed.
+
+> The script checks the packages listed in these files:
+- [Cran Packages](./dep/cran_packages.txt)
+- [GitHub Packages](./dep/github_packages.txt)
+- [Bioconductor Packages](./dep/bioconductor_packages.txt)
 
 ### Step 3 - Running the App Locally
-In the Rstudio you can run the shiny app by "Run App" option.
+In the Rstudio, you can run the shiny app by clicking the "Run App" option.
 
 ## Docker Installation
-> This part is still work in progress!
-
-
-# Publication
-> This part is still work in progress!
-
-
-# References
-> This part is still work in progress!
-
+> This part is still a work in progress!
 
 # Code of Conduct
 Please note that SQuAPP is released with a [Contributor Code of Conduct](./CODE_OF_CONDUCT.md). By contributing to this project, you agree to abide by its terms.
