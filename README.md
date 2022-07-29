@@ -6,12 +6,10 @@ SQuAPP is a workflow-based web application built on R-Shiny to enable rapid high
   - [Online Version](#online-version)
   - [Local Installation](#local-installation)
   - [Docker Installation](#docker-installation)
-- [References](#references)
 - [Code of Conduct](#code-of-conduct)
 - [Session Info](#session-info)
 
 > This document introduces the tool and how to access it. To get further information about the functionality and step-by-step tutorial, visit the [ wiki page ](https://github.com/LangeLab/SQuAPP/wiki) of the repository or follow through in [SQuAPP's](http://squapp.langelab.org/) home page.
-
 
 ---
 
@@ -51,7 +49,6 @@ SQuAPP provides features for the most commonly used downstream data analysis app
   - Circular network summary
 - **Report Generation** *`(WIP)`*
 
-
 # Usage
 SQuAPP can be accessed by different means: online, local installation, and docker installation.
 
@@ -64,20 +61,20 @@ If you want to use SQuAPP on your local computer to avoid server limitations, yo
 
 > We provide a script that checks if all necessary packages are installed and installs them if they are not. The automated dependency installation is tested only in a Linux system. If there are any issues during or after installation, please open an issue in [this repository.](https://github.com/LangeLab/SQuAPP/issues/new)
 
-### **Step 0** - R and Rstudio Installation
-> **This step is for users who don't have R and Rstudio in their system. You can ignore this step if you already have them on your local machine and don't wish to do a clean install.**
+### **Step 0** - R and RStudio Installation
+> **This step is for users who don't have R and RStudio in their system. You can ignore this step if you already have them on your local machine and don't wish to do a clean install.**
 
 #### Windows
 - Download R for windows from the [official cran website.](https://cran.rstudio.com/bin/windows/base/)
 - Install R by opening the *.exe file and following instructions.
-- Download Rstudio installer (RStudio-*.exe) file from the [official website.](https://www.rstudio.com/products/rstudio/download/#download)
+- Download RStudio installer (RStudio-*.exe) file from the [official website.](https://www.rstudio.com/products/rstudio/download/#download)
 - Install RStudio by opening *.exe file and following the instructions.
 
 #### macOS
 - Download R for macOS from the [official CRAN website.](https://cran.rstudio.com/bin/macosx/).
   - *Important:* Careful when selecting the appropriate silicon version (Apple's M-series or Intel chips.)
 - Install R by opening *.pkg file and following the instructions.
-- Download Rstudio installer (RStudio-*.dmg) file from the [official website.](https://www.rstudio.com/products/rstudio/download/#download)
+- Download RStudio installer (RStudio-*.dmg) file from the [official website.](https://www.rstudio.com/products/rstudio/download/#download)
 - Install RStudio by opening *.dmg file and following the instructions
 
 #### Linux
@@ -90,15 +87,17 @@ If you want to use SQuAPP on your local computer to avoid server limitations, yo
   - ```sudo add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"```
     - *These instructions put the R 4.0+ release repository to ubuntu, making the update and keep-up easier.*
   - ```sudo apt install --no-install-recommends r-base```
-- Download the Rstudio installer appropriate for your Linux distro and version from [official website](https://www.rstudio.com/products/rstudio/download/#download)
+- Download the RStudio installer appropriate for your Linux distro and version from [official website](https://www.rstudio.com/products/rstudio/download/#download)
 - Use your installer of choice to install the downloaded *.deb file.
   - *We prefer using gdebi command line tool to install since it automatically downloads and installs required dependencies.*
+- Install non-R dependencies for packages to be installed correctly
+  - ```sudo apt install build-essential libcurl4-gnutls-dev libxml2-dev libssl-dev libharfbuzz-dev libfribidi-dev```
 
 ### Step 1 - Get the Source Code
 You can click on the "Code," which will give you an option to either `Clone or Download ZIP`. You can clone the repository locally by using the link `git clone https://github.com/LangeLab/SQuAPP.git,` or you can download it as ZIP and then unzip it to get it ready for use.
 
 ### Step 2 - Installing Dependencies
-In the Rstudio, run the script `install_dependencies.R`, which will check if the required packages are installed and install the ones that are not already installed.
+In the RStudio, run the script `install_dependencies.R`, which will check if the required packages are installed and install the ones that are not already installed.
 
 > The script checks the packages listed in these files:
 - [Cran Packages](./dep/cran_packages.txt)
@@ -106,7 +105,7 @@ In the Rstudio, run the script `install_dependencies.R`, which will check if the
 - [Bioconductor Packages](./dep/bioconductor_packages.txt)
 
 ### Step 3 - Running the App Locally
-In the Rstudio, you can run the shiny app by clicking the "Run App" option.
+In the RStudio, you can run the shiny app by clicking the "Run App" option.
 
 ## Docker Installation
 > This part is still a work in progress!
