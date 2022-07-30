@@ -3,15 +3,15 @@
 The last step in the workflow entails visualizing quantitative differences between samples and conditions, first at the dataset level using dimensionality reduction and clustering approaches, and then at the level of individual proteins, PTMs, termini and their relationships.
 
 ### 1. Dimensional Reduction
-Dimensional reduction is a frequently used data analysis step for high-dimensional data **(1)**. Dimensional reduction can be done to all features or for a subset to denoise and simplify the high-dimensional data. `SQuAPP can perform dimensionality reduction on all features in datasets or a selected subset of features. More subset options will be available in the statistical testing that has been completed for the selected data level. (e.g. in the provided example dataset, this could be all significant, only up, or only down-regulated subsets for a comparison between Normal and B-ALL data).
+Dimensional reduction is a frequently used data analysis step for high-dimensional data<sup><b>[1](#Bibliography)</b></sup>. Dimensional reduction can be done to all features or for a subset to denoise and simplify the high-dimensional data. `SQuAPP can perform dimensionality reduction on all features in datasets or a selected subset of features. More subset options will be available in the statistical testing that has been completed for the selected data level. (e.g. in the provided example dataset, this could be all significant, only up, or only down-regulated subsets for a comparison between Normal and B-ALL data).
 
 
 `SQuAPP` offers three commonly used methods to reduce dimensions in high-dimensional data:
 
-- `PCA`: “principal component analysis” implemented using `stats::prcomp()` function.
-- `t-SNE`: “t-distributed stochastic neighbour embedding” is implemented using `Rtsne::Rtsne()` function.
+- `PCA`: “principal component analysis”<sup><b>[2](#Bibliography)</b></sup> implemented using [`stats::prcomp()`](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/prcomp) function.
+- `t-SNE`: “t-distributed stochastic neighbour embedding”<sup><b>[3](#Bibliography)</b></sup> is implemented using [`Rtsne::Rtsne()`](https://www.rdocumentation.org/packages/Rtsne/versions/0.16/topics/Rtsne) function.
 	- Allows additional “perplexity” option to be selected when running the dimensional reduction.
-- `UMAP`:  “Uniform manifold approximation and projection” is implemented using `umap::umap()` function.
+- `UMAP`:  “Uniform manifold approximation and projection”<sup><b>[4](#Bibliography)</b></sup> is implemented using [`umap::umap()`](https://www.rdocumentation.org/packages/umap/versions/0.2.8.0/topics/umap) function.
 
 
 `SQuAPP` produces a customizable scatter plot with two dimensions based on the method used. You can include a colour and/or a shape variable from the metadata in the main configuration box. Aside from the colour and shape, further customization of these plots can be done by opening the plot settings menu located on the top left corner of the plot. In the plot settings menu, you can change more aspects of the plot for downloading or for reference.
@@ -35,21 +35,21 @@ Since clustering is a subjective statistical analysis, different clustering meth
 
 `SQuAPP` offers four distinct clustering methods implemented from various packages in R:
 
-- `Hierarchical Clustering`: *hierarchical clustering is implemented from `factoextra::hcut()`*
-- `K-means Clustering`: *k-means clustering is implemented from `stats::kmeans()`*
-- `Fuzzy Clustering`: *fuzzy clustering is implemented from `cluster::fanny()`*
-- `Hierarchical K-Means Clustering`:  *hybrid hierarchical k-means clustering is implemented from `factoextra::hkmeans()`*
+- `Hierarchical Clustering`: *hierarchical clustering is implemented from [`factoextra::hcut()`](https://www.rdocumentation.org/packages/factoextra/versions/1.0.7/topics/hcut)*
+- `K-means Clustering`: *k-means clustering is implemented from [`stats::kmeans()`](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/kmeans)*
+- `Fuzzy Clustering`: *fuzzy clustering is implemented from [`cluster::fanny()`](https://www.rdocumentation.org/packages/cluster/versions/2.1.3/topics/fanny)*
+- `Hierarchical K-Means Clustering`:  *hybrid hierarchical k-means clustering is implemented from [`factoextra::hkmeans()`](https://www.rdocumentation.org/packages/factoextra/versions/1.0.7/topics/hkmeans)*
 
 <p align="center">
   <img src="../../png/036_ClusteringInitial.png" width="80%">
 </p>
 
-`SQuAPP` requires two steps to get clustering results - running a preview of the clustering and then the actual clustering with selected parameters. In the first step, `SQuAPP` implements three cluster testing visualizations to guide the user in determining the optimum number of clusters for the analysis. `SQuAPP` also gives an option to choose the maximum number of clusters to test in the preview step. The tests implemented to find the optimal number of clusters are implemented using the `factoextra::nbclust()` function:
+`SQuAPP` requires two steps to get clustering results - running a preview of the clustering and then the actual clustering with selected parameters. In the first step, `SQuAPP` implements three cluster testing visualizations to guide the user in determining the optimum number of clusters for the analysis. `SQuAPP` also gives an option to choose the maximum number of clusters to test in the preview step. The tests implemented to find the optimal number of clusters are implemented using the [`factoextra::nbclust()`](https://www.rdocumentation.org/packages/factoextra/versions/1.0.7/topics/nbclust) function:
 
 
-- `Average Silhouette`: Calculates average silhouette Si **(2)** from silhouette plots for each tested cluster number and plots it. *Measures the clustering quality.* **Higher the average silhouette width is better.**
-- `Within Sum of Squares`: (aka. Elbow Method) Calculates the total sum of squares for each tested cluster number and plots it. *Measures the compactness of the clustering*. **The smaller is better. **
-- `Gap Statistics`: Calculates the gap statistics **(3)** for each tested cluster. *Compares the total within intra-cluster variation.* *Large gap statistic is better.*
+- `Average Silhouette`: Calculates average silhouette Si<sup><b>[5](#Bibliography)</b></sup> from silhouette plots for each tested cluster number and plots it. *Measures the clustering quality.* **Higher the average silhouette width is better.**
+- `Within Sum of Squares`: (aka. Elbow Method) Calculates the total sum of squares for each tested cluster number and plots it<sup><b>[5](#Bibliography)</b></sup>. *Measures the compactness of the clustering*. **The smaller is better. **
+- `Gap Statistics`: Calculates the gap statistics<sup><b>[6](#Bibliography)</b></sup> for each tested cluster. *Compares the total within intra-cluster variation.* *Large gap statistic is better.*
 
 <p align="center">
   <img src="../../png/037_ClusteringTestMethods.png" width="80%">
@@ -57,9 +57,9 @@ Since clustering is a subjective statistical analysis, different clustering meth
 
 When the user creates and reviews the clustering performance tests, a slider selector will become available to select a number of clusters used in clustering analysis. `SQuAPP` also provides further configuration of the clustering approaches for the different methods to enable more advanced selections for each clustering analysis. When the number of clusters selection and further configuration is completed, click the “Run Clustering” button to run the clustering and create result plots:
 
--  `Cluster PCA`: plots the clustering on a two dimensional PCA, using `factoextra::fviz_cluster()` function
--  `Cluster Silhouette`: plots silhouette of the created cluster using `factoextra::fviz_silhouette()` function
--  `Cluster Dendogram`: plots a dendrogram using `factoextra::fviz_dend()` function
+-  `Cluster PCA`: plots the clustering on a two dimensional PCA, using [`factoextra::fviz_cluster()`](https://www.rdocumentation.org/packages/factoextra/versions/1.0.7/topics/fviz_cluster) function
+-  `Cluster Silhouette`: plots silhouette of the created cluster using [`factoextra::fviz_silhouette()`](https://www.rdocumentation.org/packages/factoextra/versions/1.0.7/topics/fviz_silhouette) function
+-  `Cluster Dendogram`: plots a dendrogram using [`factoextra::fviz_dend()`](https://www.rdocumentation.org/packages/factoextra/versions/1.0.7/topics/fviz_dend) function
 	- **Only available when using hierarchical clustering and hierarchical k-means clustering**
 -  `Cluster Membership Plot`: plots membership values from fuzzy clustering on a matrix.
 	- **Only available when using fuzzy clustering**
@@ -99,7 +99,7 @@ The “Plot Axis Configuration” box provides options to add different variable
 ### 4. Protein Domain
 > **This section requires at least one of the peptide, termini, or ptm datasets to be uploaded and selected in the data selection input.**
 
-This section enables an in-depth inspection of individual features on a specific protein. `SQuAPP`’s hybrid protein domain plot brings the protein domain visualization produced by the `drawProteins` package **(4)** and intensity-based lollipop plot of matching peptide, termini, and ptm level data into a single plot.
+This section enables an in-depth inspection of individual features on a specific protein. `SQuAPP`’s hybrid protein domain plot brings the protein domain visualization produced by the [`drawProteins`](https://www.bioconductor.org/packages/release/bioc/html/drawProteins.html) package<sup><b>[7](#Bibliography)</b></sup> and intensity-based lollipop plot of matching peptide, termini, and ptm level data into a single plot.
 
 <p align="center">
   <img src="../../png/042_ProteinDomainPlot.png" width="80%">
@@ -116,7 +116,7 @@ To set up `SQuAPP`’s hybrid plot, you need to select which datasets to include
 ### 5. Circular Network Summary
 > **This section requires at least 2 data levels to be present. Statistical testing on datasets to include should be conducted in the statistical testing section.**
 
-`SQuAPP`’s circular network summary plot provides a multi-level data summary view and is implemented using the `circlize` package **(5)**.
+`SQuAPP`’s circular network summary plot provides a multi-level data summary view and is implemented using the [`circlize`](https://www.rdocumentation.org/packages/circlize/versions/0.4.15) package<sup><b>[8](#Bibliography)</b></sup>.
 
 <p align="center">
   <img src="../../png/044_CircularNetworkCompletePlot.png" width="80%">
@@ -153,10 +153,13 @@ Apart from assigning colours to a group of connections, SQuAPP also allows you t
 
 ---
 
-**Bibliography**
+<p align="center"><b>Bibliography</b></p>
 
-1. 	Ivosev G, Burton L, Bonner R. Dimensionality reduction and visualization in principal component analysis. Anal Chem. 2008 Jul 1;80(13):4933–44.
-2. 	Rousseeuw PJ. Silhouettes: A graphical aid to the interpretation and validation of cluster analysis. Journal of Computational and Applied Mathematics. 1987 Nov;20:53–65.
-3. 	Tibshirani R, Walther G, Hastie T. Estimating the number of clusters in a data set via the gap statistic. J Royal Statistical Soc B. 2001 May;63(2):411–23.
-4. 	Brennan P. drawProteins: a Bioconductor/R package for reproducible and programmatic generation of protein schematics. [version 1; peer review: 2 approved]. F1000Res. 2018 Jul 18;7:1105.
-5. 	Gu Z, Gu L, Eils R, Schlesner M, Brors B. circlize Implements and enhances circular visualization in R. Bioinformatics. 2014 Oct;30(19):2811–2.
+1. [Nguyen LH, Holmes S. Ten quick tips for effective dimensionality reduction. PLoS Comput Biol. 2019;15:e1006907.](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006907)
+2. [Jolliffe IT, Cadima J. Principal component analysis: a review and recent developments. Philos Transact A Math Phys Eng Sci. 2016;374:20150202.](https://doi.org/10.1098/rsta.2015.0202)
+3. [van der Maaten L, Hinton G. Visualizing data using t-SNE. J Mach Learn Res. 2008; 9:2579–605.](https://www.jmlr.org/papers/volume9/vandermaaten08a/vandermaaten08a.pdf?fbcl)
+4. [McInnes L, Healy J, Melville J. UMAP: Uniform Manifold Approximation and Projection for Dimension Reduction. arXiv. 2018.](https://arxiv.org/abs/1802.03426)
+5. [Rousseeuw PJ. Silhouettes: A graphical aid to the interpretation and validation of cluster analysis. Journal of Computational and Applied Mathematics. 1987;20:53–65.](https://doi.org/10.1016/0377-0427(87)90125-7)
+6. [Tibshirani R, Walther G, Hastie T. Estimating the number of clusters in a data set via the gap statistic. J Royal Statistical Soc B. 2001;63:411–23.](https://doi.org/10.1111/1467-9868.00293)
+7. [Brennan P. drawProteins: a Bioconductor/R package for reproducible and programmatic generation of protein schematics. [version 1; peer review: 2 approved]. F1000Res. 2018;7:1105.](https://f1000research.com/articles/7-1105/v1)
+8. [Gu Z, Gu L, Eils R, Schlesner M, Brors B. circlize Implements and enhances circular visualization in R. Bioinformatics. 2014;30:2811–2.](https://doi.org/10.1093/bioinformatics/btu393)

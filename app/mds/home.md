@@ -1,4 +1,4 @@
-## `SQuAPP` *Version 0.26*
+## `SQuAPP` *Version 0.28*
 **S**imple **Qu**antitative **A**nalysis of **P**eptides and **P**roteins (`SQuAPP`) is a workflow-based web application built on R-Shiny to enable a rapid high-level analysis of quantitative proteomics data. `SQuAPP` provides streamlined and straightforward access to many aspects of typical downstream analysis done with quantitative proteomics data. `SQuAPP` facilitates combined statistical analysis of multiple levels of proteomics data, including peptide, protein, post-translational modifications and termini modification, and allows for visual comparisons using a variety of plots and table formats.
 
 Mandatory quality control and conscious pre-processing early in the workflow ensure that only robust data are quantitatively evaluated and visualized. The processed datasets can be downloaded for further custom analysis, and the comprehensive report supports record keeping and allows for easy sharing with colleagues and collaborators.
@@ -32,29 +32,44 @@ The source code for `SQuAPP` is available at [SQuAPP Github Page](https://github
 
 For any feedback, comments, and questions please contact:
 
-- Enes Kemal Ergin
-	- [Email](mailto:eneskemalergin@gmail.com)
-	- [Twitter](https://twitter.com/eneskemalergin)
-- Philipp Lange
-	- [Email](mailto:philipp.lange@ubc.ca)
-	- [Twitter](https://twitter.com/Lange_Lab)
+- Enes Kemal Ergin: [Email](mailto:eneskemalergin@gmail.com), [Twitter](https://twitter.com/eneskemalergin)
+- Philipp Lange: [Email](mailto:philipp.lange@ubc.ca), [Twitter](https://twitter.com/Lange_Lab)
 
 Or you can directly submit an issue on `SQuAPP`'s [GitHub page](https://github.com/LangeLab/SQuAPP/issues/new).
 
 ---
 
 #### Change Log
-- **Version 0.27 - December 13th 2021**:
-	- Various bug fixes and ui updates
-	- Blocking option in statistical testing is disabled
-	- Update Global coefficient of variation based QC plot
-	- Generate a report section is initialized
-- **Version 0.26 - December 8th 2021**:
-	- Various bug fixes
-	- Various ui updates
-	- More compact protein domain
-	- More filteration options for circular network plot
-	- Additional combinations to select in circular network plot
-	- Customizable coloring for circular network plot
-- **Version 0.25 - December 1st 2021**:
-	- Working version made public
+<details>
+  <summary> <b>Version 0.28</b> - August 1st 2022 </summary>
+    <ul>
+      <li> Various bug fixes </li>
+      <li> Updated tutorials with more references, links, descriptions </li>
+      <li> Fixed logical mistake in the custom imputation </li>
+    </ul>
+</details>
+<details>
+  <summary> <b>Version 0.27</b> - December 13th 2021 </summary>
+    <ul>
+      <li> Various bug fixes and ui updates </li>
+      <li> Blocking option in statistical testing is disabled </li>
+      <li> Update Global coefficient of variation based QC plot </li>
+      <li> Generate a report section is initialized </li>
+    </ul>
+</details>
+<details>
+  <summary> <b>Version 0.26</b> - December 8th 2021 </summary>
+    <ul>
+      <li> Various bug fixes and ui updates </li>
+      <li> More compact protein domain visualization </li>
+      <li> More filtration options for circular network plot </li>
+      <li> Additional combinations to select in circular network plot </li>
+      <li> Customizable colouring for circular network plot </li>
+    </ul>
+</details>
+<details>
+  <summary> <b>Version 0.25</b> - December 1st 2021 </summary>
+    <ul>
+      <li> Working version made public </li>
+    </ul>
+</details>
