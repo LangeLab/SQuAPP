@@ -48,4 +48,4 @@ docs/
 po/*~
 
 # Development folder to ignore
-dev/*
+**/dev/
