@@ -3,7 +3,7 @@ fluidPage(
     column(
       width=3,
       box(
-        title=tagList(icon("tag"), "Circular Network Summary"),
+        title=tagList(icon("tags"), "Circular Network Summary"),
         status="primary",
         width=NULL,
         inputId="",
@@ -186,7 +186,7 @@ fluidPage(
       conditionalPanel(
         condition="input.if_cirNet_provideColor",
         box(
-          title=tagList(icon("paint-brush"), "Setup Coloring for Connections"),
+          title=tagList(icon("paintbrush"), "Setup Coloring for Connections"),
           status="primary",
           width=NULL,
           inputId="",

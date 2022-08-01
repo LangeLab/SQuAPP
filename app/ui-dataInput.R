@@ -111,7 +111,7 @@ fluidPage(
                 actionButton(
                   inputId="show_metadata_preview",
                   label="Preview metadata",
-                  icon=icon("search"),
+                  icon=icon("magnifying-glass"),
                   status="primary",
                   size="sm"
                 ),
@@ -170,7 +170,7 @@ fluidPage(
                 actionButton(
                   inputId="show_protein_preview",
                   label="Preview Protein Data",
-                  icon=icon("search"),
+                  icon=icon("magnifying-glass"),
                   status="primary",
                   size="sm"
                 ),
@@ -224,7 +224,7 @@ fluidPage(
                 actionButton(
                   inputId="show_peptide_preview",
                   label="Preview Peptide Data",
-                  icon=icon("search"),
+                  icon=icon("magnifying-glass"),
                   status="primary",
                   size="sm"
                 ),
@@ -280,7 +280,7 @@ fluidPage(
                 actionButton(
                   inputId="show_termini_preview",
                   label="Preview Termini Data",
-                  icon=icon("search"),
+                  icon=icon("magnifying-glass"),
                   status="primary",
                   size="sm"
                 ),
@@ -342,7 +342,7 @@ fluidPage(
                 actionButton(
                   inputId="show_ptm_preview",
                   label="Preview PTM Data",
-                  icon=icon("search"),
+                  icon=icon("magnifying-glass"),
                   status="primary",
                   size="sm"
                 ),
@@ -388,7 +388,7 @@ fluidPage(
         conditionalPanel(
           condition="input.show_metadata_preview!=0 && input.process_metadata==0",
           box(
-            title=tagList(icon("columns"), "Preview - Metadata"),
+            title=tagList(icon("table-columns"), "Preview - Metadata"),
             solidHeader=TRUE,
             collapsed = FALSE,
             status="primary",
@@ -400,7 +400,7 @@ fluidPage(
         conditionalPanel(
           condition="input.show_protein_preview!=0 && input.process_protein_data==0",
           box(
-            title=tagList(icon("columns"), "Preview - Protein Data"),
+            title=tagList(icon("table-columns"), "Preview - Protein Data"),
             solidHeader=TRUE,
             collapsed = FALSE,
             status="primary",
@@ -412,7 +412,7 @@ fluidPage(
         conditionalPanel(
           condition="input.show_peptide_preview!=0 && input.process_peptide_data==0",
           box(
-            title=tagList(icon("columns"), "Preview - Peptide Data"),
+            title=tagList(icon("table-columns"), "Preview - Peptide Data"),
             solidHeader=TRUE,
             collapsed = FALSE,
             status="primary",
@@ -424,7 +424,7 @@ fluidPage(
         conditionalPanel(
           condition="input.show_termini_preview!=0 && input.process_termini_data==0",
           box(
-            title=tagList(icon("columns"), "Preview - Termini Data"),
+            title=tagList(icon("table-columns"), "Preview - Termini Data"),
             solidHeader=TRUE,
             collapsed = FALSE,
             status="primary",
@@ -436,7 +436,7 @@ fluidPage(
         conditionalPanel(
           condition="input.show_ptm_preview!=0 && input.process_ptm_data==0",
           box(
-            title=tagList(icon("columns"), "Preview - PTM Data"),
+            title=tagList(icon("table-columns"), "Preview - PTM Data"),
             solidHeader=TRUE,
             collapsed = FALSE,
             status="primary",

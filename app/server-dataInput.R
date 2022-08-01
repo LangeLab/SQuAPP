@@ -374,7 +374,7 @@ observeEvent(input$process_ptm_data,{
                          meta_uniq_col=variables$datasets$metadata$uniqCol,
                          data_type="ptm",
                          uniprotDB=variables$reference,
-                         contains_rep=input$termini_whether_replica,
+                         contains_rep=input$ptm_whether_replica,
                          pro_col=input$ptm_proteinAcc_col,
                          strSeq_col=input$ptm_strippedSeq_col,
                          modSeq_col=input$ptm_modifiedSeq_col,

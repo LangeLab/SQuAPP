@@ -3,7 +3,7 @@ fluidPage(
     column(
       width=3,
       box(
-        title=tagList(icon("tag"), "Collapse Replica by Averaging"),
+        title=tagList(icon("tags"), "Collapse Replica by Averaging"),
         status="primary",
         width=NULL,
         inputId="",

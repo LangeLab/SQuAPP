@@ -3,7 +3,7 @@ fluidPage(
     column(
       width=3,
       box(
-        title=tagList(icon("tag"), "Visualize Protein Domain"),
+        title=tagList(icon("tags"), "Visualize Protein Domain"),
         status="primary",
         width=NULL,
         inputId="",
