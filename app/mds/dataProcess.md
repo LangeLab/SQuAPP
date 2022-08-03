@@ -141,7 +141,7 @@ To save the normalized state as the original data, you must click the “Record 
 
 ---
 
-<p align="center"><b>Bibliography</b></p>
+<h3 align="center"><b>Bibliography</b></h3>
 
 1. [Rainer J, Vicini A, Salzer L, Stanstrup J, Badia JM, Neumann S, et al. A modular and expandable ecosystem for metabolomics data annotation in R. Metabolites. 2022;12.](https://www.mdpi.com/2218-1989/12/2/173)
 2. [Tyanova S, Temu T, Sinitcyn P, Carlson A, Hein MY, Geiger T, et al. The Perseus computational platform for comprehensive analysis of (prote)omics data. Nat Methods. 2016;13:731–40.](https://doi.org/10.1038/nmeth.3901)

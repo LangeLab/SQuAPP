@@ -153,7 +153,7 @@ Apart from assigning colours to a group of connections, SQuAPP also allows you t
 
 ---
 
-<p align="center"><b>Bibliography</b></p>
+<h3 align="center"><b>Bibliography</b></h3>
 
 1. [Nguyen LH, Holmes S. Ten quick tips for effective dimensionality reduction. PLoS Comput Biol. 2019;15:e1006907.](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006907)
 2. [Jolliffe IT, Cadima J. Principal component analysis: a review and recent developments. Philos Transact A Math Phys Eng Sci. 2016;374:20150202.](https://doi.org/10.1098/rsta.2015.0202)

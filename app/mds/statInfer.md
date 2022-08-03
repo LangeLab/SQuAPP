@@ -53,7 +53,7 @@ Another essential step in a data analysis workflow is to create a list of intere
 
 ---
 
-<p align="center"><b>Bibliography</b></p>
+<h3 align="center"><b>Bibliography</b></h3>
 
 1. [Ritchie ME, Phipson B, Wu D, Hu Y, Law CW, Shi W, et al. limma powers differential expression analyses for RNA-sequencing and microarray studies. Nucleic Acids Res. 2015;43:e47.](https://doi.org/10.1093/nar/gkv007)
 2. [Ritchie ME, Diyagama D, Neilson J, van Laar R, Dobrovic A, Holloway A, et al. Empirical array quality weights in the analysis of microarray data. BMC Bioinformatics. 2006;7:261.](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-7-261)

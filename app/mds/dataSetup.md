@@ -201,7 +201,7 @@ The “Keep as protein data” switch becomes available when the data is calcula
 
 ---
 
-<p align="center"><b>Bibliography</b></p>
+<h3 align="center"><b>Bibliography</b></h3>
 
 1. [Uzozie AC, Ergin EK, Rolf N, Tsui J, Lorentzian A, Weng SSH, et al. PDX models reflect the proteome landscape of pediatric acute lymphoblastic leukemia but divert in select pathways. J Exp Clin Cancer Res. 2021;40:96.](https://jeccr.biomedcentral.com/articles/10.1186/s13046-021-01835-8)
 2. [Smith TG, Uzozie AC, Chen S, Lange PF. Robust unsupervised deconvolution of linear motifs characterizes 68 protein modifications at proteome scale. Sci Rep. 2021;11:22490.](https://www.nature.com/articles/s41598-021-01971-3)
