@@ -15,6 +15,7 @@ shinyServer(function(input, output, session){
                   "peptide"=NULL,
                   "termini"=NULL,
                   "ptm"=NULL),
+    # Temporary holder variables
     temp_data=NULL,
     temp_plot=NULL,
     # Simple boolean holder list for quick checks being used in many places

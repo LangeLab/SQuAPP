@@ -22,5 +22,5 @@ plotly
 ggstatsplot
 ggcorrplot
 gprofiler2
-factoExtra
+factoextra
 circlize

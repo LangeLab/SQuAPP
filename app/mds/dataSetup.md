@@ -3,7 +3,7 @@
 ### 1. Data Upload
 
 #### Using Example Data
-You can bypass the detailed data upload options by selecting the option to use the demo dataset in the “Data Upload” page and clicking the “prepare example data” button. Using example data will set up all data levels to allow you to explore `SQuAPP`’s functionalities. You can view the uploaded data on the app or check the [raw](https://github.com/LangeLab/SQuAPP/tree/main/data/raw/) and [prepared](https://github.com/LangeLab/SQuAPP/tree/main/data/prepared/) files on the Github page.
+You can bypass the detailed data upload options by selecting the option to use the demo dataset in the “Data Upload” page and clicking the “prepare example data” button. The example data of `SQuAPP` is contains protein, phosphorylation and N termini level data comparing primary leukemic cells with matched patient-derived xenografts<sup><b>[1](#Bibliography)</b></sup>. Using the example data will set up all data levels to allow you to explore `SQuAPP`’s functionalities. You can view the uploaded data on the app or check the [raw](https://github.com/LangeLab/SQuAPP/tree/main/data/raw/) and [prepared](https://github.com/LangeLab/SQuAPP/tree/main/data/prepared/) files on the Github page.
 
 <p align="center">
   <img src="../../png/001_UseExampleData.png" width="80%">
@@ -163,7 +163,7 @@ PTM data is cleaned and prepared the same way as the termini data level. `SQuAPP
 
 > **Requires at least termini or PTM data to be loaded to the app!**
 
-Termini or PTM data can be further annotated to derive the sequence context of the modification site. In the current version, the annotation tool expands the initial annotation applied when preparing the uploaded data by including specific modification sites and modification-specific sequence windows. The annotation is used for protein domain and circular network summary plots. The expanded annotated version of termini or ptm data can also be downloaded for use in external applications, such as in RoLiM **(1)**.
+Termini or PTM data can be further annotated to derive the sequence context of the modification site. In the current version, the annotation tool expands the initial annotation applied when preparing the uploaded data by including specific modification sites and modification-specific sequence windows. The annotation is used for protein domain and circular network summary plots. The expanded annotated version of termini or ptm data can also be downloaded for use in external applications, such as in RoLiM <sup><b>[2](#Bibliography)</b></sup>.
 
 <p align="center">
   <img src="../../png/013_DataAnnotation.png" width="80%">
@@ -201,5 +201,7 @@ The “Keep as protein data” switch becomes available when the data is calcula
 
 ---
 
-**Bibliography**
-1.    [Smith TG, Uzozie AC, Chen S, Lange PF. Robust unsupervised deconvolution of linear motifs characterizes 68 protein modifications at proteome scale. Sci Rep. 2021 Nov 18;11(1):22490.](https://www.nature.com/articles/s41598-021-01971-3)
+<h3 align="center"><b>Bibliography</b></h3>
+
+1. [Uzozie AC, Ergin EK, Rolf N, Tsui J, Lorentzian A, Weng SSH, et al. PDX models reflect the proteome landscape of pediatric acute lymphoblastic leukemia but divert in select pathways. J Exp Clin Cancer Res. 2021;40:96.](https://jeccr.biomedcentral.com/articles/10.1186/s13046-021-01835-8)
+2. [Smith TG, Uzozie AC, Chen S, Lange PF. Robust unsupervised deconvolution of linear motifs characterizes 68 protein modifications at proteome scale. Sci Rep. 2021;11:22490.](https://www.nature.com/articles/s41598-021-01971-3)

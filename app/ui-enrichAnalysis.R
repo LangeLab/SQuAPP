@@ -3,7 +3,7 @@ fluidPage(
     column(
       width=3,
       box(
-        title=tagList(icon("tag"), "Enrichment Analysis"),
+        title=tagList(icon("tags"), "Enrichment Analysis"),
         status="primary",
         width=NULL,
         inputId="",

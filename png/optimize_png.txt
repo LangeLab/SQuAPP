@@ -1,0 +1,2 @@
+#Run the following that uses optipng to reduce file sizes while keeping the quality.
+find . -type f -iname "*.png" -print0 | xargs -I {} -0 optipng -o5 -quiet -keep -preserve -log optipng.log "{}"

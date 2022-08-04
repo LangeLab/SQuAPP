@@ -7,7 +7,7 @@ A prior quality check (QC) review might reveal the need for data pre-processing.
 > `SQuAPP` doesn’t automatically update your dataset when you apply a change but offers a button to approve the change. Whenever you are done with configuration and checked with the provided visuals for each preprocessing category, you must click on this button to save the data as the original.
 
 ### 1. Data Averaging
-Data averaging collapses the replicas into the same sample by averaging the replicas.
+If the replica metadata is provided, data averaging collapses the replicas into the same sample by averaging the replicas.
 
 When the data level is selected, and the “Average Replica” button is clicked, `SQuAPP` provides a simple violin plot and a quantitative data preview for both original and averaged states for comparison. Suppose you choose to continue with the averaged state of a selected data level. In that case, you must switch on the “Want to replace it with original data” button and click the “Record as Original” button to save the averaged state.
 
@@ -53,16 +53,23 @@ After you have decided to go with the filtered state, you must click on the “R
 ### 3. Data Imputation
 Missing values are a common issue in proteomics data. With filtering data, imputation can allow some features to be included without excluding large portions of the features removed from the data.
 
-`SQuAPP` can apply common data imputation methods globally or group-wise. As of version 0.25 `SQuAPP` offers 5 imputation methods, four of which utilizes `impute_matrix()` function from `MsCoreUtils` package.
+`SQuAPP` can apply common data imputation methods globally or group-wise. As of version 0.28 `SQuAPP` offers 5 imputation methods four of which utilizing [`impute_matrix()`](https://rformassspectrometry.github.io/MsCoreUtils/reference/imputation.html) function from [`MsCoreUtils`](https://rformassspectrometry.github.io/MsCoreUtils/index.html) package<sup><b>[1](#Bibliography)</b></sup> :
 
 - `min`: Applies minimum value in the data (or grouped subset) to all missing values
-- `knn`: Calculates the nearest neighbour averaging to replace the missing value as implemented in the `impute::impute.knn` function.
+- `knn`: Calculates the nearest neighbour averaging to replace the missing value as implemented in the [`impute::impute.knn`](https://rdrr.io/pkg/impute/man/impute.knn.html) function.
 - `with`: Applies user-selected value with to all missing values
-- `MinProb`: Randomly draws values from Gaussian distribution centred to a minimum value in the data. Implements the `imputeLCMD::impute.MinProb` function.
-- `Down-shifted Normal`: Custom function imputes missing values with a random value selected from a narrower normal distribution with a smaller mean shifted by a user-selected magnitude.
+- `MinProb`: Randomly draws values from Gaussian distribution centred to a minimum value in the data. Implements the [`imputeLCMD::impute.MinProb`](https://rdrr.io/cran/imputeLCMD/man/impute.MinProb.html) function.
 
 <p align="center">
   <img src="../../png/023_DataImputationInitial.png" width="80%">
+</p>
+
+Additionally `SQuAPP` offers a more custom imputation that uses the logic of [down-shifted normal imputation](http://coxdocs.org/doku.php?id=perseus:user:activities:matrixprocessing:imputation:replacemissingfromgaussian&s[]=imputation) used in Perseus<sup><b>[2](#Bibliography)</b></sup>. This method is similar to `MinProb` however can be used to avoid values to be overlapped with real values by adjusting shift and magnitude values.
+
+- `Down-shifted Normal`: Custom function imputes missing values with a random value selected from a narrower normal distribution with a smaller mean shifted by a user-selected magnitude.
+
+<p align="center">
+  <img src="../../png/023.1_DataImputationInitial.png" width="80%"> # New Image Showing Downshifted Normal Use
 </p>
 
 After selecting a data level, the imputation method, and group factor (if you switch on the “impute by group” option), you can click on “Preview Imputation Distribution” to access preview visualizations and data tables provided by `SQuAPP`:
@@ -96,13 +103,13 @@ To save the imputed state as the original data, click the “Record as Original�
 ### 4. Data Normalization
 Data normalization is a crucial step in a data analysis workflow to control for and/or reduce variability in mass spectrometry data comparison between samples.
 
-`SQuAPP` can apply commonly used data normalization methods in a global or group-wise fashion. As of version 0.25, `SQuAPP` offers 5 normalization methods customized from the `normalize_matrix()` function from `MsCoreUtils` package.
+`SQuAPP` can apply commonly used data normalization methods in a global or group-wise fashion. As of version 0.28, `SQuAPP` offers 5 normalization methods customized from the [`normalize_matrix()`](https://rformassspectrometry.github.io/MsCoreUtils/reference/normalize.html) function from [`MsCoreUtils`](https://rformassspectrometry.github.io/MsCoreUtils/index.html) package<sup><b>[1](#Bibliography)</b></sup> :
 
 - `Divided by Max`: *Dividing each feature by the maximum value of the feature*
 - `Divided by Sum`: *Dividing each feature by the sum of the feature*
 - `Divided by Mean`: *Divides values by column means*
 - `Divided by Median`: *Divides values by column median*
-- `Variance Stabilization`: *Implements variance stabilization method from `vsn::vsn2()`*
+- `Variance Stabilization`<sup><b>[3](#Bibliography)</b></sup>: *Implements variance stabilization method from [`vsn::vsn2()`](https://rdrr.io/bioc/vsn/man/vsn2.html)*
 
 <p align="center">
   <img src="../../png/026_DataNormalizationInitial.png" width="80%">
@@ -131,3 +138,11 @@ To save the normalized state as the original data, you must click the “Record 
 <p align="center">
   <img src="../../png/028_DataNormalizationDone.png" width="80%">
 </p>
+
+---
+
+<h3 align="center"><b>Bibliography</b></h3>
+
+1. [Rainer J, Vicini A, Salzer L, Stanstrup J, Badia JM, Neumann S, et al. A modular and expandable ecosystem for metabolomics data annotation in R. Metabolites. 2022;12.](https://www.mdpi.com/2218-1989/12/2/173)
+2. [Tyanova S, Temu T, Sinitcyn P, Carlson A, Hein MY, Geiger T, et al. The Perseus computational platform for comprehensive analysis of (prote)omics data. Nat Methods. 2016;13:731–40.](https://doi.org/10.1038/nmeth.3901)
+3. [Huber W, von Heydebreck A, Sültmann H, Poustka A, Vingron M. Variance stabilization applied to microarray data calibration and to the quantification of differential expression. Bioinformatics. 2002;18 Suppl 1:S96-104.](https://doi.org/10.1093/bioinformatics/18.suppl_1.S96)

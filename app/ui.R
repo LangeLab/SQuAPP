@@ -2,26 +2,31 @@
   dashboardPage(
     dark=NULL, # Removes the skin change toggle
     # Title of the dashboard
-    title = "SQuAPP V0.26",
+    title = "SQuAPP V0.28",
     # Create Header
     header = dashboardHeader(
       skin = "light",
       status = "primary",
       border = TRUE,
       fixed = TRUE,
-      title = "SQuAPP V0.26"
-      # sidebarIcon = icon("chevron-left")
+      # title = "SQuAPP V0.28"
+      # TODO: Need to make the collapsed and uncollapsed version of the title robust
+      title=tagList(
+        img(src="hex-SQuAPP.png", width=50, height=50),
+        span(),
+        span("SQuAPP V0.28")
+      )
     ),
     # Create the Collapsable Sidebar
     sidebar = dashboardSidebar(
       skin = "light",
       status = "primary",
-      title = HTML("SQuAPP V0.26"),
+      title = HTML("SQuAPP V0.28"),
       elevation = 3,
       opacity = 0.8,
       # Define individual menu items
       sidebarMenu(
-        menuItem( "Home", tabName="home", icon=icon("home") , selected=TRUE ),
+        menuItem( "Home", tabName="home", icon=icon("house") , selected=TRUE ),
         menuItem( "Data Setup", tabName="dataSetup", icon=icon("upload"), startExpanded=FALSE,
           menuSubItem("Data Upload", tabName="dataInputTab"),
           conditionalPanel(
@@ -41,11 +46,11 @@
                      input.isExist_peptide ||
                      input.isExist_termini ||
                      input.isExist_ptm",
-          menuItem("Data Inspection", tabName="qualityCheckTab", icon=icon("search"))
+          menuItem("Data Inspection", tabName="qualityCheckTab", icon=icon("magnifying-glass"))
         ),
         conditionalPanel(
           condition="input.produce_plots!=0",
-          menuItem("Data Preprocessing", tabName="dataProcessTab", icon=icon("cogs"), startExpanded=FALSE,
+          menuItem("Data Preprocessing", tabName="dataProcessTab", icon=icon("gear"), startExpanded=FALSE,
             menuSubItem("Averaging", tabName="dataAverageTab"),
             menuSubItem("Filtering", tabName="dataFilterTab"),
             menuSubItem("Imputation", tabName="dataImputeTab"),
@@ -95,7 +100,7 @@
             title="",
             width=NULL,
             add_TabPanel_homeTab(
-              "Welcome", icon("info"),
+              "Welcome", icon("house"),
               "mds/home.md"
             ),
             add_TabPanel_homeTab(
@@ -103,11 +108,11 @@
               "mds/dataSetup.md"
             ),
             add_TabPanel_homeTab(
-              "Data Inspection", icon("search"),
+              "Data Inspection", icon("magnifying-glass"),
               "mds/dataInspect.md"
             ),
             add_TabPanel_homeTab(
-              "Data Preprocessing", icon("cogs"),
+              "Data Preprocessing", icon("gear"),
               "mds/dataProcess.md"
             ),
             add_TabPanel_homeTab(
@@ -217,7 +222,7 @@
         column(
           width=3,
           align="center",
-          "Placeholder for BCCHR LOGO"
+          img(src="bcchr.png",height=120,width=120)
         ),
         column(
             width = 6,
@@ -241,7 +246,7 @@
         column(
           width=3,
           align="center",
-          "Placeholder for UBC LOGO"
+          img(src="ubc.png",height=120,width=120)
         )
       )
     )
