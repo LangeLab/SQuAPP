@@ -4,24 +4,34 @@
 impute_with_MsCore <- function(data, impute.method="MinProb", val=NULL){
   if(is.null(val)){
     # Calculate the imputed data based on given imputation method
-    tmp_matrix <- MsCoreUtils::impute_matrix(as.matrix(log10(data)),
+    tmp_matrix <- MsCoreUtils::impute_matrix(as.matrix(log2(data)),
                                              method=impute.method)
   }else{
-    tmp_matrix <- MsCoreUtils::impute_matrix(as.matrix(log10(data)),
+    tmp_matrix <- MsCoreUtils::impute_matrix(as.matrix(log2(data)),
                                              method=impute.method,
                                              val=val)
   }
   # Return the value as dataframe with scaled up version
-  return(data.frame(10**(tmp_matrix)))
+  return(data.frame(2**(tmp_matrix)))
 }
 
 impute_with_downshifted_normal <- function(data, downshift_mag){
-  # Create log10 version of the data
-  data <- log10(data)
+  # TODO: Add an percentile cutoff option to the UI.
+  # Hard prctl cut-off
+  prctl <- 0.05
+  # Create log2 version of the data
+  data <- log2(data)
   # Get aggregated distribution of the data by flattening it
   flatten_data <- as.vector(as.matrix(data))
   # Get complete values
   complete_dist <- flatten_data[!is.na(flatten_data)]
+  # Find the threshold value to choose low values
+  cut_thr <- quantile(complete_dist, probs=c(prctl))
+  # Create a low value distribution and shift it by 2^downshift_mag
+  dist2choose <- (complete_dist[complete_dist <= cut_thr]) / (2**downshift_mag)
+  # Save mean and standard deviation to be used in loop
+  mu <- mean(dist2choose)
+  sigma <- sd(complete_dist)
   # Initialize imputed dataframe
   imputed_data <- data.frame(matrix(ncol=ncol(data), nrow=nrow(data)))
   # Create imputed distribution
@@ -31,15 +41,12 @@ impute_with_downshifted_normal <- function(data, downshift_mag){
     # Find missing value index of the current column
     missing_ind <- is.na(imputed_data[, i])
     # Create downshifted normal distribution from the data distribution
-    impute_dist <- rnorm(
-      sum(missing_ind),
-      sd=sd(complete_dist),
-      mean=(mean(complete_dist)-(downshift_mag*sd(complete_dist)))
-    )
+    impute_dist <- rnorm( sum(missing_ind), sd=sigma, mean=mu )
     # Replace missing values with the downshifted normal distribution values
     imputed_data[missing_ind, i] <- impute_dist
   }
-  imputed_data <- data.frame(10**(imputed_data))
+  # Save the imputed data into a dataframe with removing log2 scaling
+  imputed_data <- data.frame(2**(imputed_data))
   colnames(imputed_data) <- colnames(data)
   rownames(imputed_data) <- rownames(data)
   # Return the imputed data
@@ -239,9 +246,9 @@ imputed_value_distribution.density_plots <- function(dataList,
             stop("donwshift_mag argument needs to be passed id Down-shifted normal method is selected")
           }
           imputed_dist <- rnorm(sum(missing_ind),
-                                sd=sd(log10(complete_dist)),
-                                mean=(mean(log10(complete_dist))-(downshift_mag*sd(log10(complete_dist)))))
-          imputed_dist <- 10 ** imputed_dist
+                                sd=sd(log2(complete_dist)),
+                                mean=(mean(log2(complete_dist))-(downshift_mag*sd(log2(complete_dist)))))
+          imputed_dist <- 2 ** imputed_dist
         }
       }
       # Create plot_df subset for given grouping
@@ -252,8 +259,8 @@ imputed_value_distribution.density_plots <- function(dataList,
       # Concatenate the data
       plot_data <- rbind(plot_data, sub_plot_df)
     }
-    # Take to log 10 scale
-    plot_data$intensity <- log10(as.numeric(plot_data$intensity))
+    # Take to log 2 scale
+    plot_data$intensity <- log2(as.numeric(plot_data$intensity))
 
     p1 <- ggdensity(plot_data, x="intensity", y=c("..count.."), facet.by="group",
                    add="median", color="state", fill="state",
@@ -263,7 +270,7 @@ imputed_value_distribution.density_plots <- function(dataList,
     p2 <- ggdensity(plot_data, x="intensity", y=c("..density.."), facet.by="group",
                    add="median", color="state", fill="state",
                    palette = c("#457b9d", "#fca311"),
-                   xlab="log10(intensity)",# ylab="Number of Features",
+                   xlab="log2(intensity)",# ylab="Number of Features",
                    size=.25, ggtheme=theme_pubclean()) + rremove("legend")
 
     return(p1/p2)
@@ -288,16 +295,16 @@ imputed_value_distribution.density_plots <- function(dataList,
           stop("donwshift_mag argument needs to be passed id Down-shifted normal method is selected")
         }
         imputed_dist <- rnorm(sum(missing_ind),
-                              sd=sd(log10(complete_dist)),
-                              mean=(mean(log10(complete_dist))-(downshift_mag*sd(log10(complete_dist)))))
-        imputed_dist <- 10 ** imputed_dist
+                              sd=sd(log2(complete_dist)),
+                              mean=(mean(log2(complete_dist))-(downshift_mag*sd(log2(complete_dist)))))
+        imputed_dist <- 2 ** imputed_dist
       }
     }
     # Put them into a dataframe
     plot_data <- data.frame(rbind(cbind(intensity=complete_dist, state="complete"),
                                   cbind(intensity=imputed_dist, state="imputed")))
     # Take to log 10 scale
-    plot_data$intensity <- log10(as.numeric(plot_data$intensity))
+    plot_data$intensity <- log2(as.numeric(plot_data$intensity))
 
     p1 <- ggdensity(plot_data, x="intensity", y=c("..count.."),
                    add="median", color="state", fill="state",
@@ -307,7 +314,7 @@ imputed_value_distribution.density_plots <- function(dataList,
     p2 <- ggdensity(plot_data, x="intensity", y=c("..density.."),
                    add="median", color="state", fill="state",
                    palette = c("#457b9d", "#fca311"),
-                   xlab="log10(intensity)",# ylab="Number of Features",
+                   xlab="log2(intensity)",# ylab="Number of Features",
                    size=.25, ggtheme=theme_pubclean()) + rremove("legend")
 
     return(p1/p2)
@@ -350,7 +357,7 @@ compare.imputation_split_violin_plot <- function(dataList,
     # Standardize column names
     colnames(plot_data) <- c("Sample", "Feature", "Intensity", "state", "group")
     # Make custom title to show
-    p <- ggplot(plot_data, aes(x=Sample, y=log10(Intensity), fill=state)) +
+    p <- ggplot(plot_data, aes(x=Sample, y=log2(Intensity), fill=state)) +
                 geom_split_violin(alpha = .4, trim = T) +
                 geom_boxplot(width = .175, alpha = .6,
                              show.legend = FALSE, outlier.shape = NA) +
@@ -362,7 +369,7 @@ compare.imputation_split_violin_plot <- function(dataList,
                           axis.text.x = element_text(angle = 90, hjust = 1, size = 7.5))
   }else{
     # Plot the split violin
-    p <- ggplot(plot_data, aes(x=Sample, y=log10(Intensity), fill=state)) +
+    p <- ggplot(plot_data, aes(x=Sample, y=log2(Intensity), fill=state)) +
                 geom_split_violin(alpha = .4, trim = T) +
                 geom_boxplot(width = .175, alpha = .6,
                              show.legend = FALSE, outlier.shape = NA) +
