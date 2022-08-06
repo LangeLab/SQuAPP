@@ -1408,19 +1408,22 @@ observeEvent(input$generateReport, {
 
 ################### Functions for Download Report #####################
 output$report_download_button <- renderUI({
-  if (variables$report$runReport) {
+  if(isTruthy(variables$report$runReport)) {
     tagList(
       tags$br(),
       downloadButton('download_the_report')
     )
   } else {
-    helpText("Click [Generate Report] for generation.")
+    tagList(
+      tags$br(),
+      helpText("Click [Generate Report] for generation.")
+    )
   }
 })
 
-output$download_the_report<- downloadHandler(
-  filename=function(){
-    paste=(paste0('SQuAPP_Analysis_Report_', format(Sys.Date(), "%Y%m%d")),
+output$download_the_report <- downloadHandler(
+  filename = function(){
+    paste(paste0('SQuAPP_Analysis_Report_', format(Sys.Date(), "%Y%m%d")),
       sep=".",
       switch(
         input$report_format,
@@ -1428,8 +1431,8 @@ output$download_the_report<- downloadHandler(
         "Markdown"=".md"
       )
     )
-  }
-  content=function(file){
+  },
+  content = function(file){
     file.rename(variables$report$reportFile, file)
   }
 )

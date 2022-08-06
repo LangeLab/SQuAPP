@@ -46,7 +46,7 @@ shinyServer(function(input, output, session){
           "isReplaced"=NULL,
           "org_distPlot"=NULL,
           "org_table"=NULL,
-          "prc_distPlot"=NULL
+          "prc_distPlot"=NULL,
           "prc_table"=NULL
         ),
         # data processing - filtering variables
@@ -176,7 +176,7 @@ shinyServer(function(input, output, session){
           "isReplaced"=NULL,
           "org_distPlot"=NULL,
           "org_table"=NULL,
-          "prc_distPlot"=NULL
+          "prc_distPlot"=NULL,
           "prc_table"=NULL
         ),
         # data processing - filtering variables
@@ -306,7 +306,7 @@ shinyServer(function(input, output, session){
           "isReplaced"=NULL,
           "org_distPlot"=NULL,
           "org_table"=NULL,
-          "prc_distPlot"=NULL
+          "prc_distPlot"=NULL,
           "prc_table"=NULL
         ),
         # data processing - filtering variables
@@ -435,7 +435,7 @@ shinyServer(function(input, output, session){
           "isReplaced"=NULL,
           "org_distPlot"=NULL,
           "org_table"=NULL,
-          "prc_distPlot"=NULL
+          "prc_distPlot"=NULL,
           "prc_table"=NULL
         ),
         # data processing - filtering variables
@@ -553,10 +553,10 @@ shinyServer(function(input, output, session){
           "plot"=NULL
         )
       )
-    )
+    ),
     report=list(
       "runReport"=NULL,
-      "reportFile"=NULL,
+      "reportFile"=NULL
     )
   )
 
