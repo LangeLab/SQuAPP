@@ -7,11 +7,11 @@ fluidPage(
         width=NULL,
         solidHeader=TRUE,
         status="primary",
-        footer="",
+        footer="For most feature rich use default HTML format.",
         awesomeRadio(
           inputId='report_format',
           label='Report Format',
-          choices=c("PDF", "HTML", "Markdown"),
+          choices=c("HTML", "Markdown"),
           status="primary",
           selected="HTML"
         ),
@@ -23,7 +23,7 @@ fluidPage(
           size="sm"
         ),
 
-        uiOutput("report_download")
+        uiOutput("report_download_button")
       )
     ),
     column(
@@ -43,11 +43,8 @@ fluidPage(
             inputId="report_opt_dataInput_protein",
             label="1.1 - Data Upload",
             choices=c("Parameters",
-                      "Summary Info",
-                      "Original Data",
                       "Prepared Data"),
             selected=c("Parameters",
-                       "Summary Info",
                        "Prepared Data"),
             inline=TRUE
           ),
@@ -91,11 +88,8 @@ fluidPage(
             inputId="report_opt_dataInput_peptide",
             label="1.1 - Data Upload",
             choices=c("Parameters",
-                      "Summary Info",
-                      "Original Data",
                       "Prepared Data"),
             selected=c("Parameters",
-                       "Summary Info",
                        "Prepared Data"),
             inline=TRUE
           ),
@@ -140,11 +134,8 @@ fluidPage(
             inputId="report_opt_dataInput_termini",
             label="1.1 - Data Upload",
             choices=c("Parameters",
-                      "Summary Info",
-                      "Original Data",
                       "Prepared Data"),
             selected=c("Parameters",
-                       "Summary Info",
                        "Prepared Data"),
             inline=TRUE
           ),
@@ -190,11 +181,8 @@ fluidPage(
             inputId="report_opt_dataInput_ptm",
             label="1.1 - Data Upload",
             choices=c("Parameters",
-                      "Summary Info",
-                      "Original Data",
                       "Prepared Data"),
             selected=c("Parameters",
-                       "Summary Info",
                        "Prepared Data"),
             inline=TRUE
           ),
