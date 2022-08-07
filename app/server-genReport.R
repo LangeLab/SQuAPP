@@ -1357,39 +1357,69 @@ observeEvent(input$generateReport, {
     session=session,
     id="report_progress",
     title="Applying selected configuration...",
-    display_pct=TRUE,
     value=10
   )
   # TODO: Here based on the user's selection of the parameters
   #  subset the report list into reportPars variable.
-  reportPars = list()
+  # reportPars = list()
 
   updateProgressBar(
     session=session,
     id="report_progress",
     title="Checking compatibility of configuration...",
-    display_pct=TRUE,
     value=30
   )
+
+  # Check compatibility of the subsetted reportedPars
+
+  updateProgressBar(
+    session=session,
+    id="report_progress",
+    title="Passing configuration to renderer...",
+    value=40
+  )
+
+  # Create a temporarty rds file
+  tmp_file <- paste(
+    paste0("tmp_", unique_session_id)
+    ,"rds",
+    sep="."
+  )
+
+  # Save the rds to harddrive for rmd renderer to read
+  saveRDS(variables$reportParam, file=tmp_file)
 
   updateProgressBar(
     session=session,
     id="report_progress",
     title="Rendering the report...",
-    display_pct=TRUE,
-    value=40
+    value=50
   )
 
-  out <- rmarkdown::render(spc_file, params = reportPars, switch(
-    input$report_format,
-    "HTML"=html_document(),
-    "Markdown"=markdown_document()
-  ))
+  out <- rmarkdown::render(
+    spc_file,
+    params = list(file_name=tmp_file),
+    switch(
+      input$report_format,
+      "HTML"= rmarkdown::html_document(
+        toc = TRUE,
+        toc_float = TRUE,
+        number_sections = TRUE,
+        df_print= "paged",
+        fig_width = 7,
+        fig_height = 5,
+        fig_caption = TRUE,
+        code_folding = "hide"
+      ),
+      "Markdown"= rmarkdown::markdown_document()
+    )
+  )
 
   variables$report$reportFile <- out
   variables$report$runReport <- input$generateReport
 
   for(i in seq(51, 100, 3)){
+    Sys.sleep(0.1)
     updateProgressBar(
       session = session,
       id = "report_progress",
@@ -1401,8 +1431,11 @@ observeEvent(input$generateReport, {
   closeSweetAlert(session = session)
   sendSweetAlert(session = session,
                  title = "DONE",
-                 text = "Click [Download] to save your report.",
+                 text = "Click [Download Report] to save your report.",
                  type = "success")
+
+  # Remove the temporary rds file created
+  file.remove(tmp_file)
 })
 
 
@@ -1410,8 +1443,12 @@ observeEvent(input$generateReport, {
 output$report_download_button <- renderUI({
   if(isTruthy(variables$report$runReport)) {
     tagList(
+      tags$h5("The prepared report can be download here:"),
       tags$br(),
-      downloadButton('download_the_report')
+      downloadBttn("download_the_report",
+                   label="Download Report",
+                   style="minimal",
+                   color="warning")
     )
   } else {
     tagList(

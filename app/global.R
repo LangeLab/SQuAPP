@@ -19,6 +19,7 @@ packages <- c("shiny",
             )
 suppressPackageStartupMessages(lapply(packages, library, character.only = TRUE))
 
+# Source all the utility scripts
 source('utils-ui.R')
 source('utils-plots.R')
 source('utils-server.R')
@@ -39,9 +40,10 @@ source('utils-visualProtein.R')
 source('utils-visualCircular.R')
 source('utils-genReport.R')
 
-options(dplyr.summarise.inform = FALSE)
-options(shiny.maxRequestSize=100*1024^2)
+options(dplyr.summarise.inform = FALSE) # To supress the summarise warning
+options(shiny.maxRequestSize=100*1024^2) # Allow large datasets to be inputed
 
+# TODO: Better caching to save time on loading all packages and other dependencies
 shinyOptions(cache = cachem::cache_disk("./app_cache/cache/"))
 
 
@@ -66,3 +68,6 @@ reference_files <- list.files(path=uniprotDB_path, full.names=F)
 reference_files_wpath <- list.files(path=uniprotDB_path, full.names=T)
 reference_organisms <- str_replace(str_match(reference_files, "(.*)\\..*$")[,2], "_", " ")
 references_vector <- setNames(reference_files_wpath, reference_organisms)
+# This random string is to keep Rds write's to not overwrite between different sessions
+# NOTE: Rds is only written to pass to Rmd render after that it is removed from the system.
+unique_session_id <- as.character(floor(runif(1)*1e20))

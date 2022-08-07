@@ -1,17 +1,56 @@
 ---
 title: "Summary of SQuAPP Analysis"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output:
-  html_document:
-    toc: true
-    toc_float: true
-    number_sections: true
-    fig_width: 7
-    fig_height: 5
-    fig_caption: true
-    code_folding: hide
+params:
+  file_name: NA
 ---
 
+**Report setup**
+
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r load_data, include=TRUE}
+message("Loading configured settings to rmarkdown")
+t1 <- Sys.time()
+# Check if the RDS is loaded correctly or not!
+tryCatch(
+  expr = {
+    reportParam = readRDS(file=params$file_name)
+    message("Reading Rds file...")
+  },
+  error = function(e){
+    message("There has been an error!")
+    print(e)
+    knitr::knit_exit()
+  },
+  warning = function(w){
+    message("Unexpected behaviour is found!")
+    print(w)
+    knitr::knit_exit()
+  },
+  finally = {
+    t2 <- Sys.time()
+  }
+)
+elapsed <- as.character(difftime(t2, t1, units="secs")[[1]])
+message(
+  paste(
+    "Shiny variables are correctly load in",
+    elapsed,
+    "seconds.",
+    sep=" ")
+)
+```
+# Analysis Summary
+
+## Data Used in Analysis
+
+```{r check_protein_section, results="asis"}
+if(!is.null(reportParam$protein$dataSetup$isRun)){
+  cat("### Protein Level")
+}else{
+  cat("**Skipping protein level since it is not run...**")
+}
 ```

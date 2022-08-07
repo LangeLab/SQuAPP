@@ -1,4 +1,5 @@
 fluidPage(
+  useSweetAlert(),
   fluidRow(
     column(
       width=3,
@@ -6,8 +7,9 @@ fluidPage(
         title=tagList(icon("gears"), "Create a Report"),
         width=NULL,
         solidHeader=TRUE,
+        collapsible=FALSE,
         status="primary",
-        footer="For most feature rich use default HTML format.",
+        footer="HTML format offers most feature rich format.",
         awesomeRadio(
           inputId='report_format',
           label='Report Format',
@@ -21,9 +23,20 @@ fluidPage(
           icon=icon("play"),
           status="primary",
           size="sm"
-        ),
+        )
 
-        uiOutput("report_download_button")
+
+      ),
+      conditionalPanel(
+        condition="input.generateReport!=0",
+        box(
+          title=tagList(icon("file-export"), "Download the Report"),
+          width=NULL,
+          solidHeader=TRUE,
+          status="primary",
+          footer="To apply changes, re-generate the report.",
+          uiOutput("report_download_button")
+        )
       )
     ),
     column(
