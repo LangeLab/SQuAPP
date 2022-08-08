@@ -122,10 +122,10 @@ observeEvent(input$confirm_record_averaged,{
     if(isTruthy(variables$temp_data)){
       # Update isReplaced variable with TRUE
       variables$reportParam[[data_name]]$dataAverage$isReplaced <- TRUE
-      # Save averaged list into a variable
-      data_list <- variables$temp_data
       # Save the modified data list into its reactive list values
-      variables$datasets[[data_name]] <- data_list
+      variables$datasets[[data_name]] <- variables$temp_data
+      # Update the averaged status in the main dataList
+      variables$datasets[[data_name]]$avrg <- TRUE
       # reset the temp_data variable
       variables$temp_data <- NULL
     }else{return()}

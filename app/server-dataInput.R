@@ -41,9 +41,9 @@ observeEvent(input$submitExampleData, {
   ## Create and Save Report Variables
   # Update isRun variables
   variables$reportParam$protein$dataSetup$isRun <- TRUE
-  variables$reportParam$peptide$dataSetup$isRun <- NULL
-  variables$reportParam$termini$dataSetup$isRun <- NULL
-  variables$reportParam$ptm$dataSetup$isRun <- NULL
+  # variables$reportParam$peptide$dataSetup$isRun <- TRUE
+  # variables$reportParam$termini$dataSetup$isRun <- TRUE
+  # variables$reportParam$ptm$dataSetup$isRun <- TRUE
   # Create report preview tables and save them in reportParam-level-dataSetup variables
   variables$reportParam$shared$reference$table <- report.preview.data(
     variables$reference, colIgnore=c("Fasta.sequence", "Gene.name"), rowN=3

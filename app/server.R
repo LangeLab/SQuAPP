@@ -25,13 +25,13 @@ shinyServer(function(input, output, session){
         "isRepl"=FALSE,
         # data setup variables
         "dataSetup"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "table"=NULL
         ),
         # quality check plot variables
         "qualityCheck"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "distPlot"=NULL,
           "cvPlot"=NULL,
@@ -42,9 +42,9 @@ shinyServer(function(input, output, session){
         ),
         # data processing - averaging variables
         "dataAverage"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
-          "isReplaced"=NULL,
+          "isReplaced"=FALSE,
           "org_distPlot"=NULL,
           "org_table"=NULL,
           "prc_distPlot"=NULL,
@@ -52,9 +52,9 @@ shinyServer(function(input, output, session){
         ),
         # data processing - filtering variables
         "dataFilter"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
-          "isReplaced"=NULL,
+          "isReplaced"=FALSE,
           "org_table"=NULL,
           "org_countPlot"=NULL,
           "org_percentPlot"=NULL,
@@ -66,23 +66,22 @@ shinyServer(function(input, output, session){
         ),
         # data processing - imputing variables
         "dataImpute"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
-          "isReplaced"=NULL,
+          "isReplaced"=FALSE,
           "org_table"=NULL,
-          "org_summaryStat"=NULL,
           "org_missingCount"=NULL,
-          "org_imputeDist"=NULL,
+          "prv_imputeDist"=NULL,
+          "org_summaryStat"=NULL,
           "prc_table"=NULL,
-          "prc_summaryStat"=NULL,
-          "prc_missingCount"=NULL,
-          "prc_imputeDist"=NULL
+          "prc_distPlot"=NULL,
+          "prc_summaryStat"=NULL
         ),
         # data processing - normalizing variables
         "dataNormalize"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
-          "isReplaced"=NULL,
+          "isReplaced"=FALSE,
           "org_table"=NULL,
           "org_summaryStat"=NULL,
           "org_violinDist"=NULL,
@@ -96,7 +95,7 @@ shinyServer(function(input, output, session){
         ),
         # statistical inference - testing variables
         "statTest"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "maPlot"=NULL,
           "volanoPlot"=NULL,
@@ -105,27 +104,27 @@ shinyServer(function(input, output, session){
         ),
         # statistical inference - enrichment variables
         "enrichAnalysis"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "table"=NULL,
           "plot"=NULL
         ),
         # statistical inference - reduced go variables
         "goVis"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "table"=NULL,
           "plot"=NULL
         ),
         # summary visualizations - dimensional reduction variables
         "dimenReduc"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "table"=NULL,
           "plot"=NULL
         ),
         "cluster"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "test_silhouette"=NULL,
           "test_sumSquare"=NULL,
@@ -137,7 +136,7 @@ shinyServer(function(input, output, session){
           "res_membership"=NULL
         ),
         "feature"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "selectTable"=NULL,
           "plot_config"=NULL,
@@ -149,20 +148,20 @@ shinyServer(function(input, output, session){
         "isRepl"=FALSE,
         # data setup variables
         "dataSetup"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "table"=NULL
         ),
         # protein calculation variables
         "proteinCalc"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "table"=NULL,
           "plot"=NULL
         ),
         # quality check plot variables
         "qualityCheck"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "distPlot"=NULL,
           "cvPlot"=NULL,
@@ -173,9 +172,9 @@ shinyServer(function(input, output, session){
         ),
         # data processing - averaging variables
         "dataAverage"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
-          "isReplaced"=NULL,
+          "isReplaced"=FALSE,
           "org_distPlot"=NULL,
           "org_table"=NULL,
           "prc_distPlot"=NULL,
@@ -183,9 +182,9 @@ shinyServer(function(input, output, session){
         ),
         # data processing - filtering variables
         "dataFilter"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
-          "isReplaced"=NULL,
+          "isReplaced"=FALSE,
           "org_table"=NULL,
           "org_countPlot"=NULL,
           "org_percentPlot"=NULL,
@@ -197,23 +196,22 @@ shinyServer(function(input, output, session){
         ),
         # data processing - imputing variables
         "dataImpute"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
-          "isReplaced"=NULL,
+          "isReplaced"=FALSE,
           "org_table"=NULL,
-          "org_summaryStat"=NULL,
           "org_missingCount"=NULL,
-          "org_imputeDist"=NULL,
+          "prv_imputeDist"=NULL,
+          "org_summaryStat"=NULL,
           "prc_table"=NULL,
-          "prc_summaryStat"=NULL,
-          "prc_missingCount"=NULL,
-          "prc_imputeDist"=NULL
+          "prc_distPlot"=NULL,
+          "prc_summaryStat"=NULL
         ),
         # data processing - normalizing variables
         "dataNormalize"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
-          "isReplaced"=NULL,
+          "isReplaced"=FALSE,
           "org_table"=NULL,
           "org_summaryStat"=NULL,
           "org_violinDist"=NULL,
@@ -227,7 +225,7 @@ shinyServer(function(input, output, session){
         ),
         # statistical inference - testing variables
         "statTest"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "maPlot"=NULL,
           "volanoPlot"=NULL,
@@ -236,27 +234,27 @@ shinyServer(function(input, output, session){
         ),
         # statistical inference - enrichment variables
         "enrichAnalysis"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "table"=NULL,
           "plot"=NULL
         ),
         # statistical inference - reduced go variables
         "goVis"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "table"=NULL,
           "plot"=NULL
         ),
         # summary visualizations - dimensional reduction variables
         "dimenReduc"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "table"=NULL,
           "plot"=NULL
         ),
         "cluster"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "test_silhouette"=NULL,
           "test_sumSquare"=NULL,
@@ -268,7 +266,7 @@ shinyServer(function(input, output, session){
           "res_membership"=NULL
         ),
         "feature"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "selectTable"=NULL,
           "plot_config"=NULL,
@@ -281,19 +279,19 @@ shinyServer(function(input, output, session){
         "isRepl"=FALSE,
         # data setup variables
         "dataSetup"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "table"=NULL
         ),
         # data annotation variables
         "dataAnnot"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "table"=NULL
         ),
         # quality check plot variables
         "qualityCheck"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "distPlot"=NULL,
           "cvPlot"=NULL,
@@ -304,9 +302,9 @@ shinyServer(function(input, output, session){
         ),
         # data processing - averaging variables
         "dataAverage"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
-          "isReplaced"=NULL,
+          "isReplaced"=FALSE,
           "org_distPlot"=NULL,
           "org_table"=NULL,
           "prc_distPlot"=NULL,
@@ -314,9 +312,9 @@ shinyServer(function(input, output, session){
         ),
         # data processing - filtering variables
         "dataFilter"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
-          "isReplaced"=NULL,
+          "isReplaced"=FALSE,
           "org_table"=NULL,
           "org_countPlot"=NULL,
           "org_percentPlot"=NULL,
@@ -328,23 +326,22 @@ shinyServer(function(input, output, session){
         ),
         # data processing - imputing variables
         "dataImpute"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
-          "isReplaced"=NULL,
+          "isReplaced"=FALSE,
           "org_table"=NULL,
-          "org_summaryStat"=NULL,
           "org_missingCount"=NULL,
-          "org_imputeDist"=NULL,
+          "prv_imputeDist"=NULL,
+          "org_summaryStat"=NULL,
           "prc_table"=NULL,
-          "prc_summaryStat"=NULL,
-          "prc_missingCount"=NULL,
-          "prc_imputeDist"=NULL
+          "prc_distPlot"=NULL,
+          "prc_summaryStat"=NULL
         ),
         # data processing - normalizing variables
         "dataNormalize"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
-          "isReplaced"=NULL,
+          "isReplaced"=FALSE,
           "org_table"=NULL,
           "org_summaryStat"=NULL,
           "org_violinDist"=NULL,
@@ -358,7 +355,7 @@ shinyServer(function(input, output, session){
         ),
         # statistical inference - testing variables
         "statTest"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "maPlot"=NULL,
           "volanoPlot"=NULL,
@@ -367,27 +364,27 @@ shinyServer(function(input, output, session){
         ),
         # statistical inference - enrichment variables
         "enrichAnalysis"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "table"=NULL,
           "plot"=NULL
         ),
         # statistical inference - reduced go variables
         "goVis"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "table"=NULL,
           "plot"=NULL
         ),
         # summary visualizations - dimensional reduction variables
         "dimenReduc"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "table"=NULL,
           "plot"=NULL
         ),
         "cluster"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "test_silhouette"=NULL,
           "test_sumSquare"=NULL,
@@ -399,7 +396,7 @@ shinyServer(function(input, output, session){
           "res_membership"=NULL
         ),
         "feature"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "selectTable"=NULL,
           "plot_config"=NULL,
@@ -411,19 +408,19 @@ shinyServer(function(input, output, session){
         "isRepl"=FALSE,
         # data setup variables
         "dataSetup"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "table"=NULL
         ),
         # data annotation variables
         "dataAnnot"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "table"=NULL
         ),
         # quality check plot variables
         "qualityCheck"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "distPlot"=NULL,
           "cvPlot"=NULL,
@@ -434,7 +431,7 @@ shinyServer(function(input, output, session){
         ),
         # data processing - averaging variables
         "dataAverage"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "isReplaced"=FALSE,
           "org_distPlot"=NULL,
           "org_table"=NULL,
@@ -443,9 +440,9 @@ shinyServer(function(input, output, session){
         ),
         # data processing - filtering variables
         "dataFilter"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
-          "isReplaced"=NULL,
+          "isReplaced"=FALSE,
           "org_table"=NULL,
           "org_countPlot"=NULL,
           "org_percentPlot"=NULL,
@@ -457,23 +454,22 @@ shinyServer(function(input, output, session){
         ),
         # data processing - imputing variables
         "dataImpute"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
-          "isReplaced"=NULL,
+          "isReplaced"=FALSE,
           "org_table"=NULL,
-          "org_summaryStat"=NULL,
           "org_missingCount"=NULL,
-          "org_imputeDist"=NULL,
+          "prv_imputeDist"=NULL,
+          "org_summaryStat"=NULL,
           "prc_table"=NULL,
-          "prc_summaryStat"=NULL,
-          "prc_missingCount"=NULL,
-          "prc_imputeDist"=NULL
+          "prc_distPlot"=NULL,
+          "prc_summaryStat"=NULL
         ),
         # data processing - normalizing variables
         "dataNormalize"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
-          "isReplaced"=NULL,
+          "isReplaced"=FALSE,
           "org_table"=NULL,
           "org_summaryStat"=NULL,
           "org_violinDist"=NULL,
@@ -487,7 +483,7 @@ shinyServer(function(input, output, session){
         ),
         # statistical inference - testing variables
         "statTest"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "maPlot"=NULL,
           "volanoPlot"=NULL,
@@ -496,27 +492,27 @@ shinyServer(function(input, output, session){
         ),
         # statistical inference - enrichment variables
         "enrichAnalysis"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "table"=NULL,
           "plot"=NULL
         ),
         # statistical inference - reduced go variables
         "goVis"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "table"=NULL,
           "plot"=NULL
         ),
         # summary visualizations - dimensional reduction variables
         "dimenReduc"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "table"=NULL,
           "plot"=NULL
         ),
         "cluster"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "test_silhouette"=NULL,
           "test_sumSquare"=NULL,
@@ -528,7 +524,7 @@ shinyServer(function(input, output, session){
           "res_membership"=NULL
         ),
         "feature"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "selectTable"=NULL,
           "plot_config"=NULL,
@@ -546,13 +542,13 @@ shinyServer(function(input, output, session){
           "table"=NULL
         ),
         "proteinDomain"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "plot"=NULL,
           "table"=NULL
         ),
         "circularNetwork"=list(
-          "isRun"=NULL,
+          "isRun"=FALSE,
           "param"=NULL,
           "concat_table"=NULL,
           "connect_table"=NULL,

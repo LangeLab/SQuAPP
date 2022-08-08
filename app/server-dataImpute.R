@@ -29,6 +29,7 @@ output$select_impute_group <- renderUI({
 # Previews the data before imputation in different states to allow
 #   user to configure the imputation settings in most informative way
 observeEvent(input$preview_imputation_distribution, {
+  # TODO: Add validation and checks
   data_name <- input$select_imputation_data
   # Get the current data
   dataList <- variables$datasets[[data_name]]
@@ -55,21 +56,12 @@ observeEvent(input$preview_imputation_distribution, {
 
   if(impute_method == "with"){
     impute_value <- input$impute_with
-  }else{impute_value <- NULL}
-
-  # Set parameters for original data preview to be used in reporting
-  variables$reportVars[[data_name]]$dataImpute$parameters$original <- list(
-    "Is Grouped?"=if_byGroup,
-    "Group Factor"=group_factor,
-    "Imputation Method"=impute_method,
-    "Single Imputed Value"=impute_value,
-    "Downshifting Magnitude"=downshift_mag
-  )
+  }else{ impute_value <- NULL }
 
   # Create missing value as stacked bar plot for data preview
   res_missingness <- missing_values.stacked_bar_plot(dataList, group_factor)
   # Save the plot to the report variables
-  variables$reportVars[[data_name]]$dataImpute$plot$original$missingness <- res_missingness
+  variables$reportParam[[data_name]]$dataImpute$org_missingCount <- res_missingness
   # Render plot to the user
   output$show_missing_values_to_impute <- renderPlot({
     req(res_missingness)
@@ -92,7 +84,7 @@ observeEvent(input$preview_imputation_distribution, {
     pname, res_density, multi=F, fig.width=12, fig.height=4
   )
   # Save the plot to the report variables
-  variables$reportVars[[data_name]]$dataImpute$plot$original$density <- res_density
+  variables$reportParam[[data_name]]$dataImpute$prv_imputeDist <- res_density
   # Output the imputation distribution for user to visualize
   output$show_imputation_distribution_comparison <- renderPlot({
     req(res_density)
@@ -102,6 +94,9 @@ observeEvent(input$preview_imputation_distribution, {
   output$imputation_data_preview <- shiny.preview.data(
     cbind(dataList$annot, dataList$quant), colIgnore='Fasta.sequence'
   )
+  # Save original table to reportParam for the original state to reportParam
+  variables$reportParam[[data_name]]$dataImpute$org_table <- report.preview.data(
+    dataList$quant, colIgnore="Fasta.sequence", rowN=3)
 
   # Create basicStats to preview
   sumStat_df <- shiny.basicStats(dataList$quant)
@@ -109,17 +104,20 @@ observeEvent(input$preview_imputation_distribution, {
   output$imputation_data_sumStat <- shiny.preview.data(
     sumStat_df, row.names=TRUE, pageLength=16
   )
-
-  # Save original dataList to the report variables
-  variables$reportVars[[data_name]]$dataImpute$data$original <- dataList
-  # Save the summary statistics for the original data
-  variables$reportVars[[data_name]]$dataImpute$summary$statistics$original <- sumStat_df
-
+  # Save the summary stat table for the original state to reportParam
+  variables$reportParam[[data_name]]$dataImpute$org_summaryStat <- sumStat_df
 })
 
 # If user clicked the submit imputation button
 observeEvent(input$submit_for_imputation, {
-  # Get the name of the selected data level
+  # Initialize null states for useful variables as well as empty str versions for param table
+  group_factor <- NULL
+  group_factor_str <- ""
+  downshift_mag <- NULL
+  downshift_magnitude_str <- "NA"
+  impute_value <- NULL
+  impute_value_str <- "NA"
+  #TODO: Add validation and checks
   data_name <- input$select_imputation_data
   # Get the current data
   dataList <- variables$datasets[[data_name]]
@@ -139,24 +137,25 @@ observeEvent(input$submit_for_imputation, {
 
     if(if_byGroup){
       group_factor <- input$select_impute_group
-    }else{ group_factor <- NULL }
+      group_factor_str <- group_factor
+    }
 
     if(impute_method=='Down-shifted Normal'){
       downshift_mag <- input$downshift_magnitude
-    }else{ downshift_mag <- NULL }
+      downshift_magnitude_str <- as.character(downshift_mag)
+    }
 
     if(impute_method == "with"){
       impute_value <- input$impute_with
-    }else{impute_value <- NULL}
+      impute_value_str <- as.character(impute_value)
+    }
 
-    # Set parameters for imputed data to be used in reporting
-    variables$reportVars[[data_name]]$dataImpute$parameters$imputed <- list(
-      "Is Grouped?"=if_byGroup,
-      "Group Factor"=group_factor,
-      "Imputation Method"=impute_method,
-      "Single Imputed Value"=impute_value,
-      "Downshifting Magnitude"=downshift_mag
-    )
+    # Create paramaters table and save to reportParams
+    variables$reportParam[[data_name]]$dataImpute$param <- data.frame(
+      "parameters" = c("is imputation grouped?", "grouping",
+                       "method", "downshift magnitude", "imputed value"),
+      "values" = c(if_byGroup, group_factor_str,
+                   impute_method, downshift_magnitude_str, impute_value_str))
 
     # Impute the data based on the configuration
     dataList_new <- impute_data(dataList,
@@ -164,6 +163,10 @@ observeEvent(input$submit_for_imputation, {
                                 group_factor=group_factor,
                                 downshift_mag=downshift_mag,
                                 impute_value=impute_value)
+
+    # Save the processed data into reactive value to be used
+    #  in record processed function if selected
+    variables$temp_data <- dataList_new
 
     # Create imputation comparison splitViolin plot
     res <- compare.imputation_split_violin_plot(dataList,
@@ -178,7 +181,7 @@ observeEvent(input$submit_for_imputation, {
       pname, res, multi=F, fig.width=12, fig.height=6
     )
     # Save the plot to the report variable
-    variables$reportVars[[data_name]]$dataImpute$plot$imputed$splitViolin <- res
+    variables$reportParam[[data_name]]$dataImpute$prc_distPlot <- res
     # Render plot to the user
     output$show_imputation_comparison_splitViolin <- renderPlot({
       req(res)
@@ -201,6 +204,10 @@ observeEvent(input$submit_for_imputation, {
       colIgnore="Fasta.sequence"
     )
 
+    # Save processed table to reportParam for the processed state to reportParam
+    variables$reportParam[[data_name]]$dataImpute$prc_table <- report.preview.data(
+      dataList_new$quant, colIgnore="Fasta.sequence", rowN=3)
+
     # Create summary statistics for the imputed data
     sumStat_df <- shiny.basicStats(dataList_new$quant)
     # Create preview for summary statistics created for filtered data
@@ -215,16 +222,17 @@ observeEvent(input$submit_for_imputation, {
     output$downloadImputed_sumStat <- shiny.download.data(
       fname_summary_table, sumStat_df, row.names=TRUE
     )
-    # Update imputation toggle
-    dataList_new$impt <- TRUE
+
+    # Save the summary statistics for the filtered data
+    variables$reportParam[[data_name]]$dataImpute$prc_summaryStat <- sumStat_df
+
+    # update isRun for filtering
+    variables$reportParam[[data_name]]$dataImpute$isRun <- TRUE
   }
-  # Save filtered dataList to the report variables
-  variables$reportVars[[data_name]]$dataImpute$data$imputed <- dataList_new
-  # Save the summary statistics for the filtered data
-  variables$reportVars[[data_name]]$dataImpute$summary$statistics$imputed <- sumStat_df
+
 })
 
-# Record the Imputed data as the original data in the reactive variables for further analysis
+# Create confirmation for user to save the imputed data as original
 observeEvent(input$record_imputed_data, {
   # Give an alert informing user that this will replace the data
   confirmSweetAlert(
@@ -236,15 +244,22 @@ observeEvent(input$record_imputed_data, {
   )
 })
 
+# If User confirmed record replace the processed data with the current data
 observeEvent(input$confirm_record_imputed,{
   # Get the data name from selected level
   data_name <- input$select_imputation_data
   # Make sure no error occurs
   if(isTruthy(input$confirm_record_imputed)){
     # If imputed data for the given data level is saved
-    if(isTruthy(variables$reportVars[[data_name]]$dataImpute$data$imputed)){
+    if(isTruthy(variables$temp_data)){
+      # Update isReplaced variable with TRUE
+      variables$reportParam[[data_name]]$dataImpute$isReplaced <- TRUE
       # Save the modified data list into its reactive list values
-      variables$datasets[[data_name]] <- variables$reportVars[[data_name]]$dataImpute$data$imputed
-    }
+      variables$datasets[[data_name]] <- variables$temp_data
+      # Update the imputed status in the main dataList
+      variables$datasets[[data_name]]$impt <- TRUE
+      # reset the temp_data variable
+      variables$temp_data <- NULL
+    }else{return()}
   }else{return()}
 })

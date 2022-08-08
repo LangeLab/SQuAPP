@@ -72,29 +72,24 @@ observeEvent(input$preview_quality_for_filter, {
     )
     return()
   }else{
+    # preview grouping
     if_byGroup <- input$filterPreviewByGroupSwitch
     if(!if_byGroup){
       group_factor <- NULL
     }else{
       group_factor <- input$select_filterPreview_group
     }
-    # Set parameters for original data preview to be used in reporting
-    variables$reportVars[[data_name]]$dataFilter$parameters$original <- list(
-      "Is Grouped?"=if_byGroup,
-      "Group Factor"=group_factor
-    )
+
     # Create Pre-filtering completeness plot from counts
     res_count <- plot_completeness_counts(dataList, group_factor=group_factor)
     # Create a download link to the count based completeness plot
-    pname_count <- paste0(
-      "dataCompleteness_with_count_", data_name, "_",
-      group_factor, "_", Sys.Date(), ".pdf"
-    )
+    pname_count <- paste0("dataCompleteness_with_count_", data_name, "_",
+                          group_factor, "_", Sys.Date(), ".pdf")
     output$download_preFilter_count <- shiny.download.plot(
       pname_count, res_count, multi=F, fig.width=12, fig.height=4
     )
     # Save the plot to the report variables
-    variables$reportVars[[data_name]]$dataFilter$plot$original$count <- res_count
+    variables$reportParam[[data_name]]$dataFilter$org_countPlot <- res_count
     # Render plot to the user
     output$show_preFilter_count <- renderPlot({
       req(res_count)
@@ -104,15 +99,13 @@ observeEvent(input$preview_quality_for_filter, {
     # Create Pre-filtering completeness plot from percentage
     res_pctg <- plot_completeness_percentage(dataList, group_factor=group_factor)
     # Create a download link to percentage based completeness plot
-    pname_pctg <- paste0(
-      "dataCompleteness_with_percent_", data_name, "_",
-      group_factor, "_", Sys.Date(), ".pdf"
-    )
+    pname_pctg <- paste0("dataCompleteness_with_percent_", data_name, "_",
+                         group_factor, "_", Sys.Date(), ".pdf")
     output$download_preFilter_percent <- shiny.download.plot(
       pname_pctg, res_pctg, multi=F, fig.width=12, fig.height=4
     )
     # Save the plot to the report variables
-    variables$reportVars[[data_name]]$dataFilter$plot$original$percentage <- res_pctg
+    variables$reportParam[[data_name]]$dataFilter$org_percentPlot <- res_pctg
     # Renter plot to the user
     output$show_preFilter_percent <- renderPlot({
       req(res_pctg)
@@ -123,6 +116,9 @@ observeEvent(input$preview_quality_for_filter, {
     output$filtering_data_preview <- shiny.preview.data(
       cbind(dataList$annot, dataList$quant), colIgnore='Fasta.sequence'
     )
+    # Save original table to reportParam for the original state to reportParam
+    variables$reportParam[[data_name]]$dataFilter$org_table <- report.preview.data(
+      dataList$quant, colIgnore="Fasta.sequence", rowN=3)
 
     # Create summary statistics for the pre-filtering data
     sumStat_df <- shiny.basicStats(dataList$quant)
@@ -130,16 +126,16 @@ observeEvent(input$preview_quality_for_filter, {
     output$filtering_data_sumStat <- shiny.preview.data(
       sumStat_df, row.names=TRUE, pageLength=16
     )
-
-    # Save original dataList to the report variables
-    variables$reportVars[[data_name]]$dataFilter$data$original <- dataList
-    # Save the summary statistics for the original data
-    variables$reportVars[[data_name]]$dataFilter$summary$statistics$original <- sumStat_df
+    # Save the summary stat table for the original state to reportParam
+    variables$reportParam[[data_name]]$dataFilter$org_summaryStat <- sumStat_df
   }
 })
 
 # Apply the filtering with the given configuration
 observeEvent(input$submit_for_filtering, {
+  # initialize grouping factor to null
+  group_factor <- NULL
+  group_factor_str <- ""
   #TODO: Add validation and checks
   data_name <- input$select_filtering_data
   # Get the selected data level
@@ -155,7 +151,6 @@ observeEvent(input$submit_for_filtering, {
   }else{
     # Save the input variables to local vars
     if_removeSample <- input$removeSampleSwitch
-
     if_filterData <- input$filterFeaturesSwitch
     if_filterByGroup <- input$filterByGroupSwitch
 
@@ -163,36 +158,54 @@ observeEvent(input$submit_for_filtering, {
     if(if_removeSample){
       samples_to_remove <- input$select_samples_to_remove
       dataList <- remove_samples(dataList, samples_to_remove)
+      removed_samples_str <- paste0(samples_to_remove, collapse=" + ")
     }else{
       samples_to_remove <- NULL
+      removed_samples_str <- ""
     }
 
     # If user select to remove features by data completeness filter
     if(if_filterData){
       filter_level <- input$filter_level
+      filter_level_str <- as.character(filter_level)
       if(if_filterByGroup){
         group_factor <- input$select_filter_group
-      }else{
-        group_factor <- NULL
+        group_factor_str <- group_factor
       }
       dataList <- filter_features(dataList,
                                   filterLevel=filter_level,
                                   group_factor=group_factor)
     }else{
       filter_level <- NULL
+      filter_level_str <- ""
     }
 
-    # Set parameters for original data preview to be used in reporting
-    variables$reportVars[[data_name]]$dataFilter$parameters$filtered <- list(
-      "Remove Samples?"=if_removeSample,
-      "Samples to be Removed"=samples_to_remove,
-      "Filtering Level"=filter_level,
-      "Is Grouped?"=if_filterByGroup,
-      "Group Factor"=group_factor
+    ## Create string information for parameter table
+    # Get preview grouping information for the parameter table
+    if_prev_byGroup <- input$filterPreviewByGroupSwitch
+    if(!if_prev_byGroup){
+      prev_group_factor <- ""
+    }else{
+      prev_group_factor <- input$select_filterPreview_group
+    }
+
+    # Create paramaters table and save to reportParams
+    variables$reportParam[[data_name]]$dataFilter$param <- data.frame(
+      "parameters" = c("is preview grouped?", "preview grouping",
+                       "any sample removed?", "removed samples",
+                       "is filteration applied?", "filteration cutoff",
+                       "is filteration grouped?", "filteration grouping"),
+      "values" = c(if_prev_byGroup, prev_group_factor,
+                   if_removeSample, removed_samples_str,
+                   if_filterData, filter_level_str,
+                   if_filterByGroup, group_factor_str)
     )
 
-    # Update filtered toggle variable
-    dataList$filt <- TRUE
+    # # Update filtered toggle variable
+    # dataList$filt <- TRUE
+    # Save the processed data into reactive value to be used
+    #  in record processed function if selected
+    variables$temp_data <- dataList
 
     # Create Pre-filtering completeness plot from counts
     res_count <- plot_completeness_counts(dataList, group_factor=group_factor)
@@ -205,7 +218,7 @@ observeEvent(input$submit_for_filtering, {
       pname_count, res_count, multi=F, fig.width=12, fig.height=4
     )
     # Save the plot to the report variable
-    variables$reportVars[[data_name]]$dataFilter$plot$filtered$count <- res_count
+    variables$reportParam[[data_name]]$dataFilter$prc_countPlot <- res_count
     # Render plot to the user
     output$show_postFilter_count <- renderPlot({
       req(res_count)
@@ -223,7 +236,7 @@ observeEvent(input$submit_for_filtering, {
       pname, res, multi=F, fig.width=12, fig.height=4
     )
     # Save the plot to the report variable
-    variables$reportVars[[data_name]]$dataFilter$plot$filtered$percentage <- res_pctg
+    variables$reportParam[[data_name]]$dataFilter$prc_percentPlot <- res_pctg
     # Render plot to the user
     output$show_postFilter_percent <- renderPlot({
       req(res_pctg)
@@ -245,6 +258,10 @@ observeEvent(input$submit_for_filtering, {
       colIgnore="Fasta.sequence"
     )
 
+    # Save processed table to reportParam for the processed state to reportParam
+    variables$reportParam[[data_name]]$dataFilter$prc_table <- report.preview.data(
+      dataList$quant, colIgnore="Fasta.sequence", rowN=3)
+
     # Create summary statistics for the filtered data
     sumStat_df <- shiny.basicStats(dataList$quant)
     # Create preview for summary statistics created for filtered data
@@ -260,10 +277,11 @@ observeEvent(input$submit_for_filtering, {
       fname_summary_table, sumStat_df, row.names=TRUE
     )
 
-    # Save filtered dataList to the report variables
-    variables$reportVars[[data_name]]$dataFilter$data$filtered <- dataList
-    # Save the summary statistics for the filtered data
-    variables$reportVars[[data_name]]$dataFilter$summary$statistics$filtered <- sumStat_df
+    # Save the summary stat table for the processed state to reportParam
+    variables$reportParam[[data_name]]$dataFilter$prc_summaryStat <- sumStat_df
+
+    # update isRun for filtering
+    variables$reportParam[[data_name]]$dataFilter$isRun <- TRUE
   }
 })
 
@@ -286,9 +304,15 @@ observeEvent(input$confirm_record_filtered, {
   # Make sure no error occurs
   if(isTruthy(input$confirm_record_filtered)){
     # If filtered data for the given data level is saved
-    if(isTruthy(variables$reportVars[[data_name]]$dataFilter$data$filtered)){
+    if(isTruthy(variables$temp_data)){
+      # Update isReplaced variable with TRUE
+      variables$reportParam[[data_name]]$dataFilter$isReplaced <- TRUE
       # Save the modified data list into its reactive list values
-      variables$datasets[[data_name]] <- variables$reportVars[[data_name]]$dataFilter$data$filtered
-    }
+      variables$datasets[[data_name]] <- variables$temp_data
+      # Update the filtered status in the main dataList
+      variables$datasets[[data_name]]$filt <- TRUE
+      # reset the temp_data variable
+      variables$temp_data <- NULL
+    }else{return()}
   }else{return()}
 })

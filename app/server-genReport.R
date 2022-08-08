@@ -206,7 +206,7 @@ output$render_report_opt_qualityCheck_ptm <- renderUI({
 # Render protein level Options
 output$render_report_opt_dataAverage_protein <- renderUI({
   # Check if the data level has replicas
-  if(variables$datasets$protein$repl){
+  if(variables$reportParam$protein$isRepl){
     # If data averaging is done
     if(isTruthy(variables$reportParam$protein$dataAverage$isRun)){
       checkboxGroupInput(inline=TRUE,
@@ -240,7 +240,7 @@ output$render_report_opt_dataAverage_protein <- renderUI({
 # Render peptide level Options
 output$render_report_opt_dataAverage_peptide <- renderUI({
   # Check if the data level has replicas
-  if(variables$datasets$peptide$repl){
+  if(variables$reportParam$peptide$isRepl){
     # If data averaging is done
     if(isTruthy(variables$reportParam$peptide$dataAverage$isRun)){
       checkboxGroupInput(inline=TRUE,
@@ -274,7 +274,7 @@ output$render_report_opt_dataAverage_peptide <- renderUI({
 # Render termini level Options
 output$render_report_opt_dataAverage_termini <- renderUI({
   # Check if the data level has replicas
-  if(variables$datasets$termini$repl){
+  if(variables$reportParam$termini$isRepl){
     # If data averaging is done
     if(isTruthy(variables$reportParam$termini$dataAverage$isRun)){
       checkboxGroupInput(inline=TRUE,
@@ -308,7 +308,7 @@ output$render_report_opt_dataAverage_termini <- renderUI({
 # Render ptm level Options
 output$render_report_opt_dataAverage_ptm <- renderUI({
   # Check if the data level has replicas
-  if(variables$datasets$ptm$repl){
+  if(variables$reportParam$ptm$isRepl){
     # If  data averaging is done
     if(isTruthy(variables$reportParam$ptm$dataAverage$isRun)){
       checkboxGroupInput(inline=TRUE,
@@ -476,17 +476,18 @@ output$render_report_opt_dataImpute_protein <- renderUI({
       choices=c("Is Replaced?",
                 "Parameters",
                 "Original State - Data",
-                "Original State - Summary Statistics",
                 "Original State - Missing Value Counts",
-                "Original State - Imputation Distributions",
+                "Preview of Imputation Distributions",
+                "Original State - Summary Statistics",
                 "Imputed State - Data",
-                "Imputed State - Summary Statistics",
                 "Imputed State - Missing Value Counts",
-                "Imputed State - Imputation Distributions"),
+                "Sample-wise Imputation Distributions",
+                "Imputed State - Summary Statistics"),
       selected=c("Is Replaced?",
                  "Parameters",
                  "Imputed State - Summary Statistics",
-                 "Imputed State - Imputation Distributions"
+                 "Preview of Imputation Distributions",
+                 "Sample-wise Imputation Distributions"
                 )
     )
     # If data imputation is not completed render a placeholder
@@ -508,17 +509,18 @@ output$render_report_opt_dataImpute_peptide <- renderUI({
       choices=c("Is Replaced?",
                 "Parameters",
                 "Original State - Data",
-                "Original State - Summary Statistics",
                 "Original State - Missing Value Counts",
-                "Original State - Imputation Distributions",
+                "Preview of Imputation Distributions",
+                "Original State - Summary Statistics",
                 "Imputed State - Data",
-                "Imputed State - Summary Statistics",
                 "Imputed State - Missing Value Counts",
-                "Imputed State - Imputation Distributions"),
+                "Sample-wise Imputation Distributions",
+                "Imputed State - Summary Statistics"),
       selected=c("Is Replaced?",
                  "Parameters",
                  "Imputed State - Summary Statistics",
-                 "Imputed State - Imputation Distributions"
+                 "Preview of Imputation Distributions",
+                 "Sample-wise Imputation Distributions"
                 )
     )
     # If data imputation is not completed render a placeholder
@@ -540,17 +542,18 @@ output$render_report_opt_dataImpute_termini <- renderUI({
       choices=c("Is Replaced?",
                 "Parameters",
                 "Original State - Data",
-                "Original State - Summary Statistics",
                 "Original State - Missing Value Counts",
-                "Original State - Imputation Distributions",
+                "Preview of Imputation Distributions",
+                "Original State - Summary Statistics",
                 "Imputed State - Data",
-                "Imputed State - Summary Statistics",
                 "Imputed State - Missing Value Counts",
-                "Imputed State - Imputation Distributions"),
+                "Sample-wise Imputation Distributions",
+                "Imputed State - Summary Statistics"),
       selected=c("Is Replaced?",
                  "Parameters",
                  "Imputed State - Summary Statistics",
-                 "Imputed State - Imputation Distributions"
+                 "Preview of Imputation Distributions",
+                 "Sample-wise Imputation Distributions"
                 )
     )
     # If data imputation is not completed render a placeholder
@@ -572,17 +575,18 @@ output$render_report_opt_dataImpute_ptm <- renderUI({
       choices=c("Is Replaced?",
                 "Parameters",
                 "Original State - Data",
-                "Original State - Summary Statistics",
                 "Original State - Missing Value Counts",
-                "Original State - Imputation Distributions",
+                "Preview of Imputation Distributions",
+                "Original State - Summary Statistics",
                 "Imputed State - Data",
-                "Imputed State - Summary Statistics",
                 "Imputed State - Missing Value Counts",
-                "Imputed State - Imputation Distributions"),
+                "Sample-wise Imputation Distributions",
+                "Imputed State - Summary Statistics"),
       selected=c("Is Replaced?",
                  "Parameters",
                  "Imputed State - Summary Statistics",
-                 "Imputed State - Imputation Distributions"
+                 "Preview of Imputation Distributions",
+                 "Sample-wise Imputation Distributions"
                 )
     )
     # If data imputation is not completed render a placeholder

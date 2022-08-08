@@ -25,10 +25,10 @@ fluidPage(
           condition="input.select_imputation_method=='with'",
           numericInput(
             "impute_with",
-            "Value to impute missing values",
+            "Value to impute missing values with",
             value=0,
             min=0,
-            max=1000
+            max=NA
           )
         ),
         conditionalPanel(
@@ -36,9 +36,10 @@ fluidPage(
           sliderInput(
             "downshift_magnitude",
             "Value to down shift minimum normal distribution",
-            value=3.5,
+            value=4,
             min=1,
-            max=5
+            max=9,
+            step=0.25
           )
         ),
         hr(),
