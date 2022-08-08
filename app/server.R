@@ -534,6 +534,10 @@ shinyServer(function(input, output, session){
         )
       ),
       "shared"=list(
+        "reference"=list(
+          "param"=NULL,
+          "table"=NULL
+        ),
         "metadata"=list(
           "param"=NULL,
           "table"=NULL

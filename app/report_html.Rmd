@@ -8,7 +8,30 @@ params:
 **Report setup**
 
 ```{r setup, include=FALSE}
+require(knitr)
+require(kableExtra)
 knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r util_funcs, include=FALSE}
+check_var = FALSE
+isProtein = FALSE
+isPeptide = FALSE
+isTermini = FALSE
+isPTM = FALSE
+print.pretty_table <- function(data,caption=NULL, format="html"){
+  knitr::kable(
+    data,
+    format=format,
+    caption=caption,
+    # col.names = gsub("[.]", " "),
+    table.attr = "style='width:40%;'"
+  ) %>% kable_styling(
+    full_width = F,
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    position = "center"
+  )
+}
 ```
 
 ```{r load_data, include=TRUE}
@@ -35,22 +58,532 @@ tryCatch(
   }
 )
 elapsed <- as.character(difftime(t2, t1, units="secs")[[1]])
-message(
-  paste(
-    "Shiny variables are correctly load in",
-    elapsed,
-    "seconds.",
-    sep=" ")
-)
+message(paste("Shiny variables are correctly load in",
+              elapsed, "seconds.", sep=" "))
 ```
 # Analysis Summary
 
-## Data Used in Analysis
+## Data in Analysis
+In this section of the report you will find the annotated version of your data that `SQuAPP` used internally. The full data can be download in the data setup section in the prepared data boxes.
 
-```{r check_protein_section, results="asis"}
-if(!is.null(reportParam$protein$dataSetup$isRun)){
-  cat("### Protein Level")
+### Reference Used
+The proteome fasta reference used to annotated the different data levels provided.
+
+```{r reference_preview, include=TRUE, results="asis"}
+tmp_obj <- reportParam$shared$reference
+
+if(!is.null(tmp_obj$param)){
+  print.pretty_table(
+    tmp_obj$param,
+    caption="Relevant parameters for the reference used.")
 }else{
-  cat("**Skipping protein level since it is not run...**")
+  cat("> No parameters have been recorded for the reference used!\n\n")
 }
+
+# Data table preview
+if(!is.null(tmp_obj$table)){
+  check_var <- TRUE
+  print.pretty_table(
+    tmp_obj$table,
+    caption="Preview of reference used in the analysis")
+}else{
+  cat("> Error in rendering the reference table!\n\n")
+}
+
+if(check_var){
+  cat("**Fasta.sequence and Gene.name has been removed from the preview but are used in the `SQuAPP` analysis.**\n\n")
+}
+cat("---\n\n")
+```
+
+### Metadata Used
+The metadata provided is shown with the parameters used to correctly setup
+in the analysis as well as few rows of content for preview.
+
+```{r metadata_preview, include=TRUE, results="asis"}
+tmp_obj <- reportParam$shared$metadata
+
+if(!is.null(tmp_obj$param)){
+  print.pretty_table(
+    tmp_obj$param,
+    caption="Relevant parameters for the metadata used.")
+}else{
+  cat("> No parameters have been recorded for the metadata used!\n\n")
+}
+
+# Data table preview
+if(!is.null(tmp_obj$table)){
+  print.pretty_table(
+    tmp_obj$table,
+    caption="Preview of metadata used in the analysis")
+}else{
+  cat("> Error in rendering the metadata table!\n\n")
+}
+
+cat("---\n\n")
+```
+
+```{r protein_data_preview, include=TRUE, results="asis"}
+tmp_obj <- reportParam$protein$dataSetup
+
+# Update the isProtein variable to be used throughout protein sections
+isProtein <- !is.null(tmp_obj$isRun)
+
+# Rendering the section headers and markdown text.
+if(isProtein){
+  cat("### Prepared Protein Data\n\n")
+}else{
+  cat("> Protein level data is not run with the current analysis. **Disabling protein sections in the report.**\n\n")
+}
+
+# Rendering the Parameters Table
+if(isProtein){
+  if(!is.null(tmp_obj$param)){
+    print.pretty_table(
+      tmp_obj$param,
+      caption="Parameters used to setup protein data.")
+  }else{
+    cat("> An error occurred when saving the parameters of the data\n\n")
+  }
+}
+
+# Rendering the Data Table
+if(isProtein){
+  if(!is.null(tmp_obj$table)){
+    print.pretty_table(
+      tmp_obj$table,
+      caption="Preview of prepared protein data.") %>%
+      scroll_box(width="100%")
+  }else{
+    cat("> An error occurred when rendering the prepared protein data\n\n")
+  }
+}
+
+cat("---\n\n")
+```
+
+```{r peptide_data_preview, include=TRUE, results="asis"}
+tmp_obj <- reportParam$peptide$dataSetup
+
+# Update the isPeptide variable to be used throughout peptide sections
+isPeptide <- !is.null(tmp_obj$isRun)
+
+# Rendering the section headers and markdown text.
+if(isPeptide){
+  cat("### Prepared Peptide Data\n\n")
+}else{
+  cat("> Peptide level data is not run with the current analysis. **Disabling peptide sections in the report.**\n\n")
+}
+
+# Rendering the Parameters Table
+if(isPeptide){
+  if(!is.null(tmp_obj$param)){
+    print.pretty_table(
+      tmp_obj$param,
+      caption="Parameters used to setup peptide data.")
+  }else{
+    cat("> An error occurred when saving the parameters of the data\n\n")
+  }
+}
+
+# Rendering the Data Table
+if(isPeptide){
+  if(!is.null(tmp_obj$table)){
+    print.pretty_table(
+      tmp_obj$table,
+      caption="Preview of prepared peptide data.") %>%
+      scroll_box(width="100%")
+  }else{
+    cat("> An error occurred when rendering the prepared peptide data\n\n")
+  }
+}
+
+cat("---\n\n")
+```
+
+```{r termini_data_preview, include=TRUE, results="asis"}
+tmp_obj <- reportParam$termini$dataSetup
+
+# Update the isTermini variable to be used throughout termini sections
+isTermini <- !is.null(tmp_obj$isRun)
+
+# Rendering the section headers and markdown text.
+if(isTermini){
+  cat("### Prepared Termini Data\n\n")
+}else{
+  cat("> Termini level data is not run with the current analysis. **Disabling termini sections in the report.**\n\n")
+}
+
+# Rendering the Parameters Table
+if(isTermini){
+  if(!is.null(tmp_obj$param)){
+    print.pretty_table(
+      tmp_obj$param,
+      caption="Parameters used to setup termini data.")
+  }else{
+    cat("> An error occurred when saving the parameters of the data\n\n")
+  }
+}
+
+# Rendering the Data Table
+if(isTermini){
+  if(!is.null(tmp_obj$table)){
+    print.pretty_table(
+      tmp_obj$table,
+      caption="Preview of prepared termini data.") %>%
+      scroll_box(width="100%")
+  }else{
+    cat("> An error occurred when rendering the prepared termini data\n\n")
+  }
+}
+
+cat("---\n\n")
+```
+
+```{r ptm_data_preview, include=TRUE, results="asis"}
+tmp_obj <- reportParam$ptm$dataSetup
+
+# Update the isPTM variable to be used throughout ptm sections
+isPTM <- !is.null(tmp_obj$isRun)
+
+# Rendering the section headers and markdown text.
+if(isPTM){
+  cat("### Prepared PTM Data\n\n")
+}else{
+  cat("> PTM level data is not run with the current analysis. **Disabling ptm sections in the report.**\n\n")
+}
+
+# Rendering the Parameters Table
+if(isPTM){
+  if(!is.null(tmp_obj$param)){
+    print.pretty_table(
+      tmp_obj$param,
+      caption="Parameters used to setup ptm data.")
+  }else{
+    cat("> An error occurred when saving the parameters of the data\n\n")
+  }
+}
+
+# Rendering the Data Table
+if(isPTM){
+  if(!is.null(tmp_obj$table)){
+    print.pretty_table(
+      tmp_obj$table,
+      caption="Preview of prepared ptm data.") %>%
+      scroll_box(width="100%")
+  }else{
+    cat("> An error occurred when rendering the prepared ptm data\n\n")
+  }
+}
+
+cat("---\n\n")
+```
+## Quality Check of Data
+
+```{r protein_qualityCheck, include=TRUE, results="asis"}
+tmp_obj <- reportParam$protein$qualityCheck
+
+# Render the section header and specific markdown text
+if(isProtein){
+  cat("### Protein Quality Check\n\n")
+}
+
+# Include the parameter texts to describe the plotting process
+if(isProtein){
+  if(!is.null(tmp_obj$param)){
+    print.pretty_table(
+      tmp_obj$param,
+      caption="Parameters used to setup ptm data.")
+  }else{
+    cat("> An error occurred when saving plotting parameters\n\n")
+  }
+}
+
+# Render the distribution plot
+if(isProtein){
+  if(!is.null(tmp_obj$distPlot)){
+    tmp_obj$distPlot
+  }else{
+    cat("> An error occurred when rendering the violin plot!\n\n")
+  }
+}
+
+# Render the CV plot
+if(isProtein){
+  if(!is.null(tmp_obj$cvPlot)){
+    tmp_obj$cvPlot
+  }else{
+    cat("> An error occurred when rendering the cv plot!\n\n")
+  }
+}
+
+# Render the identification counts plot
+if(isProtein){
+  if(!is.null(tmp_obj$identCount)){
+    tmp_obj$identCount
+  }else{
+    cat("> An error occurred when rendering the number of identifications plot!\n\n")
+  }
+}
+
+# Render the shared identification count plot
+if(isProtein){
+  if(!is.null(tmp_obj$sharedCount)){
+    tmp_obj$sharedCount
+  }else{
+    cat("> An error occurred when rendering the shared identification count plot!\n\n")
+  }
+}
+
+# Render the data completeness plot
+if(isProtein){
+  if(!is.null(tmp_obj$completeness)){
+    tmp_obj$completeness
+  }else{
+    cat("> An error occurred when rendering the data completeness plot!\n\n")
+  }
+}
+
+# Render the data missingness plot
+if(isProtein){
+  if(!is.null(tmp_obj$missingCount)){
+    tmp_obj$missingCount
+  }else{
+    cat("> An error occurred when rendering the data missingness plot!\n\n")
+  }
+}
+
+if(isProtein){cat("---\n\n")}
+```
+
+```{r peptide_qualityCheck, include=TRUE, results="asis"}
+# Render the section header and specific markdown text
+if(isPeptide){
+  tmp_obj <- reportParam$peptide$qualityCheck
+  cat("### Peptide Quality Check\n\n")
+}
+
+# Include the parameter texts to describe the plotting process
+if(isPeptide){
+  if(!is.null(tmp_obj$param)){
+    print.pretty_table(
+      tmp_obj$param,
+      caption="Parameters used to setup ptm data.")
+  }else{
+    cat("> An error occurred when saving plotting parameters\n\n")
+  }
+}
+
+# Render the distribution plot
+if(isPeptide){
+  if(!is.null(tmp_obj$distPlot)){
+    tmp_obj$distPlot
+  }else{
+    cat("> An error occurred when rendering the violin plot!\n\n")
+  }
+}
+
+# Render the CV plot
+if(isPeptide){
+  if(!is.null(tmp_obj$cvPlot)){
+    tmp_obj$cvPlot
+  }else{
+    cat("> An error occurred when rendering the cv plot!\n\n")
+  }
+}
+
+# Render the identification counts plot
+if(isPeptide){
+  if(!is.null(tmp_obj$identCount)){
+    tmp_obj$identCount
+  }else{
+    cat("> An error occurred when rendering the number of identifications plot!\n\n")
+  }
+}
+
+# Render the shared identification count plot
+if(isPeptide){
+  if(!is.null(tmp_obj$sharedCount)){
+    tmp_obj$sharedCount
+  }else{
+    cat("> An error occurred when rendering the shared identification count plot!\n\n")
+  }
+}
+
+# Render the data completeness plot
+if(isPeptide){
+  if(!is.null(tmp_obj$completeness)){
+    tmp_obj$completeness
+  }else{
+    cat("> An error occurred when rendering the data completeness plot!\n\n")
+  }
+}
+
+# Render the data missingness plot
+if(isPeptide){
+  if(!is.null(tmp_obj$missingCount)){
+    tmp_obj$missingCount
+  }else{
+    cat("> An error occurred when rendering the data missingness plot!\n\n")
+  }
+}
+if(isPeptide){cat("---\n\n")}
+```
+
+```{r termini_qualityCheck, include=TRUE, results="asis"}
+# Render the section header and specific markdown text
+if(isTermini){
+  tmp_obj <- reportParam$termini$qualityCheck
+  cat("### Termini Quality Check\n\n")
+}
+
+# Include the parameter texts to describe the plotting process
+if(isTermini){
+  if(!is.null(tmp_obj$param)){
+    print.pretty_table(
+      tmp_obj$param,
+      caption="Parameters used to setup ptm data.")
+  }else{
+    cat("> An error occurred when saving plotting parameters\n\n")
+  }
+}
+
+# Render the distribution plot
+if(isTermini){
+  if(!is.null(tmp_obj$distPlot)){
+    tmp_obj$distPlot
+  }else{
+    cat("> An error occurred when rendering the violin plot!\n\n")
+  }
+}
+
+# Render the CV plot
+if(isTermini){
+  if(!is.null(tmp_obj$cvPlot)){
+    tmp_obj$cvPlot
+  }else{
+    cat("> An error occurred when rendering the cv plot!\n\n")
+  }
+}
+
+# Render the identification counts plot
+if(isTermini){
+  if(!is.null(tmp_obj$identCount)){
+    tmp_obj$identCount
+  }else{
+    cat("> An error occurred when rendering the number of identifications plot!\n\n")
+  }
+}
+
+# Render the shared identification count plot
+if(isTermini){
+  if(!is.null(tmp_obj$sharedCount)){
+    tmp_obj$sharedCount
+  }else{
+    cat("> An error occurred when rendering the shared identification count plot!\n\n")
+  }
+}
+
+# Render the data completeness plot
+if(isTermini){
+  if(!is.null(tmp_obj$completeness)){
+    tmp_obj$completeness
+  }else{
+    cat("> An error occurred when rendering the data completeness plot!\n\n")
+  }
+}
+
+# Render the data missingness plot
+if(isTermini){
+  if(!is.null(tmp_obj$missingCount)){
+    tmp_obj$missingCount
+  }else{
+    cat("> An error occurred when rendering the data missingness plot!\n\n")
+  }
+}
+if(isTermini){cat("---\n\n")}
+```
+
+```{r ptm_qualityCheck, include=TRUE, results="asis"}
+# Render the section header and specific markdown text
+if(isPTM){
+  tmp_obj <- reportParam$ptm$qualityCheck
+  cat("### PTM Quality Check\n\n")
+}
+
+# Include the parameter texts to describe the plotting process
+if(isPTM){
+  if(!is.null(tmp_obj$param)){
+    print.pretty_table(
+      tmp_obj$param,
+      caption="Parameters used to setup ptm data.")
+  }else{
+    cat("> An error occurred when saving plotting parameters\n\n")
+  }
+}
+
+# Render the distribution plot
+if(isPTM){
+  if(!is.null(tmp_obj$distPlot)){
+    tmp_obj$distPlot
+  }else{
+    cat("> An error occurred when rendering the violin plot!\n\n")
+  }
+}
+
+# Render the CV plot
+if(isPTM){
+  if(!is.null(tmp_obj$cvPlot)){
+    tmp_obj$cvPlot
+  }else{
+    cat("> An error occurred when rendering the cv plot!\n\n")
+  }
+}
+
+# Render the identification counts plot
+if(isPTM){
+  if(!is.null(tmp_obj$identCount)){
+    tmp_obj$identCount
+  }else{
+    cat("> An error occurred when rendering the number of identifications plot!\n\n")
+  }
+}
+
+# Render the shared identification count plot
+if(isPTM){
+  if(!is.null(tmp_obj$sharedCount)){
+    tmp_obj$sharedCount
+  }else{
+    cat("> An error occurred when rendering the shared identification count plot!\n\n")
+  }
+}
+
+# Render the data completeness plot
+if(isPTM){
+  if(!is.null(tmp_obj$completeness)){
+    tmp_obj$completeness
+  }else{
+    cat("> An error occurred when rendering the data completeness plot!\n\n")
+  }
+}
+
+# Render the data missingness plot
+if(isPTM){
+  if(!is.null(tmp_obj$missingCount)){
+    tmp_obj$missingCount
+  }else{
+    cat("> An error occurred when rendering the data missingness plot!\n\n")
+  }
+}
+if(isPTM){cat("---\n\n")}
+```
+
+## Data Pre-processing
+
+### Averaging Replicates
+
+```{r protein_dataAverage, include=TRUE, results="asis"}
+
+
+
 ```

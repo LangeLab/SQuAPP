@@ -47,10 +47,12 @@ observeEvent(input$produce_plots, {
     group_name <- paste0("_", group_factor)
   }
 
+  # Update isRun variable for report checks
+  variables$reportParam[[data_name]]$qualityCheck$isRun <- TRUE
   # Save quality check parameters for selected data level
-  variables$reportVars[[data_name]]$qualityCheck$parameters <- list(
-    "Is Grouped?" = input$use_group_factor,
-    "Group Factor"= group_factor
+  variables$reportParam[[data_name]]$qualityCheck$param <-data.frame(
+    "parameters" = c("is grouped", "grouping variable"),
+    "values" = c(input$use_group_factor, group_factor)
   )
 
   ### Violin Plot ###
@@ -67,7 +69,7 @@ observeEvent(input$produce_plots, {
     }else{
       # Create a download link to the violin plot
       pname_violin <- paste0(
-        "QCPlots_ViolinDist_", data_name,"_", group_factor, "_", Sys.Date(), ".pdf"
+        "QCPlots_ViolinDist_", data_name, group_name, "_", Sys.Date(), ".pdf"
       )
       output$download_qc_distributions <- shiny.download.plot(
         pname_violin, res_violin, multi=F, fig.width=12, fig.height=6
@@ -78,7 +80,7 @@ observeEvent(input$produce_plots, {
 
   if(!is.numeric(res_violin)){
     # Save the violin plot for the quality check report section
-    variables$reportVars[[data_name]]$qualityCheck$plot$Distribution <- res_violin
+    variables$reportParam[[data_name]]$qualityCheck$distPlot <- res_violin
   }
 
   ### CV Plot ###
@@ -114,7 +116,7 @@ observeEvent(input$produce_plots, {
   # If the plot var is not numeric continue with saving to the variable
   if(!is.numeric(res_cv)){
     # Save the cv plot for the quality check report section
-    variables$reportVars[[data_name]]$qualityCheck$plot$CV <- res_cv
+    variables$reportParam[[data_name]]$qualityCheck$cvPlot <- res_cv
   }
 
   ### Identified Feature Numbers Plot ###
@@ -141,7 +143,7 @@ observeEvent(input$produce_plots, {
   # If the plot var is not numeric continue with report var save
   if(!is.numeric(res_bar_id)){
     # Save the upset plot showing shared features for quality check report section
-    variables$reportVars[[data_name]]$qualityCheck$plot$SharedFeature <- res_bar_id
+    variables$reportParam[[data_name]]$qualityCheck$identCount <- res_bar_id
   }
 
   ### Shared Features Upset Plot ###
@@ -168,7 +170,7 @@ observeEvent(input$produce_plots, {
   # If the plot var is not numeric continue with report var save
   if(!is.numeric(res_upset)){
     # Save the upset plot showing shared features for quality check report section
-    variables$reportVars[[data_name]]$qualityCheck$plot$SharedFeature <- res_upset
+    variables$reportParam[[data_name]]$qualityCheck$sharedCount <- res_upset
   }
 
   ### Data Completeness Plot ###
@@ -195,7 +197,7 @@ observeEvent(input$produce_plots, {
   # If the plot var is not numeric continue with report var save
   if(!is.numeric(res_compl)){
     # Save the data completeness plot for quality check report section
-    variables$reportVars[[data_name]]$qualityCheck$plot$Completeness <- res_compl
+    variables$reportParam[[data_name]]$qualityCheck$completeness <- res_compl
   }
 
   ### Data Missingness Plot ###
@@ -223,7 +225,7 @@ observeEvent(input$produce_plots, {
   # If the plot var is not numeric continue with report var save
   if(!is.numeric(res_miss)){
     # Save the data missingness plot for quality check report section
-    variables$reportVars[[data_name]]$qualityCheck$plot$Missingness <- res_miss
+    variables$reportParam[[data_name]]$qualityCheck$missingCount <- res_miss
   }
 
 

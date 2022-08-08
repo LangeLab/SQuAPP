@@ -6,6 +6,21 @@ observeEvent(input$submitExampleData, {
   load('../data/prepared/peptide_data.RData')
   load('../data/prepared/termini_data.RData')
   load('../data/prepared/ptm_data.RData')
+
+  # Metadata
+  metadata <- protein.list$meta
+  # Save to reactive variables
+  variables$uploads$metadata <- metadata
+
+  # Save the opened data to reactive variables
+  variables$datasets$protein <- protein.list
+  variables$datasets$peptide <- peptide.list
+  variables$datasets$termini <- termini.list
+  variables$datasets$ptm <- ptm.list
+
+  # Save the uniprot reference data for example data
+  variables$reference <- feather::read_feather(path=references_vector["Homo sapiens"])
+
   ## Create dataframe to show
   # Protein
   protein <- cbind(protein.list$annot, protein.list$quant)
@@ -15,31 +30,86 @@ observeEvent(input$submitExampleData, {
   termini <- cbind(termini.list$annot, termini.list$quant)
   # PTM
   ptm <- cbind(ptm.list$annot, ptm.list$quant)
-  # Metadata
-  metadata <- protein.list$meta
-  # Save to reactive variables
-  variables$uploads$metadata <- metadata
 
   # Create datatable renders to show in the UI
-  output$example_metaData_prepared <- shiny.preview.data(metadata, colIgnore='Fasta.sequence')
-  output$example_proteinData_prepared <- shiny.preview.data(protein, colIgnore='Fasta.sequence')
-  output$example_peptideData_prepared <- shiny.preview.data(peptide, colIgnore='Fasta.sequence')
-  output$example_terminiData_prepared <- shiny.preview.data(termini, colIgnore='Fasta.sequence')
-  output$example_ptmData_prepared <- shiny.preview.data(ptm, colIgnore='Fasta.sequence')
+  output$example_metaData_prepared <- shiny.preview.data(metadata, colIgnore="Fasta.sequence")
+  output$example_proteinData_prepared <- shiny.preview.data(protein, colIgnore="Fasta.sequence")
+  output$example_peptideData_prepared <- shiny.preview.data(peptide, colIgnore="Fasta.sequence")
+  output$example_terminiData_prepared <- shiny.preview.data(termini, colIgnore="Fasta.sequence")
+  output$example_ptmData_prepared <- shiny.preview.data(ptm, colIgnore="Fasta.sequence")
 
-  # Save the opened data to reactive variables
-  variables$datasets$protein <- protein.list
-  variables$datasets$peptide <- peptide.list
-  variables$datasets$termini <- termini.list
-  variables$datasets$ptm <- ptm.list
-  # Save the uniprot reference data for example data
-  variables$reference <- feather::read_feather(path=references_vector["Homo sapiens"])
+  ## Create and Save Report Variables
+  # Update isRun variables
+  variables$reportParam$protein$dataSetup$isRun <- TRUE
+  variables$reportParam$peptide$dataSetup$isRun <- NULL
+  variables$reportParam$termini$dataSetup$isRun <- NULL
+  variables$reportParam$ptm$dataSetup$isRun <- NULL
+  # Create report preview tables and save them in reportParam-level-dataSetup variables
+  variables$reportParam$shared$reference$table <- report.preview.data(
+    variables$reference, colIgnore=c("Fasta.sequence", "Gene.name"), rowN=3
+  )
+  variables$reportParam$shared$metadata$table <- report.preview.data(
+    metadata, colIgnore="Fasta.sequence", rowN=3
+  )
+  variables$reportParam$protein$dataSetup$table <- report.preview.data(
+    protein, colIgnore="Fasta.sequence", rowN=3
+  )
+  variables$reportParam$peptide$dataSetup$table <- report.preview.data(
+    peptide, colIgnore="Fasta.sequence", rowN=3
+  )
+  variables$reportParam$termini$dataSetup$table <- report.preview.data(
+    termini, colIgnore="Fasta.sequence", rowN=3
+  )
+  variables$reportParam$ptm$dataSetup$table <- report.preview.data(
+    ptm, colIgnore="Fasta.sequence", rowN=3
+  )
+  # Update the param variables
+  variables$reportParam$shared$reference$param <- data.frame(
+    "parameters" = c("organism", "source", "isCustom", "date"),
+    "values" = c(
+      "Homo Sapiens",
+      "Reviewed (Swiss-Prot) + Unreviewed (TrEMBL)",
+      "non-customized",
+      "2022-08-07")
+  )
+  variables$reportParam$shared$metadata$param <- data.frame(
+    "parameters" = c("file name","file format", "id column", "contain replica?", "unique column"),
+    "values" = c("meta_data.csv", "comma-separated", "ID", "Yes", "SampleName")
+  )
+  variables$reportParam$protein$dataSetup$param <- data.frame(
+    "parameters" = c("file name","file format", "id column", "contain replica?"),
+    "values" = c("protein_data.csv", "comma-separated", "PG.ProteinAccessions", "Yes")
+  )
+  variables$reportParam$peptide$dataSetup$param <- data.frame(
+    "parameters" = c("file name", "file format", "id column",
+                     "protein id column", "stripped seq column",
+                     "contain replica?"),
+    "values" = c("peptide_data.csv", "comma-separated", "PEP.StrippedSequence",
+                 "PG.ProteinAccessions","PEP.StrippedSequence", "Yes"))
+  variables$reportParam$termini$dataSetup$param <- data.frame(
+    "parameters" = c("file name", "file format", "Termini Type", "id column",
+                     "protein id column", "stripped seq column",
+                     "modified seq column", "contain replica?"),
+    "values" = c("termini_data_cleaned.csv","comma-separated", "N-Term",
+                 "EG.PrecursorId","PG.ProteinAccessions", "PEP.StrippedSequence",
+                 "EG.PrecursorId", "Yes"))
+  variables$reportParam$ptm$dataSetup$param <- data.frame(
+    "parameters" = c("file name", "file format", "PTM Type", "id column",
+                     "protein id column", "stripped seq column",
+                     "modified seq column", "contain replica?"),
+    "values" = c("peptide_data.csv", "comma-separated", "Phosphorylation",
+                 "PTM_collapse_key", "PG.ProteinGroups", "PEP.StrippedSequence",
+                 "PTM_group", "No"))
 })
 
 # Upload a custom uniprot reference proteome by user
 observeEvent(input$uploadReference, {
-  # Save the uniprot reference data
+  # Save the uniprot reference data to main list
   variables$reference <- makeUniProtData(input$uploadReference$datapath)
+  # Update the report list with created reference table
+  variables$reportParam$shared$reference$table <- report.preview.data(
+    variables$reference, colIgnore=c("Fasta.sequence", "Gene.name"), rowN=3
+  )
 })
 
 # Load the references based on user's selection
@@ -60,6 +130,7 @@ observeEvent(input$load_reference, {
     if(length(refs) > 1){
       # Loop through the given references
       dfs <- data.frame()
+      orgs = c()
       for(i in refs){
         # Opens the current data
         df <- feather::read_feather(references_vector[i])
@@ -75,6 +146,19 @@ observeEvent(input$load_reference, {
     }
     # Save the uniprot reference data
     variables$reference <- dfs
+    # Update the report list with created reference table
+    variables$reportParam$shared$reference$table <- report.preview.data(
+      dfs, colIgnore=c("Fasta.sequence", "Gene.name"), rowN=3
+    )
+    # Update the param variables
+    variables$reportParam$shared$reference$param <- data.frame(
+      "parameters" = c("organism", "source", "isCustom", "date"),
+      "values" = c(
+        paste(refs, collapse=" + "),
+        "Reviewed (Swiss-Prot) + Unreviewed (TrEMBL)",
+        "non-customized",
+        "2022-08-07")
+    )
   }
 })
 
