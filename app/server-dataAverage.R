@@ -40,13 +40,15 @@ observeEvent(input$average_replicas, {
     return()
   }else{
     if(dataList$repl){
+      # Save the replica contain variable
+      variables$reportParam[[data_name]]$isRepl <- TRUE
       # Run the averaging function
       dataList_new <- average_data(dataList)
 
       # Create Violin Plot for Original Distribution
       res_original <- plotviolin(dataList, group_factor=NULL, custom_title="")
       # Save the original distribution plot to the data averaging report section
-      variables$reportVars[[data_name]]$dataAverage$plot$original <- res_original
+      variables$reportParam[[data_name]]$dataAverage$org_distPlot <- res_original
       # Render plot to the user
       output$show_original_dist_averaging <- renderPlot({
         req(res_original)
@@ -55,7 +57,7 @@ observeEvent(input$average_replicas, {
       # Create violin plot for the averaged version
       res_averaged <- plotviolin(dataList_new, group_factor=NULL, custom_title="")
       # Save the averaged distribution plot to the data averaging report section
-      variables$reportVars[[data_name]]$dataAverage$plot$averaged <- res_averaged
+      variables$reportParam[[data_name]]$dataAverage$prc_distPlot <- res_averaged
       # Create a download link to the averaged
       output$show_averaged_dist_in_averaging <- renderPlot({
         req(res_averaged)
@@ -80,9 +82,17 @@ observeEvent(input$average_replicas, {
         cbind(dataList_new$annot, dataList_new$quant),
         colIgnore="Fasta.sequence"
       )
-      # Save the data into reactive value
-      variables$reportVars[[data_name]]$dataAverage$data$original <- dataList
-      variables$reportVars[[data_name]]$dataAverage$data$averaged <- dataList_new
+      # Save the processed data into reactive value to be used
+      #  in record processed function if selected
+      variables$temp_data <- dataList_new
+
+      # Create report data-average tables and save them for report
+      variables$reportParam[[data_name]]$dataAverage$org_table <- report.preview.data(
+        dataList$quant, colIgnore="Fasta.sequence", rowN=3)
+      variables$reportParam[[data_name]]$dataAverage$prc_table <- report.preview.data(
+        dataList_new$quant, colIgnore="Fasta.sequence", rowN=3)
+      # Update the isRun variable
+      variables$reportParam[[data_name]]$dataAverage$isRun <- TRUE
     }else{
       sendSweetAlert(
         session=session,
@@ -109,10 +119,15 @@ observeEvent(input$confirm_record_averaged,{
   data_name <- input$select_averaging_data
   if(isTruthy(input$confirm_record_averaged)){
     # If temp_data is populated replace the variables in the reactive list
-    if(isTruthy(variables$reportVars[[data_name]]$dataAverage$data$averaged)){
-      data_list <- variables$reportVars[[data_name]]$dataAverage$data$averaged
+    if(isTruthy(variables$temp_data)){
+      # Update isReplaced variable with TRUE
+      variables$reportParam[[data_name]]$dataAverage$isReplaced <- TRUE
+      # Save averaged list into a variable
+      data_list <- variables$temp_data
       # Save the modified data list into its reactive list values
       variables$datasets[[data_name]] <- data_list
+      # reset the temp_data variable
+      variables$temp_data <- NULL
     }else{return()}
   }else{return()}
 })

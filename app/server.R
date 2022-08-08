@@ -22,6 +22,7 @@ shinyServer(function(input, output, session){
     reportParam=list(
       # protein level
       "protein"=list(
+        "isRepl"=FALSE,
         # data setup variables
         "dataSetup"=list(
           "isRun"=NULL,
@@ -145,6 +146,7 @@ shinyServer(function(input, output, session){
         )
       ),
       "peptide"=list(
+        "isRepl"=FALSE,
         # data setup variables
         "dataSetup"=list(
           "isRun"=NULL,
@@ -276,6 +278,7 @@ shinyServer(function(input, output, session){
       ),
       # termini level
       "termini"=list(
+        "isRepl"=FALSE,
         # data setup variables
         "dataSetup"=list(
           "isRun"=NULL,
@@ -405,6 +408,7 @@ shinyServer(function(input, output, session){
         )
       ),
       "ptm"=list(
+        "isRepl"=FALSE,
         # data setup variables
         "dataSetup"=list(
           "isRun"=NULL,
@@ -431,8 +435,7 @@ shinyServer(function(input, output, session){
         # data processing - averaging variables
         "dataAverage"=list(
           "isRun"=NULL,
-          "param"=NULL,
-          "isReplaced"=NULL,
+          "isReplaced"=FALSE,
           "org_distPlot"=NULL,
           "org_table"=NULL,
           "prc_distPlot"=NULL,
