@@ -59,17 +59,11 @@ Missing values are a common issue in proteomics data. With filtering data, imput
 - `knn`: Calculates the nearest neighbour averaging to replace the missing value as implemented in the [`impute::impute.knn`](https://rdrr.io/pkg/impute/man/impute.knn.html) function.
 - `with`: Applies user-selected value with to all missing values
 - `MinProb`: Randomly draws values from Gaussian distribution centred to a minimum value in the data. Implements the [`imputeLCMD::impute.MinProb`](https://rdrr.io/cran/imputeLCMD/man/impute.MinProb.html) function.
-
-<p align="center">
-  <img src="../../png/023_DataImputationInitial.png" width="80%">
-</p>
-
-Additionally `SQuAPP` offers a more custom imputation that uses the logic of [down-shifted normal imputation](http://coxdocs.org/doku.php?id=perseus:user:activities:matrixprocessing:imputation:replacemissingfromgaussian&s[]=imputation) used in Perseus<sup><b>[2](#Bibliography)</b></sup>. This method is similar to `MinProb` however can be used to avoid values to be overlapped with real values by adjusting shift and magnitude values.
-
 - `Down-shifted Normal`: Custom function imputes missing values with a random value selected from a narrower normal distribution with a smaller mean shifted by a user-selected magnitude.
+  - This custom imputation that uses the logic of [down-shifted normal imputation](http://coxdocs.org/doku.php?id=perseus:user:activities:matrixprocessing:imputation:replacemissingfromgaussian&s[]=imputation) used in Perseus<sup><b>[2](#Bibliography)</b></sup>.
 
 <p align="center">
-  <img src="../../png/023.1_DataImputationInitial.png" width="80%"> # New Image Showing Downshifted Normal Use
+  <img src="../../png/023_DataImputationInitial.png" width="80%"> # New Image Showing Downshifted Normal Use
 </p>
 
 After selecting a data level, the imputation method, and group factor (if you switch on the “impute by group” option), you can click on “Preview Imputation Distribution” to access preview visualizations and data tables provided by `SQuAPP`:

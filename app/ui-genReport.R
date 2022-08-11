@@ -1,4 +1,5 @@
 fluidPage(
+  useSweetAlert(),
   fluidRow(
     column(
       width=3,
@@ -6,12 +7,13 @@ fluidPage(
         title=tagList(icon("gears"), "Create a Report"),
         width=NULL,
         solidHeader=TRUE,
+        collapsible=FALSE,
         status="primary",
-        footer="",
+        footer="HTML format offers most feature rich format.",
         awesomeRadio(
           inputId='report_format',
           label='Report Format',
-          choices=c("PDF", "HTML", "Markdown"),
+          choices=c("HTML", "Markdown"),
           status="primary",
           selected="HTML"
         ),
@@ -21,9 +23,20 @@ fluidPage(
           icon=icon("play"),
           status="primary",
           size="sm"
-        ),
+        )
 
-        uiOutput("report_download")
+
+      ),
+      conditionalPanel(
+        condition="input.generateReport!=0",
+        box(
+          title=tagList(icon("file-export"), "Download the Report"),
+          width=NULL,
+          solidHeader=TRUE,
+          status="primary",
+          footer="To apply changes, re-generate the report.",
+          uiOutput("report_download_button")
+        )
       )
     ),
     column(
@@ -43,11 +56,8 @@ fluidPage(
             inputId="report_opt_dataInput_protein",
             label="1.1 - Data Upload",
             choices=c("Parameters",
-                      "Summary Info",
-                      "Original Data",
                       "Prepared Data"),
             selected=c("Parameters",
-                       "Summary Info",
                        "Prepared Data"),
             inline=TRUE
           ),
@@ -91,11 +101,8 @@ fluidPage(
             inputId="report_opt_dataInput_peptide",
             label="1.1 - Data Upload",
             choices=c("Parameters",
-                      "Summary Info",
-                      "Original Data",
                       "Prepared Data"),
             selected=c("Parameters",
-                       "Summary Info",
                        "Prepared Data"),
             inline=TRUE
           ),
@@ -140,11 +147,8 @@ fluidPage(
             inputId="report_opt_dataInput_termini",
             label="1.1 - Data Upload",
             choices=c("Parameters",
-                      "Summary Info",
-                      "Original Data",
                       "Prepared Data"),
             selected=c("Parameters",
-                       "Summary Info",
                        "Prepared Data"),
             inline=TRUE
           ),
@@ -190,11 +194,8 @@ fluidPage(
             inputId="report_opt_dataInput_ptm",
             label="1.1 - Data Upload",
             choices=c("Parameters",
-                      "Summary Info",
-                      "Original Data",
                       "Prepared Data"),
             selected=c("Parameters",
-                       "Summary Info",
                        "Prepared Data"),
             inline=TRUE
           ),

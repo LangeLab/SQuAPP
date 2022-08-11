@@ -1,0 +1,767 @@
+---
+title: "Summary of SQuAPP Analysis"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+params:
+  file_name: NA
+---
+
+**Report setup**
+
+```{r setup, include=FALSE}
+require(knitr)
+require(kableExtra)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r util_funcs, include=FALSE}
+check_var = FALSE
+isProtein = FALSE
+isPeptide = FALSE
+isTermini = FALSE
+isPTM = FALSE
+print.pretty_table <- function(data,caption=NULL, format="html"){
+  knitr::kable(
+    data,
+    format=format,
+    caption=caption,
+    # col.names = gsub("[.]", " "),
+    table.attr = "style='width:40%;'"
+  ) %>% kable_styling(
+    full_width = F,
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    position = "center"
+  )
+}
+```
+
+```{r load_data, include=TRUE}
+message("Loading configured settings to rmarkdown")
+t1 <- Sys.time()
+# Check if the RDS is loaded correctly or not!
+tryCatch(
+  expr = {
+    reportParam = readRDS(file=params$file_name)
+    message("Reading Rds file...")
+  },
+  error = function(e){
+    message("There has been an error!")
+    print(e)
+    knitr::knit_exit()
+  },
+  warning = function(w){
+    message("Unexpected behaviour is found!")
+    print(w)
+    knitr::knit_exit()
+  },
+  finally = {
+    t2 <- Sys.time()
+  }
+)
+elapsed <- as.character(difftime(t2, t1, units="secs")[[1]])
+message(paste("Shiny variables are correctly load in",
+              elapsed, "seconds.", sep=" "))
+```
+# Analysis Summary
+
+## Shared Data in Analysis
+In this section of the report you will find the annotated version of your data that `SQuAPP` used internally. The full data can be download in the data setup section in the prepared data boxes.
+
+### Reference Used
+The proteome fasta reference used to annotated the different data levels provided.
+
+```{r reference_preview, include=TRUE, results="asis"}
+tmp_obj <- reportParam$shared$reference
+
+if(!is.null(tmp_obj$param)){
+  print.pretty_table(
+    tmp_obj$param,
+    caption="Relevant parameters for the reference used.")
+}else{
+  cat("> No parameters have been recorded for the reference used!\n\n")
+}
+
+# Data table preview
+if(!is.null(tmp_obj$table)){
+  check_var <- TRUE
+  print.pretty_table(
+    tmp_obj$table,
+    caption="Preview of reference used in the analysis")
+}else{
+  cat("> Error in rendering the reference table!\n\n")
+}
+
+if(check_var){
+  cat("**Fasta.sequence and Gene.name has been removed from the preview but are used in the `SQuAPP` analysis.**\n\n")
+}
+cat("---\n\n")
+```
+
+### Metadata Used
+The metadata provided is shown with the parameters used to correctly setup
+in the analysis as well as few rows of content for preview.
+
+```{r metadata_preview, include=TRUE, results="asis"}
+tmp_obj <- reportParam$shared$metadata
+
+if(!is.null(tmp_obj$param)){
+  print.pretty_table(
+    tmp_obj$param,
+    caption="Relevant parameters for the metadata used.")
+}else{
+  cat("> No parameters have been recorded for the metadata used!\n\n")
+}
+
+# Data table preview
+if(!is.null(tmp_obj$table)){
+  print.pretty_table(
+    tmp_obj$table,
+    caption="Preview of metadata used in the analysis")
+}else{
+  cat("> Error in rendering the metadata table!\n\n")
+}
+
+cat("---\n\n")
+```
+
+```{r initialize_protein_level, include=TRUE, results="asis"}
+tmp_obj <- reportParam$protein$dataSetup
+# Update the isProtein variable to be used throughout protein sections
+isProtein <- tmp_obj$isRun
+
+# Rendering the section headers and markdown text.
+if(isProtein){
+  cat("## Protein Level Analysis\n\n### Prepared Data\n\n")
+}else{
+  cat("> Protein level data is not run with the current analysis. **Skipping protein sections in the report.**\n\n")
+}
+
+# Rendering the Parameters Table
+if(isProtein){
+  if(!is.null(tmp_obj$param)){
+    print.pretty_table(
+      tmp_obj$param,
+      caption="Parameters used to setup protein data.")
+  }else{
+    cat("> An error occurred when saving the parameters of the data\n\n")
+  }
+}
+
+# Rendering the Data Table
+if(isProtein){
+  if(!is.null(tmp_obj$table)){
+    print.pretty_table(
+      tmp_obj$table,
+      caption="Preview of prepared protein data.") %>%
+      scroll_box(width="100%")
+  }else{
+    cat("> An error occurred when rendering the prepared protein data\n\n")
+  }
+}
+```
+
+```{r protein_qualityCheck, include=TRUE, results="asis"}
+tmp_obj <- reportParam$protein$qualityCheck
+
+# Render the section header and specific markdown text
+if(isProtein){
+  if(tmp_obj$isRun){
+    cat("### Quality Check\n\n")
+  }else{
+    cat("> Quality check for this level is not run on the app!\n\n")
+  }
+}
+
+# Include the parameter texts to describe the plotting process
+if(isProtein){
+  if(!is.null(tmp_obj$param)){
+    print.pretty_table(
+      tmp_obj$param,
+      caption="Parameters used to setup quality check plots.")
+  }else{
+    cat("> An error occurred when saving plotting parameters\n\n")
+  }
+}
+
+# Render the distribution plot
+if(isProtein){
+  if(!is.null(tmp_obj$distPlot)){
+    tmp_obj$distPlot
+  }else{
+    cat("> An error occurred when rendering the violin plot!\n\n")
+  }
+}
+
+# Render the CV plot
+if(isProtein){
+  if(!is.null(tmp_obj$cvPlot)){
+    tmp_obj$cvPlot
+  }else{
+    cat("> An error occurred when rendering the cv plot!\n\n")
+  }
+}
+
+# Render the identification counts plot
+if(isProtein){
+  if(!is.null(tmp_obj$identCount)){
+    tmp_obj$identCount
+  }else{
+    cat("> An error occurred when rendering the number of identifications plot!\n\n")
+  }
+}
+
+# Render the shared identification count plot
+if(isProtein){
+  if(!is.null(tmp_obj$sharedCount)){
+    tmp_obj$sharedCount
+  }else{
+    cat("> An error occurred when rendering the shared identification count plot!\n\n")
+  }
+}
+
+# Render the data completeness plot
+if(isProtein){
+  if(!is.null(tmp_obj$completeness)){
+    tmp_obj$completeness
+  }else{
+    cat("> An error occurred when rendering the data completeness plot!\n\n")
+  }
+}
+
+# Render the data missingness plot
+if(isProtein){
+  if(!is.null(tmp_obj$missingCount)){
+    tmp_obj$missingCount
+  }else{
+    cat("> An error occurred when rendering the data missingness plot!\n\n")
+  }
+}
+```
+
+```{r protein_dataProcessing, include=TRUE, results="asis"}
+# Create a logical variable if any dataProcessing is run in the app
+isProtein_dataProcess <- (
+  reportParam$protein$dataAverage$isRun |
+  reportParam$protein$dataFilter$isRun |
+  reportParam$protein$dataImpute$isRun |
+  reportParam$protein$dataNormalize$isRun
+)
+# Render the data processing header and specific markdown text
+if(isProtein){
+  if(isProtein_dataProcess){
+    cat("### Data Pre-processing\n\n")
+  }else{
+    cat("> Data preprocessing for this data level is not run. **Skipping this section in the report.**\n\n")
+  }
+}
+```
+
+```{r protein_dataAverage, include=TRUE, results="asis"}
+tmp_obj <- reportParam$protein$dataAverage
+
+# Render the section header and specific markdown text
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(reportParam$protein$isRepl){
+      if(tmp_obj$isRun){
+        cat("#### Averaging Replicates\n\n")
+      }else{
+        cat("> Data averaging is not run for this data level.\n\n")
+      }
+    }else{
+      cat(" > Data averaging is not applicable to this data since it doesn't contain replicas.\n\n")
+    }
+  }
+}
+
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(reportParam$protein$isRepl){
+      if(tmp_obj$isReplaced){
+        cat("**User decided to keep the averaged state for the further analysis.**\n\n")
+      }else{
+        cat("**User decided discarded the averaged state of the data and kept the replica state for the further analysis.**\n\n")
+      }
+    }
+  }
+}
+
+# Render the original table
+if(isProtein){
+  if(reportParam$protein$isRepl){
+    if(isProtein_dataProcess){
+      if(!is.null(tmp_obj$org_table)){
+        print.pretty_table(
+          tmp_obj$org_table,
+          caption="Data State: **Before averaging**") %>%
+          scroll_box(width="100%")
+      }else{
+        cat("> An error occurred when rendering the data state **before** processing!\n\n")
+      }
+    }
+  }
+}
+
+# Render the original distribution plot
+if(isProtein){
+  if(reportParam$protein$isRepl){
+    if(isProtein_dataProcess){
+      if(!is.null(tmp_obj$org_distPlot)){
+        tmp_obj$org_distPlot
+      }else{
+        cat("> An error occurred when rendering the distribution plot of original state!\n\n")
+      }
+    }
+  }
+}
+
+# Render the original table
+if(isProtein){
+  if(reportParam$protein$isRepl){
+    if(isProtein_dataProcess){
+      if(!is.null(tmp_obj$prc_table)){
+        print.pretty_table(
+          tmp_obj$prc_table,
+          caption="Data State: **After averaging**") %>%
+          scroll_box(width="100%")
+      }else{
+        cat("> An error occurred when rendering the data state **after** processing!\n\n")
+      }
+    }
+  }
+}
+
+# Render the original distribution plot
+if(isProtein){
+  if(reportParam$protein$isRepl){
+    if(isProtein_dataProcess){
+      if(!is.null(tmp_obj$prc_distPlot)){
+        tmp_obj$prc_distPlot
+      }else{
+        cat("> An error occurred when rendering the distribution plot of processed state!\n\n")
+      }
+    }
+  }
+}
+```
+
+```{r protein_dataFilter, include=TRUE, results="asis"}
+tmp_obj <- reportParam$protein$dataFilter
+
+# Render the section header and specific markdown text
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(tmp_obj$isRun){
+      cat("#### Data Filtering\n\n")
+    }else{
+      cat("> Data filtering is not run for this data level.\n\n")
+    }
+  }
+}
+
+# Creating a isReplaced based text for the user
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(tmp_obj$isReplaced){
+      cat("**User decided to keep the filtered state for the further analysis.**\n\n")
+    }else{
+      cat("**User decided discarded the filtered state of the data and kept the original state for the further analysis.**\n\n")
+    }
+  }
+}
+
+# Include the parameters for the processing
+if(isProtein){
+  if(!is.null(tmp_obj$param)){
+    print.pretty_table(
+      tmp_obj$param,
+      caption="Parameters used in filtering")
+  }else{
+    cat("> An error occurred when saving filtering parameters\n\n")
+  }
+}
+
+# Render the table for original state
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(!is.null(tmp_obj$org_table)){
+      print.pretty_table(
+        tmp_obj$org_table,
+        caption="Data State: **Before filtering**") %>%
+        scroll_box(width="100%")
+    }else{
+      cat("> An error occurred when rendering the data state **before** processing!\n\n")
+    }
+  }
+}
+
+# Render the missing count plot for original state
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(!is.null(tmp_obj$org_countPlot)){
+      tmp_obj$org_countPlot
+    }else{
+      cat("> An error occurred when rendering the distribution plot of original state!\n\n")
+    }
+  }
+}
+
+# Render the missing percentage plot for original state
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(!is.null(tmp_obj$org_percentPlot)){
+      tmp_obj$org_percentPlot
+    }else{
+      cat("> An error occurred when rendering the percentage missing plot of original state!\n\n")
+    }
+  }
+}
+
+# Render the summary stats table for original state
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(!is.null(tmp_obj$org_summaryStat)){
+      print.pretty_table(
+        tmp_obj$org_summaryStat,
+        caption="Summary Statistics \n - Data State: **Before processing**") %>%
+        scroll_box(width="100%")
+    }else{
+      cat("> An error occurred when rendering the summary statistics for **before** processing!\n\n")
+    }
+  }
+}
+
+# Render the table for processed state
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(!is.null(tmp_obj$prc_table)){
+      print.pretty_table(
+        tmp_obj$prc_table,
+        caption="Data State: **after filtering**") %>%
+        scroll_box(width="100%")
+    }else{
+      cat("> An error occurred when rendering the data state **after** processing!\n\n")
+    }
+  }
+}
+
+# Render the missing count plot for processed state
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(!is.null(tmp_obj$prc_countPlot)){
+      tmp_obj$prc_countPlot
+    }else{
+      cat("> An error occurred when rendering the distribution plot of processed state!\n\n")
+    }
+  }
+}
+
+# Render the missing percentage plot for processed state
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(!is.null(tmp_obj$prc_percentPlot)){
+      tmp_obj$prc_percentPlot
+    }else{
+      cat("> An error occurred when rendering the percentage missing plot of processed state!\n\n")
+    }
+  }
+}
+
+# Render the summary stats table for processed state
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(!is.null(tmp_obj$prc_summaryStat)){
+      print.pretty_table(
+        tmp_obj$prc_summaryStat,
+        caption="Summary Statistics \n - Data State: **after processing**") %>%
+        scroll_box(width="100%")
+    }else{
+      cat("> An error occurred when rendering the summary statistics for **after** processing!\n\n")
+    }
+  }
+}
+```
+
+```{r protein_dataImpute, include=TRUE, results="asis"}
+tmp_obj <- reportParam$protein$dataImpute
+
+# Render the section header and specific markdown text
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(tmp_obj$isRun){
+      cat("#### Data Imputation\n\n")
+    }else{
+      cat("> Data imputation is not run for this data level.\n\n")
+    }
+  }
+}
+
+# Creating a isReplaced based text for the user
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(tmp_obj$isReplaced){
+      cat("**User decided to keep the imputed state for the further analysis.**\n\n")
+    }else{
+      cat("**User decided discarded the imputed state of the data and kept the original state for the further analysis.**\n\n")
+    }
+  }
+}
+
+# Include the parameters for the processing
+if(isProtein){
+  if(!is.null(tmp_obj$param)){
+    print.pretty_table(
+      tmp_obj$param,
+      caption="Parameters used in imputation")
+  }else{
+    cat("> An error occurred when saving imputation parameters\n\n")
+  }
+}
+
+# Render the table for original state
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(!is.null(tmp_obj$org_table)){
+      print.pretty_table(
+        tmp_obj$org_table,
+        caption="Data State: **Before imputation**") %>%
+        scroll_box(width="100%")
+    }else{
+      cat("> An error occurred when rendering the data state **before** processing!\n\n")
+    }
+  }
+}
+
+# Render the missing count plot for original state
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(!is.null(tmp_obj$org_missingCount)){
+      tmp_obj$org_missingCount
+    }else{
+      cat("> An error occurred when rendering the missing count plot of original state!\n\n")
+    }
+  }
+}
+
+# Render the preview imputation distribution with selected config
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(!is.null(tmp_obj$prv_imputeDist)){
+      tmp_obj$prv_imputeDist
+    }else{
+      cat("> An error occurred when rendering the review imputation distribution with selected configuration!\n\n")
+    }
+  }
+}
+
+# Render the summary stats table for original state
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(!is.null(tmp_obj$org_summaryStat)){
+      print.pretty_table(
+        tmp_obj$org_summaryStat,
+        caption="Summary Statistics \n - Data State: **Before processing**") %>%
+        scroll_box(width="100%")
+    }else{
+      cat("> An error occurred when rendering the summary statistics for **before** processing!\n\n")
+    }
+  }
+}
+
+# Render the table for processed state
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(!is.null(tmp_obj$prc_table)){
+      print.pretty_table(
+        tmp_obj$prc_table,
+        caption="Data State: **after imputation**") %>%
+        scroll_box(width="100%")
+    }else{
+      cat("> An error occurred when rendering the data state **after** processing!\n\n")
+    }
+  }
+}
+
+# Render the sample-wise imputation distribution in violin plot
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(!is.null(tmp_obj$prc_distPlot)){
+      tmp_obj$prc_distPlot
+    }else{
+      cat("> An error occurred when rendering sample-wise distribution for imputation!\n\n")
+    }
+  }
+}
+
+# Render the summary stats table for processed state
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(!is.null(tmp_obj$prc_summaryStat)){
+      print.pretty_table(
+        tmp_obj$prc_summaryStat,
+        caption="Summary Statistics \n - Data State: **after processing**") %>%
+        scroll_box(width="100%")
+    }else{
+      cat("> An error occurred when rendering the summary statistics for **after** processing!\n\n")
+    }
+  }
+}
+```
+
+```{r protein_dataNormalize, include=TRUE, results="asis"}
+tmp_obj <- reportParam$protein$dataNormalize
+
+# Render the section header and specific markdown text
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(tmp_obj$isRun){
+      cat("#### Data Normalization\n\n")
+    }else{
+      cat("> Data normalization is not run for this data level.\n\n")
+    }
+  }
+}
+
+# Creating a isReplaced based text for the user
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(tmp_obj$isReplaced){
+      cat("**User decided to keep the normalized state for the further analysis.**\n\n")
+    }else{
+      cat("**User decided discarded the normalized state of the data and kept the original state for the further analysis.**\n\n")
+    }
+  }
+}
+
+# Include the parameters for the processing
+if(isProtein){
+  if(!is.null(tmp_obj$param)){
+    print.pretty_table(
+      tmp_obj$param,
+      caption="Parameters used in normalization")
+  }else{
+    cat("> An error occurred when saving normalization parameters\n\n")
+  }
+}
+
+# Render the table for original state
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(!is.null(tmp_obj$org_table)){
+      print.pretty_table(
+        tmp_obj$org_table,
+        caption="Data State: **Before normalization**") %>%
+        scroll_box(width="100%")
+    }else{
+      cat("> An error occurred when rendering the data state **before** processing!\n\n")
+    }
+  }
+}
+
+# Render the summary stats table for original state
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(!is.null(tmp_obj$org_summaryStat)){
+      print.pretty_table(
+        tmp_obj$org_summaryStat,
+        caption="Summary Statistics \n - Data State: **Before normalization**") %>%
+        scroll_box(width="100%")
+    }else{
+      cat("> An error occurred when rendering the summary statistics for **before** normalization!\n\n")
+    }
+  }
+}
+
+# Render the violin plot for original state
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(!is.null(tmp_obj$org_violinDist)){
+      tmp_obj$org_violinDist
+    }else{
+      cat("> An error occurred when rendering the violin plot of original state!\n\n")
+    }
+  }
+}
+
+# Render the density plot for original state
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(!is.null(tmp_obj$org_denstyDist)){
+      tmp_obj$org_denstyDist
+    }else{
+      cat("> An error occurred when rendering the density plot of original state!\n\n")
+    }
+  }
+}
+
+# Render the pair-plot for original state
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(!is.null(tmp_obj$org_pairedPlot)){
+      tmp_obj$org_pairedPlot
+    }else{
+      cat("> An error occurred when rendering the paired plot of original state!\n\n")
+    }
+  }
+}
+
+# Render the table for processed state
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(!is.null(tmp_obj$prc_table)){
+      print.pretty_table(
+        tmp_obj$prc_table,
+        caption="Data State: **after normalization**") %>%
+        scroll_box(width="100%")
+    }else{
+      cat("> An error occurred when rendering the data state **after** processing!\n\n")
+    }
+  }
+}
+
+# Render the summary stats table for processed state
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(!is.null(tmp_obj$prc_summaryStat)){
+      print.pretty_table(
+        tmp_obj$prc_summaryStat,
+        caption="Summary Statistics \n - Data State: **after normalization**") %>%
+        scroll_box(width="100%")
+    }else{
+      cat("> An error occurred when rendering the summary statistics for **after** normalization!\n\n")
+    }
+  }
+}
+
+# Render the violin plot for processed state
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(!is.null(tmp_obj$prc_violinDist)){
+      tmp_obj$prc_violinDist
+    }else{
+      cat("> An error occurred when rendering the violin plot of processed state!\n\n")
+    }
+  }
+}
+
+# Render the density plot for processed state
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(!is.null(tmp_obj$prc_denstyDist)){
+      tmp_obj$prc_denstyDist
+    }else{
+      cat("> An error occurred when rendering the density plot of processed state!\n\n")
+    }
+  }
+}
+
+# Render the pair-plot for processed state
+if(isProtein){
+  if(isProtein_dataProcess){
+    if(!is.null(tmp_obj$prc_pairedPlot)){
+      tmp_obj$prc_pairedPlot
+    }else{
+      cat("> An error occurred when rendering the paired plot of processed state!\n\n")
+    }
+  }
+}
+```

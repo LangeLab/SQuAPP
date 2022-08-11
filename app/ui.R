@@ -9,13 +9,12 @@
       status = "primary",
       border = TRUE,
       fixed = TRUE,
-      # title = "SQuAPP V0.28"
+      title = "SQuAPP V0.28"
       # TODO: Need to make the collapsed and uncollapsed version of the title robust
-      title=tagList(
-        img(src="hex-SQuAPP.png", width=50, height=50),
-        span(),
-        span("SQuAPP V0.28")
-      )
+      # title=tagList(
+      #   img(src="hex-SQuAPP.png", width=50, height=50),
+      #   span("SQuAPP V0.28")
+      # )
     ),
     # Create the Collapsable Sidebar
     sidebar = dashboardSidebar(

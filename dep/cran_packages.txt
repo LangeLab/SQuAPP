@@ -24,3 +24,5 @@ ggcorrplot
 gprofiler2
 factoextra
 circlize
+kableExtra
+imputeLCMD

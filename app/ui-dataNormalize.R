@@ -9,21 +9,6 @@ fluidPage(
         inputId="",
         collapsible=FALSE,
         uiOutput("select_normalization_data"),
-        hr(),
-        awesomeRadio(
-          inputId="select_normalization_method",
-          label="Normalization methods",
-          choices=c(
-            "Divided by Max"="max",
-            "Divided by Sum"="sum",
-            "Divided by Mean"="div.mean",
-            "Divided by Median"="div.median",
-            "Variance Stabilization"="vsn"
-          ),
-          inline=FALSE,
-          selected="Divided by Median"
-        ),
-        hr(),
         materialSwitch(
           inputId="normalizeByGroupSwitch",
           label="Do you want to normalize by group?",
@@ -34,10 +19,9 @@ fluidPage(
           condition="input.normalizeByGroupSwitch",
           uiOutput("select_normalize_group")
         ),
-        hr(),
         actionButton(
           inputId="preview_normalization_distribution",
-          label="Preview Normalization Distribution",
+          label="Preview Data",
           icon=icon("play"),
           status="primary",
           size="sm"
@@ -45,6 +29,19 @@ fluidPage(
         conditionalPanel(
           condition="input.preview_normalization_distribution!=0",
           hr(),
+          awesomeRadio(
+            inputId="select_normalization_method",
+            label="Normalization methods",
+            choices=c(
+              "Divided by Max"="max",
+              "Divided by Sum"="sum",
+              "Divided by Mean"="div.mean",
+              "Divided by Median"="div.median",
+              "Variance Stabilization"="vsn"
+            ),
+            inline=FALSE,
+            selected="Divided by Median"
+          ),
           fluidRow(
             column(
               width=6,

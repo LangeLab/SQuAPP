@@ -18,69 +18,549 @@ shinyServer(function(input, output, session){
     # Temporary holder variables
     temp_data=NULL,
     temp_plot=NULL,
-    # Simple boolean holder list for quick checks being used in many places
-    reportVars=list(
+    # Exlusive list that holds report variables to be passed to Rmd in generate report
+    reportParam=list(
+      # protein level
       "protein"=list(
-        "qualityCheck"=NULL,
-        "dataAverage"=NULL,
-        "dataFilter"=NULL,
-        "dataImpute"=NULL,
-        "dataNormalize"=NULL,
-        "statTest"=NULL,
-        "enrichAnalysis"=NULL,
-        "goVis"=NULL,
-        "dimenReduc"=NULL,
-        "clustering"=NULL,
-        "featureCompare"=NULL
+        "isRepl"=FALSE,
+        # data setup variables
+        "dataSetup"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "table"=NULL
+        ),
+        # quality check plot variables
+        "qualityCheck"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "distPlot"=NULL,
+          "cvPlot"=NULL,
+          "identCount"=NULL,
+          "sharedCount"=NULL,
+          "completeness"=NULL,
+          "missingCount"=NULL
+        ),
+        # data processing - averaging variables
+        "dataAverage"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "isReplaced"=FALSE,
+          "org_distPlot"=NULL,
+          "org_table"=NULL,
+          "prc_distPlot"=NULL,
+          "prc_table"=NULL
+        ),
+        # data processing - filtering variables
+        "dataFilter"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "isReplaced"=FALSE,
+          "org_table"=NULL,
+          "org_countPlot"=NULL,
+          "org_percentPlot"=NULL,
+          "org_summaryStat"=NULL,
+          "prc_table"=NULL,
+          "prc_countPlot"=NULL,
+          "prc_percentPlot"=NULL,
+          "prc_summaryStat"=NULL
+        ),
+        # data processing - imputing variables
+        "dataImpute"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "isReplaced"=FALSE,
+          "org_table"=NULL,
+          "org_missingCount"=NULL,
+          "prv_imputeDist"=NULL,
+          "org_summaryStat"=NULL,
+          "prc_table"=NULL,
+          "prc_distPlot"=NULL,
+          "prc_summaryStat"=NULL
+        ),
+        # data processing - normalizing variables
+        "dataNormalize"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "isReplaced"=FALSE,
+          "org_table"=NULL,
+          "org_summaryStat"=NULL,
+          "org_violinDist"=NULL,
+          "org_denstyDist"=NULL,
+          "org_pairedPlot"=NULL,
+          "prc_table"=NULL,
+          "prc_summaryStat"=NULL,
+          "prc_violinDist"=NULL,
+          "prc_denstyDist"=NULL,
+          "prc_pairedPlot"=NULL
+        ),
+        # statistical inference - testing variables
+        "statTest"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "maPlot"=NULL,
+          "volcanoPlot"=NULL,
+          "all_table"=NULL,
+          "signf_table"=NULL
+        ),
+        # statistical inference - enrichment variables
+        "enrichAnalysis"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "table"=NULL,
+          "plot"=NULL
+        ),
+        # statistical inference - reduced go variables
+        "goVis"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "table"=NULL,
+          "plot"=NULL
+        ),
+        # summary visualizations - dimensional reduction variables
+        "dimenReduc"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "table"=NULL,
+          "plot"=NULL
+        ),
+        "cluster"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "test_silhouette"=NULL,
+          "test_sumSquare"=NULL,
+          "test_gapStat"=NULL,
+          "cluster_config"=NULL,
+          "res_pca"=NULL,
+          "res_silhouette"=NULL,
+          "res_dendogram"=NULL,
+          "res_membership"=NULL
+        ),
+        "feature"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "selectTable"=NULL,
+          "plot_config"=NULL,
+          "intensityPlot"=NULL,
+          "corrPlot"=NULL
+        )
       ),
       "peptide"=list(
-        "proteinCalc"=NULL,
-        "qualityCheck"=NULL,
-        "dataAverage"=NULL,
-        "dataFilter"=NULL,
-        "dataImpute"=NULL,
-        "dataNormalize"=NULL,
-        "statTest"=NULL,
-        "enrichAnalysis"=NULL,
-        "goVis"=NULL,
-        "dimenReduc"=NULL,
-        "clustering"=NULL,
-        "featureCompare"=NULL
+        "isRepl"=FALSE,
+        # data setup variables
+        "dataSetup"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "table"=NULL
+        ),
+        # protein calculation variables
+        "proteinCalc"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "table"=NULL,
+          "plot"=NULL
+        ),
+        # quality check plot variables
+        "qualityCheck"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "distPlot"=NULL,
+          "cvPlot"=NULL,
+          "identCount"=NULL,
+          "sharedCount"=NULL,
+          "completeness"=NULL,
+          "missingCount"=NULL
+        ),
+        # data processing - averaging variables
+        "dataAverage"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "isReplaced"=FALSE,
+          "org_distPlot"=NULL,
+          "org_table"=NULL,
+          "prc_distPlot"=NULL,
+          "prc_table"=NULL
+        ),
+        # data processing - filtering variables
+        "dataFilter"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "isReplaced"=FALSE,
+          "org_table"=NULL,
+          "org_countPlot"=NULL,
+          "org_percentPlot"=NULL,
+          "org_summaryStat"=NULL,
+          "prc_table"=NULL,
+          "prc_countPlot"=NULL,
+          "prc_percentPlot"=NULL,
+          "prc_summaryStat"=NULL
+        ),
+        # data processing - imputing variables
+        "dataImpute"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "isReplaced"=FALSE,
+          "org_table"=NULL,
+          "org_missingCount"=NULL,
+          "prv_imputeDist"=NULL,
+          "org_summaryStat"=NULL,
+          "prc_table"=NULL,
+          "prc_distPlot"=NULL,
+          "prc_summaryStat"=NULL
+        ),
+        # data processing - normalizing variables
+        "dataNormalize"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "isReplaced"=FALSE,
+          "org_table"=NULL,
+          "org_summaryStat"=NULL,
+          "org_violinDist"=NULL,
+          "org_denstyDist"=NULL,
+          "org_pairedPlot"=NULL,
+          "prc_table"=NULL,
+          "prc_summaryStat"=NULL,
+          "prc_violinDist"=NULL,
+          "prc_denstyDist"=NULL,
+          "prc_pairedPlot"=NULL
+        ),
+        # statistical inference - testing variables
+        "statTest"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "maPlot"=NULL,
+          "volcanoPlot"=NULL,
+          "all_table"=NULL,
+          "signf_table"=NULL
+        ),
+        # statistical inference - enrichment variables
+        "enrichAnalysis"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "table"=NULL,
+          "plot"=NULL
+        ),
+        # statistical inference - reduced go variables
+        "goVis"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "table"=NULL,
+          "plot"=NULL
+        ),
+        # summary visualizations - dimensional reduction variables
+        "dimenReduc"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "table"=NULL,
+          "plot"=NULL
+        ),
+        "cluster"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "test_silhouette"=NULL,
+          "test_sumSquare"=NULL,
+          "test_gapStat"=NULL,
+          "cluster_config"=NULL,
+          "res_pca"=NULL,
+          "res_silhouette"=NULL,
+          "res_dendogram"=NULL,
+          "res_membership"=NULL
+        ),
+        "feature"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "selectTable"=NULL,
+          "plot_config"=NULL,
+          "intensityPlot"=NULL,
+          "corrPlot"=NULL
+        )
       ),
+      # termini level
       "termini"=list(
-        "dataAnnot"=NULL,
-        "qualityCheck"=NULL,
-        "dataAverage"=NULL,
-        "dataFilter"=NULL,
-        "dataImpute"=NULL,
-        "dataNormalize"=NULL,
-        "statTest"=NULL,
-        "enrichAnalysis"=NULL,
-        "goVis"=NULL,
-        "dimenReduc"=NULL,
-        "clustering"=NULL,
-        "featureCompare"=NULL
+        "isRepl"=FALSE,
+        # data setup variables
+        "dataSetup"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "table"=NULL
+        ),
+        # data annotation variables
+        "dataAnnot"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "table"=NULL
+        ),
+        # quality check plot variables
+        "qualityCheck"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "distPlot"=NULL,
+          "cvPlot"=NULL,
+          "identCount"=NULL,
+          "sharedCount"=NULL,
+          "completeness"=NULL,
+          "missingCount"=NULL
+        ),
+        # data processing - averaging variables
+        "dataAverage"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "isReplaced"=FALSE,
+          "org_distPlot"=NULL,
+          "org_table"=NULL,
+          "prc_distPlot"=NULL,
+          "prc_table"=NULL
+        ),
+        # data processing - filtering variables
+        "dataFilter"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "isReplaced"=FALSE,
+          "org_table"=NULL,
+          "org_countPlot"=NULL,
+          "org_percentPlot"=NULL,
+          "org_summaryStat"=NULL,
+          "prc_table"=NULL,
+          "prc_countPlot"=NULL,
+          "prc_percentPlot"=NULL,
+          "prc_summaryStat"=NULL
+        ),
+        # data processing - imputing variables
+        "dataImpute"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "isReplaced"=FALSE,
+          "org_table"=NULL,
+          "org_missingCount"=NULL,
+          "prv_imputeDist"=NULL,
+          "org_summaryStat"=NULL,
+          "prc_table"=NULL,
+          "prc_distPlot"=NULL,
+          "prc_summaryStat"=NULL
+        ),
+        # data processing - normalizing variables
+        "dataNormalize"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "isReplaced"=FALSE,
+          "org_table"=NULL,
+          "org_summaryStat"=NULL,
+          "org_violinDist"=NULL,
+          "org_denstyDist"=NULL,
+          "org_pairedPlot"=NULL,
+          "prc_table"=NULL,
+          "prc_summaryStat"=NULL,
+          "prc_violinDist"=NULL,
+          "prc_denstyDist"=NULL,
+          "prc_pairedPlot"=NULL
+        ),
+        # statistical inference - testing variables
+        "statTest"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "maPlot"=NULL,
+          "volcanoPlot"=NULL,
+          "all_table"=NULL,
+          "signf_table"=NULL
+        ),
+        # statistical inference - enrichment variables
+        "enrichAnalysis"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "table"=NULL,
+          "plot"=NULL
+        ),
+        # statistical inference - reduced go variables
+        "goVis"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "table"=NULL,
+          "plot"=NULL
+        ),
+        # summary visualizations - dimensional reduction variables
+        "dimenReduc"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "table"=NULL,
+          "plot"=NULL
+        ),
+        "cluster"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "test_silhouette"=NULL,
+          "test_sumSquare"=NULL,
+          "test_gapStat"=NULL,
+          "cluster_config"=NULL,
+          "res_pca"=NULL,
+          "res_silhouette"=NULL,
+          "res_dendogram"=NULL,
+          "res_membership"=NULL
+        ),
+        "feature"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "selectTable"=NULL,
+          "plot_config"=NULL,
+          "intensityPlot"=NULL,
+          "corrPlot"=NULL
+        )
       ),
       "ptm"=list(
-        "dataAnnot"=NULL,
-        "qualityCheck"=NULL,
-        "dataAverage"=NULL,
-        "dataFilter"=NULL,
-        "dataImpute"=NULL,
-        "dataNormalize"=NULL,
-        "statTest"=NULL,
-        "enrichAnalysis"=NULL,
-        "goVis"=NULL,
-        "dimenReduc"=NULL,
-        "clustering"=NULL,
-        "featureCompare"=NULL
+        "isRepl"=FALSE,
+        # data setup variables
+        "dataSetup"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "table"=NULL
+        ),
+        # data annotation variables
+        "dataAnnot"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "table"=NULL
+        ),
+        # quality check plot variables
+        "qualityCheck"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "distPlot"=NULL,
+          "cvPlot"=NULL,
+          "identCount"=NULL,
+          "sharedCount"=NULL,
+          "completeness"=NULL,
+          "missingCount"=NULL
+        ),
+        # data processing - averaging variables
+        "dataAverage"=list(
+          "isRun"=FALSE,
+          "isReplaced"=FALSE,
+          "org_distPlot"=NULL,
+          "org_table"=NULL,
+          "prc_distPlot"=NULL,
+          "prc_table"=NULL
+        ),
+        # data processing - filtering variables
+        "dataFilter"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "isReplaced"=FALSE,
+          "org_table"=NULL,
+          "org_countPlot"=NULL,
+          "org_percentPlot"=NULL,
+          "org_summaryStat"=NULL,
+          "prc_table"=NULL,
+          "prc_countPlot"=NULL,
+          "prc_percentPlot"=NULL,
+          "prc_summaryStat"=NULL
+        ),
+        # data processing - imputing variables
+        "dataImpute"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "isReplaced"=FALSE,
+          "org_table"=NULL,
+          "org_missingCount"=NULL,
+          "prv_imputeDist"=NULL,
+          "org_summaryStat"=NULL,
+          "prc_table"=NULL,
+          "prc_distPlot"=NULL,
+          "prc_summaryStat"=NULL
+        ),
+        # data processing - normalizing variables
+        "dataNormalize"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "isReplaced"=FALSE,
+          "org_table"=NULL,
+          "org_summaryStat"=NULL,
+          "org_violinDist"=NULL,
+          "org_denstyDist"=NULL,
+          "org_pairedPlot"=NULL,
+          "prc_table"=NULL,
+          "prc_summaryStat"=NULL,
+          "prc_violinDist"=NULL,
+          "prc_denstyDist"=NULL,
+          "prc_pairedPlot"=NULL
+        ),
+        # statistical inference - testing variables
+        "statTest"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "maPlot"=NULL,
+          "volcanoPlot"=NULL,
+          "all_table"=NULL,
+          "signf_table"=NULL
+        ),
+        # statistical inference - enrichment variables
+        "enrichAnalysis"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "table"=NULL,
+          "plot"=NULL
+        ),
+        # statistical inference - reduced go variables
+        "goVis"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "table"=NULL,
+          "plot"=NULL
+        ),
+        # summary visualizations - dimensional reduction variables
+        "dimenReduc"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "table"=NULL,
+          "plot"=NULL
+        ),
+        "cluster"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "test_silhouette"=NULL,
+          "test_sumSquare"=NULL,
+          "test_gapStat"=NULL,
+          "cluster_config"=NULL,
+          "res_pca"=NULL,
+          "res_silhouette"=NULL,
+          "res_dendogram"=NULL,
+          "res_membership"=NULL
+        ),
+        "feature"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "selectTable"=NULL,
+          "plot_config"=NULL,
+          "intensityPlot"=NULL,
+          "corrPlot"=NULL
+        )
       ),
       "shared"=list(
-        "proteinDomain"=NULL,
-        "circularNetwork"=NULL
+        "reference"=list(
+          "param"=NULL,
+          "table"=NULL
+        ),
+        "metadata"=list(
+          "param"=NULL,
+          "table"=NULL
+        ),
+        "proteinDomain"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "plot"=NULL,
+          "table"=NULL
+        ),
+        "circularNetwork"=list(
+          "isRun"=FALSE,
+          "param"=NULL,
+          "concat_table"=NULL,
+          "connect_table"=NULL,
+          "plot_config"=NULL,
+          "plot"=NULL
+        )
       )
     ),
-    reportFile=NULL
+    report=list(
+      "runReport"=NULL,
+      "reportFile"=NULL
+    )
   )
 
   # Data Input server script
