@@ -36,8 +36,9 @@ output$select_testing_groups <- renderUI({
 })
 
 # output$select_blocking_variable <- renderUI({
-#   metadata <- variables$datasets[[input$select_testing_data]]$meta
-#   id_col <- variables$datasets[[input$select_testing_data]]$meta_id
+#   data_name <- input$select_testing_data
+#   metadata <- variables$datasets[[data_name]]$meta
+#   id_col <- variables$datasets[[data_name]]$meta_id
 #   testing_var <- input$select_testing_variable
 #   cc <- colnames(metadata)[!(colnames(metadata) %in% c("Replica",
 #                                                        id_col,
@@ -49,8 +50,9 @@ output$select_testing_groups <- renderUI({
 # })
 #
 # output$select_blocking_groups <- renderUI({
+#   data_name <- input$select_testing_data
 #   if(isTruthy(input$select_blocking_variable)){
-#     metadata <- variables$datasets[[input$select_testing_data]]$meta
+#     metadata <- variables$datasets[[data_name]]$meta
 #     selectInput("select_blocking_groups",
 #                 label="Select groups for blocking (Only 2 unique group allowed!)",
 #                 choices=unique(metadata[, input$select_blocking_variable]),
@@ -60,9 +62,9 @@ output$select_testing_groups <- renderUI({
 
 observeEvent(input$run_statistical_analysis, {
   # TODO: Add validation and checks here
-
+  data_name <- input$select_testing_data
   # Get the current data list
-  dataList <- variables$datasets[[input$select_testing_data]]
+  dataList <- variables$datasets[[data_name]]
   ## Gather the arguments from the UI
   # Get the testing method
   methodin <- input$select_testing_method
@@ -117,79 +119,91 @@ observeEvent(input$run_statistical_analysis, {
     NAind <- NULL
   }
 
+  # # Create paramaters table and save to reportParams
+  # variables$reportParam[[data_name]]$statTest$param <- data.frame(
+  #   "parameters" = c(
+  #     "testing method", "test variable", "test groups", "correction method",
+  #     "adj-pval threshold", "fold-change threshold", "is weighted?", "weight value"),
+  #   "values" = c(
+  #     methodin, group_factor, paste0(test_variables, collapse=" vs "), adj.method, pval.thr, log2FC.thr,
+  #     flag.weight, NAweight_str))
+
   # Run the statistical testing
-  dataList <- run_testing(dataList, methodin, group_factor, test_variables,
-                          flag.block, blockfactor, blockLevels,
-                          flag.weight, NAweight, NAind, adj.method,
-                          pval.thr, log2FC.thr)
+dataList <- run_testing(dataList, methodin, group_factor, test_variables,
+                        flag.block, blockfactor, blockLevels,
+                        flag.weight, NAweight, NAind, adj.method,
+                        pval.thr, log2FC.thr)
 
-  # Output the Volcano plot to visualize the results
-  output$show_volcano_plot <- renderPlot({
-    if(input$update_volcano_plot){
-      i_size <- eventReactive(input$update_volcano_plot, {
-        input$set_volcano_point_size
-      })
-      res <- plot_volcano(dataList, pval.thr, log2FC.thr,
-                          i_size=i_size())
-    }else{
-      res <- plot_volcano(dataList, pval.thr, log2FC.thr)
-    }
+# Output the Volcano plot to visualize the results
+output$show_volcano_plot <- renderPlot({
+  if(input$update_volcano_plot){
+    i_size <- eventReactive(input$update_volcano_plot, {
+      input$set_volcano_point_size
+    })
+    res <- plot_volcano(dataList, pval.thr, log2FC.thr,
+                        i_size=i_size())
+  }else{
+    res <- plot_volcano(dataList, pval.thr, log2FC.thr)
+  }
 
-    # Create download plot button
-    pname <- paste0("VolcanoPlot_",
-                    input$select_testing_data,
-                    "_",  Sys.Date(), ".pdf")
-    # Download handler for the plot created
-    output$download_volcano_plot <- shiny.download.plot(pname, res, multi=F,
-                                                        fig.width=8, fig.height=4)
-    return(res)
-  })
+  # Create download plot button
+  pname <- paste0("VolcanoPlot_",
+                  data_name,
+                  "_",  Sys.Date(), ".pdf")
+  # Download handler for the plot created
+  output$download_volcano_plot <- shiny.download.plot(pname, res, multi=F,
+                                                      fig.width=8, fig.height=4)
+  return(res)
+})
 
-  # Output the Volcano plot to visualize the results
-  output$show_ma_plot <- renderPlot({
-    if(input$update_ma_plot){
-      i_size <- eventReactive(input$update_ma_plot, {
-        input$set_ma_point_size
-      })
-      res <- plot_ma(dataList,
-                     i_size=i_size())
-    }else{
-      res <- plot_ma(dataList,)
-    }
+# Output the Volcano plot to visualize the results
+output$show_ma_plot <- renderPlot({
+  if(input$update_ma_plot){
+    i_size <- eventReactive(input$update_ma_plot, {
+      input$set_ma_point_size
+    })
+    res <- plot_ma(dataList,
+                   i_size=i_size())
+  }else{
+    res <- plot_ma(dataList,)
+  }
 
-    # Create download plot button
-    pname <- paste0("MAPlot",
-                    input$select_testing_data,
-                    "_",  Sys.Date(), ".pdf")
-    # Download handler for the plot created
-    output$download_ma_plot <- shiny.download.plot(pname, res, multi=F,
-                                                        fig.width=8, fig.height=4)
-    return(res)
-  })
+  # Create download plot button
+  pname <- paste0("MAPlot",
+                  data_name,
+                  "_",  Sys.Date(), ".pdf")
+  # Download handler for the plot created
+  output$download_ma_plot <- shiny.download.plot(pname, res, multi=F,
+                                                      fig.width=8, fig.height=4)
+  return(res)
+})
 
-  # Create stat data for data preview
-  stat_data <- robust_cbind(dataList$annot, dataList$stats)
-  # Subset only significant data
-  signf_data <- filter(stat_data, significance!="no significance")
+# Create stat data for data preview
+stat_data <- robust_cbind(dataList$annot, dataList$stats)
+# Subset only significant data
+signf_data <- filter(stat_data, significance!="no significance")
 
-  # Create a preview for original data
-  output$show_significant_table <- shiny.preview.data(signf_data,
-                                                      colIgnore='Fasta.sequence')
+# Create a preview for original data
+output$show_significant_table <- shiny.preview.data(signf_data,
+                                                    colIgnore='Fasta.sequence')
 
-  # Create a preview for original data
-  output$show_statistical_result_table <- shiny.preview.data(stat_data,
-                                                             colIgnore='Fasta.sequence')
-  # Create a file name for download
-  fname_data <- paste0("testing_result_table_",
-                        dataList$name,
-                        "level_data_",
-                        Sys.Date(),
-                        ".csv")
-  # Pass to the download button
-  output$downloadStatResults <- shiny.download.data(fname_data,
-                                                    robust_cbind(dataList$annot,
-                                                                 dataList$stats),
-                                                    colIgnore="Fasta.sequence")
-  # Save the update list to the reactive value
-  variables$datasets[[input$select_testing_data]] <- dataList
+# Create a preview for original data
+output$show_statistical_result_table <- shiny.preview.data(stat_data,
+                                                           colIgnore='Fasta.sequence')
+# Create a file name for download
+fname_data <- paste0("testing_result_table_",
+                      dataList$name,
+                      "level_data_",
+                      Sys.Date(),
+                      ".csv")
+# Pass to the download button
+output$downloadStatResults <- shiny.download.data(fname_data,
+                                                  robust_cbind(dataList$annot,
+                                                               dataList$stats),
+                                                  colIgnore="Fasta.sequence")
+# Save the update list to the reactive value
+variables$datasets[[data_name]] <- dataList
+
+# update isRun for filtering
+variables$reportParam[[data_name]]$statTest$isRun <- TRUE
 })

@@ -98,7 +98,7 @@ shinyServer(function(input, output, session){
           "isRun"=FALSE,
           "param"=NULL,
           "maPlot"=NULL,
-          "volanoPlot"=NULL,
+          "volcanoPlot"=NULL,
           "all_table"=NULL,
           "signf_table"=NULL
         ),
@@ -228,7 +228,7 @@ shinyServer(function(input, output, session){
           "isRun"=FALSE,
           "param"=NULL,
           "maPlot"=NULL,
-          "volanoPlot"=NULL,
+          "volcanoPlot"=NULL,
           "all_table"=NULL,
           "signf_table"=NULL
         ),
@@ -358,7 +358,7 @@ shinyServer(function(input, output, session){
           "isRun"=FALSE,
           "param"=NULL,
           "maPlot"=NULL,
-          "volanoPlot"=NULL,
+          "volcanoPlot"=NULL,
           "all_table"=NULL,
           "signf_table"=NULL
         ),
@@ -486,7 +486,7 @@ shinyServer(function(input, output, session){
           "isRun"=FALSE,
           "param"=NULL,
           "maPlot"=NULL,
-          "volanoPlot"=NULL,
+          "volcanoPlot"=NULL,
           "all_table"=NULL,
           "signf_table"=NULL
         ),

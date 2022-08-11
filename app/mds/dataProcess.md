@@ -64,9 +64,8 @@ Missing values are a common issue in proteomics data. With filtering data, imput
   <img src="../../png/023_DataImputationInitial.png" width="80%">
 </p>
 
-Additionally `SQuAPP` offers a more custom imputation that uses the logic of [down-shifted normal imputation](http://coxdocs.org/doku.php?id=perseus:user:activities:matrixprocessing:imputation:replacemissingfromgaussian&s[]=imputation) used in Perseus<sup><b>[2](#Bibliography)</b></sup>. This method is similar to `MinProb` however can be used to avoid values to be overlapped with real values by adjusting shift and magnitude values.
-
 - `Down-shifted Normal`: Custom function imputes missing values with a random value selected from a narrower normal distribution with a smaller mean shifted by a user-selected magnitude.
+  - This custom imputation that uses the logic of [down-shifted normal imputation](http://coxdocs.org/doku.php?id=perseus:user:activities:matrixprocessing:imputation:replacemissingfromgaussian&s[]=imputation) used in Perseus<sup><b>[2](#Bibliography)</b></sup>.
 
 <p align="center">
   <img src="../../png/023.1_DataImputationInitial.png" width="80%"> # New Image Showing Downshifted Normal Use
