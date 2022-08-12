@@ -11,6 +11,10 @@ SQuAPP is a workflow-based web application built on R-Shiny to enable rapid high
 
 > This document introduces the tool and how to access it. To get further information about the functionality and step-by-step tutorial, visit the [ wiki page ](https://github.com/LangeLab/SQuAPP/wiki) of the repository or follow through in [SQuAPP's](http://squapp.langelab.org/) home page.
 
+> The SQuAPP demonstration video can be accessed from here:
+[![SQuAPP Demonstration](https://img.youtube.com/vi/tczeMi8aC3I/0.jpg)](https://www.youtube.com/watch?v=tczeMi8aC3I)
+
+
 ---
 
 # SQuAPP Features
