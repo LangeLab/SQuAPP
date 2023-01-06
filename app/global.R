@@ -43,10 +43,6 @@ source('utils-genReport.R')
 options(dplyr.summarise.inform = FALSE) # To supress the summarise warning
 options(shiny.maxRequestSize=100*1024^2) # Allow large datasets to be inputed
 
-# TODO: Better caching to save time on loading all packages and other dependencies
-shinyOptions(cache = cachem::cache_disk("./app_cache/cache/"))
-
-
 # Establishes a default theme for the app using "fresh" package with "bs4Dash"
 # Reference: https://dreamrs.github.io/fresh/articles/vars-bs4dash.html
 custom_theme <- create_theme(

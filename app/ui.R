@@ -25,8 +25,8 @@
       opacity = 0.8,
       # Define individual menu items
       sidebarMenu(
-        menuItem( "Home", tabName="home", icon=icon("house") , selected=TRUE ),
-        menuItem( "Data Setup", tabName="dataSetup", icon=icon("upload"), startExpanded=FALSE,
+        menuItem( "Home", tabName="home", icon=icon("house"), selected=TRUE ),
+        menuItem( "Data Setup", tabName="dataSetup", icon=icon("upload"), 
           menuSubItem("Data Upload", tabName="dataInputTab"),
           conditionalPanel(
             condition="input.isExist_ptm ||
@@ -40,7 +40,7 @@
           )
         ),
         conditionalPanel(
-          condition="input.submitExampleData!=0||
+          condition="input.submitExampleData!=0 ||
                      input.isExist_protein ||
                      input.isExist_peptide ||
                      input.isExist_termini ||
@@ -49,7 +49,7 @@
         ),
         conditionalPanel(
           condition="input.produce_plots!=0",
-          menuItem("Data Preprocessing", tabName="dataProcessTab", icon=icon("gear"), startExpanded=FALSE,
+          menuItem("Data Preprocessing", tabName="dataProcessTab", icon=icon("gear"), 
             menuSubItem("Averaging", tabName="dataAverageTab"),
             menuSubItem("Filtering", tabName="dataFilterTab"),
             menuSubItem("Imputation", tabName="dataImputeTab"),
@@ -58,7 +58,7 @@
         ),
         conditionalPanel(
           condition="input.produce_plots!=0",
-          menuItem("Statistical Inference", tabName="statInferTab", icon=icon("braille"), startExpanded=FALSE,
+          menuItem("Statistical Inference", tabName="statInferTab", icon=icon("braille"), 
             menuSubItem("Statistical Testing", tabName="statTestTab"),
             conditionalPanel(
               condition="input.run_statistical_analysis!=0",
@@ -69,7 +69,7 @@
         ),
         conditionalPanel(
           condition="input.run_statistical_analysis!=0",
-          menuItem("Summary Visualizations", tabName="dataVisualTab", icon=icon("chart-line"), startExpanded=FALSE,
+          menuItem("Summary Visualizations", tabName="dataVisualTab", icon=icon("chart-line"), 
             menuSubItem("Dimensional Reduction", tabName="visualDimReduceTab"),
             menuSubItem("Clustering", tabName="visualClusterTab"),
             menuSubItem("Feature Comparisons", tabName="visualFeatureTab"),
@@ -237,7 +237,7 @@
             br(),
             "For citing the app:",
             br(),
-            "Copyright (C) 2021, code licensed under MIT "
+            "Copyright (C) 2023, code licensed under MIT "
             # TODO:
             #   1 - Complete the footer with more information
             #   2 - Create a markdown version of it for cleaner and easier modification
