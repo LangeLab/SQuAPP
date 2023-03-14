@@ -599,4 +599,8 @@ if (READY){
     
   })
   
+}else{
+  shinyServer(function(input, output){
+    NULL
+  })
 }
