@@ -6,6 +6,7 @@ SQuAPP is a workflow-based web application built on R-Shiny to enable rapid high
   - [Online Version](#online-version)
   - [Local Installation](#local-installation)
   - [Docker Installation](#docker-installation)
+- [Publication](#publication)
 - [Code of Conduct](#code-of-conduct)
 - [Session Info](#session-info)
 
@@ -113,6 +114,15 @@ In the RStudio, you can run the shiny app by clicking the "Run App" option.
 
 ## Docker Installation
 > This part is still a work in progress!
+
+# Publication
+If you have used `SQuAPP` in your work, please cite the paper that describes our tool using the following citation:
+
+> **SQuAPP—simple quantitative analysis of proteins and PTMs**
+> Enes K Ergin, Anuli C Uzozie, Siyuan Chen, Ye Su, Philipp F Lange
+> Bioinformatics, Volume 38, Issue 21, Pages 4956–4958
+> https://doi.org/10.1093/bioinformatics/btac628
+> **Received:** 15 December 2021 | **Accepted:** 13 September 2022 | **Published:** 14 September 2022
 
 # Code of Conduct
 Please note that SQuAPP is released with a [Contributor Code of Conduct](./CODE_OF_CONDUCT.md). By contributing to this project, you agree to abide by its terms.
