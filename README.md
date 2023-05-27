@@ -119,9 +119,13 @@ In the RStudio, you can run the shiny app by clicking the "Run App" option.
 If you have used `SQuAPP` in your work, please cite the paper that describes our tool using the following citation:
 
 > **SQuAPP—simple quantitative analysis of proteins and PTMs**
+> 
 > Enes K Ergin, Anuli C Uzozie, Siyuan Chen, Ye Su, Philipp F Lange
+> 
 > Bioinformatics, Volume 38, Issue 21, Pages 4956–4958
+> 
 > https://doi.org/10.1093/bioinformatics/btac628
+> 
 > **Received:** 15 December 2021 | **Accepted:** 13 September 2022 | **Published:** 14 September 2022
 
 # Code of Conduct
