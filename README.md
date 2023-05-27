@@ -116,7 +116,7 @@ In the RStudio, you can run the shiny app by clicking the "Run App" option.
 > This part is still a work in progress!
 
 # Publication
-If you have used `SQuAPP` in your work, please cite the paper that describes our tool using the following citation:
+If you have used `SQuAPP` in your work, please cite the paper that describes our tool:
 
 > **SQuAPP—simple quantitative analysis of proteins and PTMs**
 > 
