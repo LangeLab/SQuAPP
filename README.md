@@ -121,13 +121,13 @@ Please note that SQuAPP is released with a [Contributor Code of Conduct](./CODE_
 # Session Info
 ```R
 > sessionInfo()
-R version 4.1.0 (2021-05-18)
+R version 4.3.0 (2023-04-21)
 Platform: x86_64-pc-linux-gnu (64-bit)
-Running under: Pop!_OS 21.04
+Running under: Pop!_OS 22.04 LTS
 
 Matrix products: default
-BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3
-LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.13.so
+BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
+LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.20.so;  LAPACK version 3.10.0
 
 locale:
  [1] LC_CTYPE=en_CA.UTF-8       LC_NUMERIC=C               LC_TIME=en_CA.UTF-8       
@@ -139,27 +139,24 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] circlize_0.4.13       patchwork_1.1.1       ggpubr_0.4.0          plotly_4.10.0        
- [5] ggplot2_3.3.5         limma_3.48.3          MsCoreUtils_1.4.0     reshape2_1.4.4       
- [9] feather_0.3.5         stringr_1.4.0         tidyr_1.1.4           dplyr_1.0.7          
-[13] fresh_0.2.0           shinycssloaders_1.0.0 shinyWidgets_0.6.2    tippy_0.1.0          
-[17] DT_0.19               bs4Dash_2.0.3         shiny_1.7.1          
+ [1] circlize_0.4.15       patchwork_1.1.2.9000  ggpubr_0.6.0          plotly_4.10.1        
+ [5] ggplot2_3.4.2         reshape2_1.4.4        feather_0.3.5         stringr_1.5.0        
+ [9] tidyr_1.3.0           dplyr_1.1.2           colourpicker_1.2.0    shinycssloaders_1.0.0
+[13] shinyWidgets_0.7.6    bs4Dash_2.2.1         fresh_0.2.0           tippy_0.1.0          
+[17] DT_0.28               shiny_1.7.4          
 
 loaded via a namespace (and not attached):
- [1] fontawesome_0.2.2   httr_1.4.2          tools_4.1.0         backports_1.3.0     bslib_0.3.1        
- [6] utf8_1.2.2          R6_2.5.1            DBI_1.1.1           lazyeval_0.2.2      BiocGenerics_0.38.0
-[11] colorspace_2.0-2    withr_2.4.2         tidyselect_1.1.1    curl_4.3.2          compiler_4.1.0     
-[16] sass_0.4.0          scales_1.1.1        digest_0.6.28       foreign_0.8-81      rio_0.5.27         
-[21] pkgconfig_2.0.3     htmltools_0.5.2     fastmap_1.1.0       htmlwidgets_1.5.4   rlang_0.4.12       
-[26] GlobalOptions_0.1.2 readxl_1.3.1        rstudioapi_0.13     shape_1.4.6         jquerylib_0.1.4    
-[31] generics_0.1.1      jsonlite_1.7.2      crosstalk_1.1.1     zip_2.2.0           car_3.0-11         
-[36] magrittr_2.0.1      Rcpp_1.0.7          munsell_0.5.0       S4Vectors_0.30.2    fansi_0.5.0        
-[41] abind_1.4-5         lifecycle_1.0.1     yaml_2.2.1          stringi_1.7.5       carData_3.0-4      
-[46] MASS_7.3-54         plyr_1.8.6          grid_4.1.0          parallel_4.1.0      promises_1.2.0.1   
-[51] forcats_0.5.1       crayon_1.4.1        haven_2.4.3         hms_1.1.1           pillar_1.6.4       
-[56] markdown_1.1        ggsignif_0.6.3      stats4_4.1.0        glue_1.4.2          data.table_1.14.2  
-[61] vctrs_0.3.8         httpuv_1.6.3        cellranger_1.1.0    gtable_0.3.0        purrr_0.3.4        
-[66] clue_0.3-60         assertthat_0.2.1    cachem_1.0.6        xfun_0.27           openxlsx_4.2.4     
-[71] mime_0.12           xtable_1.8-4        broom_0.7.9         rstatix_0.7.0       later_1.3.0        
-[76] viridisLite_0.4.0   tibble_3.1.5        cluster_2.1.2       ellipsis_0.3.2   
+ [1] shape_1.4.6         gtable_0.3.3        xfun_0.39           bslib_0.4.2         GlobalOptions_0.1.2
+ [6] htmlwidgets_1.6.2   rstatix_0.7.2       crosstalk_1.2.0     vctrs_0.6.2         tools_4.3.0        
+[11] generics_0.1.3      tibble_3.2.1        fansi_1.0.4         pkgconfig_2.0.3     data.table_1.14.8  
+[16] lifecycle_1.0.3     compiler_4.3.0      munsell_0.5.0       fontawesome_0.5.1   carData_3.0-5      
+[21] httpuv_1.6.11       htmltools_0.5.5     sass_0.4.6          yaml_2.3.7          lazyeval_0.2.2     
+[26] later_1.3.1         pillar_1.9.0        car_3.1-2           jquerylib_0.1.4     ellipsis_0.3.2     
+[31] cachem_1.0.8        abind_1.4-5         mime_0.12           commonmark_1.9.0    tidyselect_1.2.0   
+[36] digest_0.6.31       stringi_1.7.12      purrr_1.0.1         fastmap_1.1.1       grid_4.3.0         
+[41] colorspace_2.1-0    cli_3.6.1           magrittr_2.0.3      utf8_1.2.3          broom_1.0.4        
+[46] withr_2.5.0         scales_1.2.1        promises_1.2.0.1    backports_1.4.1     httr_1.4.6         
+[51] ggsignif_0.6.4      hms_1.1.3           memoise_2.0.1       miniUI_0.1.1.1      viridisLite_0.4.2  
+[56] markdown_1.7        rlang_1.1.1         Rcpp_1.0.10         xtable_1.8-4        glue_1.6.2         
+[61] rstudioapi_0.14     jsonlite_1.8.4      R6_2.5.1            plyr_1.8.8 
 ```
