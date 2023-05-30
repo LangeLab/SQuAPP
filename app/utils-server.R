@@ -1,65 +1,167 @@
-shiny.preview.data <- function(data,
-                               colIgnore=NULL,
-                               row.names=FALSE,
-                               pageLength=5,
-                               selection="multiple"){
-  if(!is.null(colIgnore)){data[, colIgnore] <- NULL}
-  DT::renderDataTable({
-    # Create a HTML widget for the resulting dataframe.
-    DT::datatable(data,
-      class = 'cell-border stripe',
-      rownames = row.names,
-      extensions = 'Buttons',
-      options = list(
-        scrollX = TRUE,
-        lengthMenu = list(c(5, 10, 25), c('5','10','25')),
-        pageLength = pageLength
-      ),
-      selection=selection
+# Description: Contains utility functions that are used in the server.R file.
+
+# An expanded tryCatch function that returns an error code
+try2 <- function(
+    expr,
+    err_code=NULL,
+    silent=TRUE
+){
+    tryCatch(
+        expr, 
+        error = function(c) {
+            msg <- conditionMessage(c)
+            if (!silent) message(c)
+            invisible(
+                structure(
+                    msg, 
+                    class = "try-error"
+                )
+            )
+            return(err_code)
+        }
     )
-  })
 }
 
-shiny.download.data <- function(fname,
-                                data,
-                                row.names=FALSE,
-                                colIgnore=NULL){
-  if(!is.null(colIgnore)){data[, colIgnore] <- NULL}
-  downloadHandler(
-    filename=function() {fname},
-    content = function(file) {write.csv(data, file, row.names=row.names)})
-}
-
-shiny.download.plot <- function(f, p, multi=F,
-                                fig.width=5, fig.height=3){
-  downloadHandler(
-    filename = function() {f},
-    content = function(file){
-      pdf( file, paper="special", width=fig.width, height=fig.height )
-      if(multi){ for(i in p){ print(i) } } else { print(p) }
-      dev.off()
+# Function to create a reactive dataframe from a passed data object
+shiny.preview.data <- function(
+    data,
+    colIgnore=NULL,
+    row.names=FALSE,
+    pageLength=5,
+    selection="multiple"
+){
+    # If the data passed is a matrix, convert it to a dataframe.
+    if(is.matrix(data)){
+        data <- as.data.frame(data, check.names=FALSE)
     }
-  )
+    # If the data passed is not a dataframe, display an error message.
+    if(!is.data.frame(data)){
+        return(
+            tags$div(
+                class = "alert alert-danger",
+                "There has been an error happened 
+                while trying to display the data.\n 
+                Please ensure your data is formatted correctly."
+            )
+        )
+    }
+    # Remove the columns that are to be ignored.
+    if(!is.null(colIgnore)){data[, colIgnore] <- NULL}
+    DT::renderDataTable({
+        # Create a HTML widget for the resulting dataframe.
+        DT::datatable(data,
+            class = 'cell-border stripe',
+            rownames = row.names,
+            extensions = 'Buttons',
+            options = list(
+            scrollX = TRUE,
+            lengthMenu = list(
+                c(5, 10, 25), 
+                c('5','10','25')
+            ),
+            pageLength = pageLength
+            ),
+            selection=selection
+        )
+    })
 }
 
-robust_cbind <- function(df1, df2){
-  df1 <- df1[!is.na(match(rownames(df1), rownames(df2))), ]
-  df <- cbind(df1, df2)
-  return(df)
+# Function to create a download handler for a data object
+shiny.download.data <- function(
+    fname,
+    data,
+    row.names=FALSE,
+    colIgnore=NULL
+){
+    # If the data passed is a matrix, convert it to a dataframe.
+    if(is.matrix(data)){
+        data <- as.data.frame(data, check.names=FALSE)
+    }
+    # If the data passed is not a dataframe, display an error message.
+    if(!is.data.frame(data)){
+        return(
+            tags$div(
+                class = "alert alert-danger",
+                "There has been an error happened 
+                while trying to download the data.\n 
+                Please ensure your data is formatted correctly."
+            )
+        )
+    }
+    # Remove the columns that are to be ignored.
+    if(!is.null(colIgnore)){data[, colIgnore] <- NULL}
+    # Download handler for the data object.
+    downloadHandler(
+        filename=function() {fname},
+        content = function(file){
+            write.csv(
+                data, 
+                file, 
+                row.names=row.names
+            )
+        }
+    )
 }
 
-shiny.basicStats <- function(x, ci=.95){
-    # Function taken from fBasics package
-    # Source: https://cran.r-project.org/web/packages/fBasics/index.html
+# Function to create download handler for a plot object saved as a pdf
+shiny.download.plot <- function(
+    f, 
+    p, 
+    multi=F,
+    fig.width=5, 
+    fig.height=3
+){
+    downloadHandler(
+        filename = function() {f},
+        content = function(file){
+            # Open a pdf device.
+            pdf( 
+                file, 
+                paper="special", 
+                width=fig.width, 
+                height=fig.height 
+            )
+            # If the plot is a list of plots, print each plot.
+            if(multi){ for(i in p){ print(i) } } else { print(p) }
+            # Close the pdf device.
+            dev.off()
+        }
+    )
+}
+
+# Ensure the Rownames match when cbind-ing two dataframes
+robust_cbind <- function(
+    df1, 
+    df2
+){
+    df1 <- df1[!is.na(match(rownames(df1), rownames(df2))), ]
+    df <- cbind(df1, df2)
+    return(df)
+}
+
+# Function taken from fBasics package
+# Source: https://cran.r-project.org/web/packages/fBasics/index.html
+# Expanded Descriptive Statistics about the data  
+shiny.basicStats <- function(x, ci=.95){    
     # Univariate/Multivariate:
     y = as.matrix(x)
     # Handle Column Names:
     if (is.null(colnames(y))) {
         Dim <- dim(y)[2]
         if (Dim == 1) {
-            colnames(y) <- paste(substitute(x), collapse = ".")
+            colnames(y) <- paste(
+                substitute(x), 
+                collapse = "."
+            )
         } else if (Dim > 1) {
-            colnames(y) <- paste(paste(substitute(x), collapse = ""), 1:Dim, sep = "")
+            colnames(y) <- paste(
+                paste(
+                    substitute(x), 
+                    collapse = ""
+                ), 
+                1:Dim, 
+                sep = ""
+            )
         }
     }
     # Internal Function - CL Levels:

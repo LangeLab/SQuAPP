@@ -73,7 +73,8 @@ observeEvent(input$preview_imputation_distribution, {
     dataList,
     impute.method=impute_method,
     group_factor=group_factor,
-    downshift_mag=downshift_mag
+    downshift_mag=downshift_mag, 
+    impute_value=impute_value
   )
   # Create a download link to the density comparison plot
   pname <- paste0(

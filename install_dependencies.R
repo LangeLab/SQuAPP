@@ -70,6 +70,8 @@ if(length(github_)){
 if (!require("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
+BiocManager::install(version = "3.17")
+
 # Read the file to get the list of bioconductor packages
 bioconductor_ <- paste(readLines('./dep/bioconductor_packages.txt'), sep = "\n")
 # Check if the file has packages
