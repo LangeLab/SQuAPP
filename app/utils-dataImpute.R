@@ -1,21 +1,34 @@
 # require -> MsCoreUtils
 
 # Imputation by all using MsCoreUtils
-impute_with_MsCore <- function(data, impute.method="MinProb", val=NULL){
+impute_with_MsCore <- function(
+  data, 
+  impute.method="MinProb", 
+  val=NULL
+){
   if(is.null(val)){
     # Calculate the imputed data based on given imputation method
-    tmp_matrix <- MsCoreUtils::impute_matrix(as.matrix(log2(data)),
-                                             method=impute.method)
+    tmp_matrix <- MsCoreUtils::impute_matrix(
+      as.matrix(log2(data)),
+      method=impute.method
+    )
   }else{
-    tmp_matrix <- MsCoreUtils::impute_matrix(as.matrix(log2(data)),
-                                             method=impute.method,
-                                             val=val)
+    tmp_matrix <- MsCoreUtils::impute_matrix(
+      as.matrix(log2(data)),
+      method=impute.method,
+      val=val
+    )
   }
   # Return the value as dataframe with scaled up version
-  return(data.frame(2**(tmp_matrix)))
+  return(
+    data.frame(2**(tmp_matrix), check.names = FALSE)
+  )
 }
 
-impute_with_downshifted_normal <- function(data, downshift_mag){
+impute_with_downshifted_normal <- function(
+  data, 
+  downshift_mag
+){
   # TODO: Add an percentile cutoff option to the UI.
   # Hard prctl cut-off
   prctl <- 0.05
@@ -53,25 +66,42 @@ impute_with_downshifted_normal <- function(data, downshift_mag){
   return(imputed_data)
 }
 
-impute_data <- function(dataList,
-                        impute_method="MinProb",
-                        group_factor=NULL,
-                        downshift_mag=3.5,
-                        impute_value=NULL){
+impute_data <- function(
+  dataList,
+  impute_method="MinProb",
+  group_factor=NULL,
+  downshift_mag=3.5,
+  impute_value=NULL
+){
+  # Error Codes:
+  # 1: A numeric value must be passed when using with method!
+
+  if (impute_method=="with") {
+    if (is.null(impute_value)) {
+      return(1)
+    }else if (is.na(impute_value)) {
+      return(1)
+    }else if (!is.numeric(impute_value)) {
+       return(1)
+    }
+  }
+
   # Get quantitative data
   quant_data <- dataList$quant
 
   # Check if the imputation method is based on global or grouped
   if(is.null(group_factor)){
     if(impute_method == "Down-shifted Normal"){
-      imputed_data <- impute_with_downshifted_normal(quant_data, downshift_mag)
+      imputed_data <- impute_with_downshifted_normal(
+        quant_data, 
+        downshift_mag
+      )
     }else{
-      if(impute_method == "with" && is.null(impute_value)){
-        stop("A value must be passed when using impute_with method!")
-      }
-      imputed_data <- impute_with_MsCore(quant_data,
-                                         impute.method=impute_method,
-                                         val=impute_value)
+      imputed_data <- impute_with_MsCore(
+        quant_data,
+        impute.method=impute_method,
+        val=impute_value
+      )
     }
   }else{
     # Get the metadata
@@ -93,7 +123,10 @@ impute_data <- function(dataList,
         # Subset the data
         subset_data <- quant_data[, col2subset]
         # Apply the imputation for selected group
-        subset_imputed <- impute_with_downshifted_normal(subset_data, downshift_mag)
+        subset_imputed <- impute_with_downshifted_normal(
+          subset_data, 
+          downshift_mag
+        )
         # Concatanate the imputed data
         if(nrow(imputed_data)==0){
           imputed_data <- subset_imputed
@@ -102,18 +135,17 @@ impute_data <- function(dataList,
         }
       }
     }else{
-      if(impute_method == "with" && is.null(impute_value)){
-        stop("A value must be passed when using impute_with method!")
-      }
       for(grp in uniq_grps){
         # Find indices to subset
         col2subset <- metadata[which(grp_col %in% grp), meta_id_col]
         # Subset the data
         subset_data <- quant_data[, col2subset]
         # Apply the imputation for selected group
-        subset_imputed <- impute_with_MsCore(subset_data,
-                                             impute.method=impute_method,
-                                             val=impute_value)
+        subset_imputed <- impute_with_MsCore(
+          subset_data,
+          impute.method=impute_method,
+          val=impute_value
+        )
         # Concatanate the imputed data
         if(nrow(imputed_data)==0){
           imputed_data <- subset_imputed
@@ -132,7 +164,10 @@ impute_data <- function(dataList,
 }
 
 # Stacked Bar plot from ggplot to present missing value counts in the data
-missing_values.stacked_bar_plot <- function(dataList, group_factor=NULL){
+missing_values.stacked_bar_plot <- function(
+  dataList, 
+  group_factor=NULL
+){
   # Get quantiative data
   data <- dataList$quant
   # Get missing counts
@@ -157,13 +192,26 @@ missing_values.stacked_bar_plot <- function(dataList, group_factor=NULL){
       stop("More than 5 unique values in group_factor won't be plotted!")
     }
     # Add group factor to the count data
-    count_data <- cbind(count_data,
-                        group=metadata[, group_factor][match(count_data$samples,
-                                                             metadata[, meta_id_col])])
+    count_data <- cbind(
+      count_data,
+      group=metadata[
+        , 
+        group_factor
+      ][
+        match(
+          count_data$samples,
+          metadata[, meta_id_col]
+        )
+      ]
+    )
 
     # Convert the data into long format
-    count_data <- melt(count_data, id.vars=c("samples", "group"),
-                      value.name="count", variable.name="state")
+    count_data <- melt(
+      count_data, 
+      id.vars=c("samples", "group"),
+      value.name="count", 
+      variable.name="state"
+    )
     # Create average count table for horizontal indicators
     avg_counts <- count_data %>%
         group_by(group, state) %>%
@@ -189,8 +237,12 @@ missing_values.stacked_bar_plot <- function(dataList, group_factor=NULL){
   # If grouping factor is not passed plot the whole data without facet
   }else{
     # Convert the data into long format
-    count_data <- melt(count_data, id.vars=c("samples"),
-                      value.name="count", variable.name="state")
+    count_data <- melt(
+      count_data, 
+      id.vars=c("samples"),
+      value.name="count", 
+      variable.name="state"
+    )
     # Create the plot
     p <- ggplot(count_data, aes(fill=state, y=count, x=samples)) +
       geom_bar(position="stack", stat="identity", width=1) +
@@ -201,10 +253,13 @@ missing_values.stacked_bar_plot <- function(dataList, group_factor=NULL){
   }
 }
 
-imputed_value_distribution.density_plots <- function(dataList,
-                                                     impute.method="MinProb",
-                                                     group_factor=NULL,
-                                                     downshift_mag=3.5){
+imputed_value_distribution.density_plots <- function(
+  dataList,
+  impute.method="MinProb",
+  group_factor=NULL,
+  downshift_mag=3.5, 
+  impute_value=NULL
+){
   # Get the quant data
   quant_data <- dataList$quant
 
@@ -237,23 +292,32 @@ imputed_value_distribution.density_plots <- function(dataList,
       # If imputation methods is selected
       if(impute.method != "No imputation"){
         if(impute.method != "Down-shifted Normal"){
-          subset_data <- impute_with_MsCore(subset_data,
-                                            impute.method=impute.method)
-
+          subset_data <- impute_with_MsCore(
+            subset_data,
+            impute.method=impute.method,
+            val=impute_value
+          )
           imputed_dist <- as.vector(as.matrix(subset_data))[missing_ind]
         }else{
           if(is.null(downshift_mag)){
             stop("donwshift_mag argument needs to be passed id Down-shifted normal method is selected")
           }
-          imputed_dist <- rnorm(sum(missing_ind),
-                                sd=sd(log2(complete_dist)),
-                                mean=(mean(log2(complete_dist))-(downshift_mag*sd(log2(complete_dist)))))
+          imputed_dist <- rnorm(
+            sum(missing_ind),
+            sd=sd(log2(complete_dist)),
+            mean=(mean(log2(complete_dist))-(downshift_mag*sd(log2(complete_dist))))
+          )
           imputed_dist <- 2 ** imputed_dist
         }
       }
       # Create plot_df subset for given grouping
-      sub_plot_df <- data.frame(rbind(cbind(intensity=complete_dist, state="complete"),
-                                      cbind(intensity=imputed_dist, state="imputed")))
+      sub_plot_df <- data.frame(
+        rbind(
+          cbind(intensity=complete_dist, state="complete"),
+          cbind(intensity=imputed_dist, state="imputed")
+        ),
+        check.names = FALSE
+      )
       # Add grouping variable
       sub_plot_df$group <- grp
       # Concatenate the data
@@ -286,17 +350,21 @@ imputed_value_distribution.density_plots <- function(dataList,
     # If imputation methods is selected
     if(impute.method != "No imputation"){
       if(impute.method != "Down-shifted Normal"){
-        quant_data <- impute_with_MsCore(quant_data,
-                                         impute.method=impute.method)
-
+        quant_data <- impute_with_MsCore(
+          quant_data,
+          impute.method=impute.method,
+          val=impute_value
+        )
         imputed_dist <- as.vector(as.matrix(quant_data))[missing_ind]
       }else{
         if(is.null(downshift_mag)){
           stop("donwshift_mag argument needs to be passed id Down-shifted normal method is selected")
         }
-        imputed_dist <- rnorm(sum(missing_ind),
-                              sd=sd(log2(complete_dist)),
-                              mean=(mean(log2(complete_dist))-(downshift_mag*sd(log2(complete_dist)))))
+        imputed_dist <- rnorm(
+          sum(missing_ind),
+          sd=sd(log2(complete_dist)),
+          mean=(mean(log2(complete_dist))-(downshift_mag*sd(log2(complete_dist))))
+        )
         imputed_dist <- 2 ** imputed_dist
       }
     }

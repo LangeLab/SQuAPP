@@ -16,7 +16,8 @@ fluidPage(
           status="primary"),
         conditionalPanel(
           condition="input.use_group_factor",
-          uiOutput("select_grouping_for_coloring")),
+          uiOutput("select_grouping_for_coloring")
+        ),
         hr(),
         actionButton(
           inputId="produce_plots",
@@ -43,52 +44,63 @@ fluidPage(
             tabPanel(
               title="Violin Plot",
               plotOutput("show_data_distributions") %>% withSpinner(),
-              downloadBttn("download_qc_distributions",
-                           label="Download Plot",
-                           style="minimal",
-                           color="warning")
+              downloadBttn(
+                "download_qc_distributions",
+                label="Download Plot",
+                style="minimal",
+                color="warning"
+              )
             ),
             tabPanel(
               title="CV Plot",
               plotOutput("show_cv_plots") %>% withSpinner(),
-              downloadBttn("download_qc_cv",
-                           label="Download Plot",
-                           style="minimal",
-                           color="warning")
+              downloadBttn(
+                "download_qc_cv",
+                label="Download Plot",
+                style="minimal",
+                color="warning"
+              )
             ),
             tabPanel(
               title="Identified Features Comparison",
               plotOutput("show_identified_features") %>% withSpinner(),
-              downloadBttn("download_qc_identifiedFeatures",
-                           label="Download Plot",
-                           style="minimal",
-                           color="warning")
+              downloadBttn(
+                "download_qc_identifiedFeatures",
+                label="Download Plot",
+                style="minimal",
+                color="warning"
+              )
             ),
             tabPanel(
               title="Comparing Shared Features",
               plotOutput("show_shared_features") %>% withSpinner(),
-              downloadBttn("download_qc_sharedFeatures",
-                           label="Download Plot",
-                           style="minimal",
-                           color="warning")
+              downloadBttn(
+                "download_qc_sharedFeatures",
+                label="Download Plot",
+                style="minimal",
+                color="warning"
+              )
             ),
             tabPanel(
               title="Data completeness",
               plotOutput("show_data_completeness") %>% withSpinner(),
-              downloadBttn("download_qc_completeness",
-                           label="Download Plot",
-                           style="minimal",
-                           color="warning")
+              downloadBttn(
+                "download_qc_completeness",
+                label="Download Plot",
+                style="minimal",
+                color="warning"
+              )
             ),
             tabPanel(
               title="Missing Values",
               plotOutput("show_missing_values") %>% withSpinner(),
-              downloadBttn("download_qc_missingvalues",
-                           label="Download Plot",
-                           style="minimal",
-                           color="warning")
-            )
-            # TODO: There could be more quality check visualizations
+              downloadBttn(
+                "download_qc_missingvalues",
+                label="Download Plot",
+                style="minimal",
+                color="warning"
+              )
+            )# TODO: There could be more quality check visualizations
           )
         )
       )

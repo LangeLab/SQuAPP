@@ -6,7 +6,11 @@ placeholder_message <- function(title, message){
   )
 }
 
-report.preview.data <- function(data, colIgnore=NULL, rowN=3){
+report.preview.data <- function(
+  data, 
+  colIgnore=NULL, 
+  rowN=3
+){
   if(!is.null(colIgnore)){data[, colIgnore] <- NULL}
   return (psych::headTail(data, top=rowN, bottom=rowN, ellipsis=FALSE))
 }

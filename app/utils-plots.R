@@ -1,51 +1,94 @@
 # Main plot to visualize distributions with violin plots
-plotviolin <- function(dataList, group_factor=NULL, custom_title=""){
-  # Get the quantitative data
-  quant_data <- dataList$quant
-  # Create long version of the data
-  data.long <- na.omit(melt(as.matrix(quant_data)))
-  colnames(data.long) <- c("Feature", "Sample", "Intensity")
-  rownames(data.long) <- NULL
-  data.long <- as.data.frame(data.long)
-  # If no group factor is passed
-  if(is.null(group_factor)){
-    # Plot the Violin Plots of the data to show intensities
-    p <- ggplot(data.long, aes(x = Sample, y = log2(Intensity))) +
-            geom_violin(draw_quantiles=(.5)) + # Drawing median for each violin
-            theme_pubclean() + ggtitle(custom_title) + labs(x="Samples") +
-            theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 7.5))
-  }else{
-    # Get the metadata
-    metadata <- dataList$meta
-    meta_id_col <- dataList$meta_id
-    # Check if the group factor is within the metadata
-    if(!group_factor %in% colnames(metadata)){return()}
-    # If there are more than 5 unique values for the group_factor
-    if(length(unique(metadata[, group_factor])) > 5){
-      # stop("More than 5 unique values in group_factor won't be plotted!")
-      return(1)
+plotviolin <- function(
+    dataList, 
+    group_factor=NULL, 
+    custom_title=""
+){
+    # Error Code:
+    # 0: Unknown error
+    # 1: Only up to 5 unique values are allowed for the group factor
+
+
+    # Get the quantitative data
+    quant_data <- dataList$quant
+    # Create long version of the data
+    data.long <- na.omit(melt(as.matrix(quant_data)))
+    colnames(data.long) <- c("Feature", "Sample", "Intensity")
+    rownames(data.long) <- NULL
+    data.long <- as.data.frame(data.long)
+    # If no group factor is passed
+    if(is.null(group_factor)){
+        # Plot the Violin Plots of the data to show intensities
+        p <- ggplot(
+            data.long, 
+            aes(
+                x = Sample, 
+                y = log2(Intensity)
+            )
+        ) +
+        geom_violin(draw_quantiles=(.5)) + # Drawing median for each violin
+        theme_pubclean() + 
+        ggtitle(custom_title) + 
+        labs(x="Samples") +
+        theme(
+            axis.text.x = element_text(angle = 90, hjust = 1, size = 7.5)
+        )
+    }else{
+        # Get the metadata
+        metadata <- dataList$meta
+        meta_id_col <- dataList$meta_id
+        # Check if the group factor is within the metadata
+        if(!group_factor %in% colnames(metadata)){return()}
+        # If there are more than 5 unique values for the group_factor
+        if(length(unique(metadata[, group_factor])) > 5){
+            return(1)
+        }
+        # Merge the grouping factor to the plot data
+        data.long <- merge(
+            data.long,
+            metadata[, c(meta_id_col, group_factor)],
+            by.x="Sample",
+            by.y=meta_id_col
+        )
+        # Standardize column names
+        colnames(data.long) <- c("Sample", "Feature", "Intensity", "group")
+        # Plot the Violin Plots of the data to show intensities
+        p <- ggplot(
+            data.long, 
+            aes(
+                x = Sample, 
+                y = log2(Intensity), 
+                fill=group
+            )
+        ) +
+        geom_violin(draw_quantiles=(.5)) + # Drawing median for each violin
+        facet_grid(
+            . ~group, 
+            scales = "free_x", 
+            space='free'
+        ) +
+        theme_pubclean() + 
+        ggtitle(custom_title) + 
+        labs(x="Samples") +
+        theme(
+            axis.text.x = element_text(angle = 90, hjust = 1, size = 7.5)
+        )
+        p <- set_palette(p, "jco")
     }
-    # Merge the grouping factor to the plot data
-    data.long <- merge(data.long,
-                       metadata[, c(meta_id_col, group_factor)],
-                       by.x="Sample",
-                       by.y=meta_id_col)
-                       # Standardize column names
-    colnames(data.long) <- c("Sample", "Feature", "Intensity", "group")
-    # Plot the Violin Plots of the data to show intensities
-    p <- ggplot(data.long, aes(x = Sample, y = log2(Intensity), fill=group)) +
-            geom_violin(draw_quantiles=(.5)) + # Drawing median for each violin
-            facet_grid(. ~group, scales = "free_x", space='free') +
-            theme_pubclean() + ggtitle(custom_title) + labs(x="Samples") +
-            theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 7.5))
-    p <- set_palette(p, "jco")
-  }
-  return(p)
+    return(p)
 }
 
-geom_flat_violin <- function(mapping = NULL, data = NULL, stat = "ydensity",
-                             position = "dodge", trim = TRUE, scale = "area",
-                             show.legend = NA, inherit.aes = TRUE, ...) {
+geom_flat_violin <- function(
+    mapping = NULL, 
+    data = NULL, 
+    stat = "ydensity",
+    position = "dodge", 
+    trim = TRUE, 
+    scale = "area",
+    show.legend = NA, 
+    inherit.aes = TRUE,
+    ...
+) {
     # define flat violin geom
     GeomFlatViolin <- ggplot2::ggproto(
         "Violinist",
@@ -57,13 +100,18 @@ geom_flat_violin <- function(mapping = NULL, data = NULL, stat = "ydensity",
             # ymin, ymax, xmin, and xmax define the bounding rectangle for each group
             data %>%
                 dplyr::group_by(group) %>%
-                dplyr::mutate(ymin = min(y),
-                              ymax = max(y),
-                              xmin = x,
-                              xmax = x + width / 2)
-
+                dplyr::mutate(
+                    ymin = min(y),
+                    ymax = max(y),
+                    xmin = x,
+                    xmax = x + width / 2
+                )
         },
-        draw_group = function(data, panel_scales, coord) {
+        draw_group = function(
+            data, 
+            panel_scales, 
+            coord
+        ) {
             # Find the points for the line to go all the way around
             data <- transform(data, xminv = x,
                               xmaxv = x + violinwidth * (xmax - x))
@@ -76,13 +124,20 @@ geom_flat_violin <- function(mapping = NULL, data = NULL, stat = "ydensity",
             # Needed for coord_polar and such
             newdata <- rbind(newdata, newdata[1,])
 
-            ggplot2:::ggname("geom_flat_violin",
-                             ggplot2::GeomPolygon$draw_panel(newdata, panel_scales, coord))
+            ggplot2:::ggname(
+                "geom_flat_violin",
+                ggplot2::GeomPolygon$draw_panel(newdata, panel_scales, coord)
+            )
         },
         draw_key = draw_key_polygon,
-        default_aes = aes(weight = 1, colour = "grey20",
-                          fill = "white", size = 0.5,
-                          alpha = NA, linetype = "solid"),
+        default_aes = aes(
+            weight = 1, 
+            colour = "grey20",
+            fill = "white", 
+            size = 0.5,
+            alpha = NA, 
+            linetype = "solid"
+        ),
         required_aes = c("x", "y")
     )
 
@@ -102,16 +157,19 @@ geom_flat_violin <- function(mapping = NULL, data = NULL, stat = "ydensity",
     )
 }
 
-geom_split_violin <- function (mapping = NULL,
-                               data = NULL,
-                               stat = "ydensity",
-                               position = "identity", ...,
-                               draw_quantiles = NULL,
-                               trim = TRUE,
-                               scale = "area",
-                               na.rm = FALSE,
-                               show.legend = NA,
-                               inherit.aes = TRUE) {
+geom_split_violin <- function (
+    mapping = NULL,
+    data = NULL,
+    stat = "ydensity",
+    position = "identity", 
+    ...,
+    draw_quantiles = NULL,
+    trim = TRUE,
+    scale = "area",
+    na.rm = FALSE,
+    show.legend = NA,
+    inherit.aes = TRUE
+) {
     GeomSplitViolin <- ggplot2::ggproto(
         "GeomSplitViolin",
         GeomViolin,
@@ -141,7 +199,6 @@ geom_split_violin <- function (mapping = NULL,
         }
     )
 
-
     layer(data = data,
           mapping = mapping,
           stat = stat,
@@ -149,55 +206,12 @@ geom_split_violin <- function (mapping = NULL,
           position = position,
           show.legend = show.legend,
           inherit.aes = inherit.aes,
-          params = list(trim = trim,
-                        scale = scale,
-                        draw_quantiles = draw_quantiles,
-                        na.rm = na.rm, ...)
+          params = list(
+            trim = trim,
+            scale = scale,
+            draw_quantiles = draw_quantiles,
+            na.rm = na.rm, 
+            ...
+        )
     )
 }
-
-# Implements splitviolin from plotly
-# plotly.splitViolin <- function(df1, df2, df1_name, df2_name, color1, color2){
-#   # Melt the first dataframe
-#   df1 <- melt(df1, id.vars=NULL, variable.name="Samples", value.name="Intensity")
-#   df1$DataStatus <- df1_name # Assign value to Data Status
-#   df1 <- na.omit(df1) # Remove NA value rows
-#   # Melt the second dataframe
-#   df2 <- melt(df2, id.vars=NULL, variable.name="Samples", value.name="Intensity")
-#   df2$DataStatus <- df2_name # Assign value to Data Status
-#   df2 <- na.omit(df2) # Remove NA value rows
-#   # Concat datasets
-#   combined_df <- rbind(df1, df2)
-#
-#   # Plot a split violin
-#   fig <- combined_df %>%
-#     plot_ly(type="violin", points = F, showlegend = T) %>%
-#     add_trace(
-#       x = combined_df[combined_df$DataStatus==df1_name, "Samples"],
-#       y = log10(combined_df[combined_df$DataStatus==df1_name, "Intensity"]),
-#       legendgroup = df1_name,
-#       scalegroup = df1_name,
-#       name = df1_name,
-#       side = "negative",
-#       box = list(visible = T),
-#       meanline = list(visible = T),
-#       color = I(color1)
-#     ) %>%
-#     add_trace(
-#       x = combined_df[combined_df$DataStatus==df2_name, "Samples"],
-#       y = log10(combined_df[combined_df$DataStatus==df2_name, "Intensity"]),
-#       legendgroup = df2_name,
-#       scalegroup = df2_name,
-#       name = df2_name,
-#       side = "positive",
-#       box = list(visible = T),
-#       meanline = list(visible = T),
-#       color = I(color2)
-#     ) %>%
-#     layout(
-#       xaxis = list(title=""),
-#       yaxis = list(title="log10(Intensity)", zeroline=F)
-#     )
-#
-#   return(fig)
-# }
